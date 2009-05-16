@@ -1,12 +1,10 @@
 //example use of LCD4Bit_mod library
 
+//example use of LCD4Bit_mod library
+
 #include <LCD4Bit_mod.h> 
 //create object to control an LCD.  
 //number of lines in display=1
-#include "WProgram.h"
-void setup();
-void loop();
-int get_key(unsigned int input);
 LCD4Bit_mod lcd = LCD4Bit_mod(2); 
 
 //Key message
@@ -22,11 +20,16 @@ int  adc_key_val[5] ={30, 150, 360, 535, 760 };
 #define DOWN 2
 #define LEFT 3
 #define SELECT 4
+// if the correct password is entered the interval is reset to 1000 ms
+const int pwdlen=5;
+int password[pwdlen] = {UP, DOWN, LEFT, RIGHT, DOWN};
+int pwdCursor=0; // cursor in the password
+short int pwdGood=true; // to check if correct pwd
 int NUM_KEYS = 5;
 int adc_key_in;
 int key=-1;
 int oldkey=-1;
-long interval = 1000, previousMillis=0;
+unsigned long interval = 1000, previousMillis=0;
 char interChar[5];
 short int value = LOW;
 
@@ -54,25 +57,47 @@ void loop() {
   key = get_key(adc_key_in); // convert into key press
 	
   if (key != oldkey) { // if keypress is detected
-    delay(50);		// wait for debounce time
+    delay(3000);		// wait for debounce time (keydown keyup)
     adc_key_in = analogRead(0);    // read the value from the sensor  
     key = get_key(adc_key_in);		        // convert into key press
-    if (key != oldkey){			
+    if (key != oldkey){
       oldkey = key;
       if (key >=0){
         lcd.cursorTo(2, 0);  //line=2, x=0
         lcd.printIn(msgs[key]);
         if(key == SELECT){
           lcd.cursorTo(2,10);
-          itoa(interval/1000,interChar,10);
+          itoa(interval,interChar,10);
           lcd.printIn(interChar);
-          lcd.cursorTo(2,15); lcd.printIn("s");
+          lcd.cursorTo(2,14); lcd.printIn("ms");
         }else if(key == UP){
           interval += 250;
         }else if(key == DOWN){
-          interval -= 250;
+          interval>250? interval-= 250:interval=0;
         }
       }
+      // end interval check - start password check
+      if(pwdCursor == 0) pwdGood=true;
+      pwdGood = pwdGood && (key == password[pwdCursor++]);
+      if(pwdGood && pwdCursor == (pwdlen+1)){
+        interval = 1000;
+        lcd.clear();
+        lcd.cursorTo(1,0); lcd.printIn("--Access Granted--");
+        lcd.cursorTo(2,0); lcd.printIn("-Interval reseted-");
+        delay(1500);
+        pwdCursor = 0;
+      }else{
+        if(pwdGood){
+          lcd.cursorTo(1,0); lcd.printIn("--Correct key--");
+        }else{
+          lcd.cursorTo(1,0); lcd.printIn("---Wrong key---");
+          //delete the next line when completed
+          pwdCursor=0;
+        }
+        delay(500);
+      }
+      if(pwdCursor > pwdlen) pwdCursor = 0;
+      lcd.cursorTo(1,0); lcd.printIn(lcds[3]); // print the last message
     }
   }
   
@@ -97,6 +122,7 @@ int get_key(unsigned int input){
   if (k >= NUM_KEYS)  k = -1;     // No valid key pressed
   return k;
 }
+
 
 int main(void)
 {
