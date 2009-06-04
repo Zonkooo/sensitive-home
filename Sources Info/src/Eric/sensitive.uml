@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML" xmi:id="_N5uBsFDjEd6XHonB0aNNKA" name="">
+  <packagedElement xmi:type="uml:Class" xmi:id="_aLhKgFDjEd6XHonB0aNNKA" name="Servlet"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_mIcPgFDjEd6XHonB0aNNKA" name="Gestion_profils"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_mZHIwFDjEd6XHonB0aNNKA" name="Communication"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_vEGi8FDjEd6XHonB0aNNKA" name="Hit_the_wall"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_MQxRcFDkEd6XHonB0aNNKA" name="Servlet"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_jjJWUFDlEd6XHonB0aNNKA" name="Profil"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_meuWoFDlEd6XHonB0aNNKA" name="Profil_general"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_p1gsQFDlEd6XHonB0aNNKA" name="Profil_global"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_FQdTkVDoEd6TlbtUN12WKA" name="Profil_piece"/>
+</uml:Model>
