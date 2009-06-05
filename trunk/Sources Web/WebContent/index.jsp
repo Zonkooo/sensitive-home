@@ -21,13 +21,18 @@
     // d'affichage, par exemple.
     nombreVisites++;
 %>
+
+
           <div id="haut">
             <div id="photo"><img src="photo.png" alt="picture of the place"/></div>
             <div id="ban"><img src="ban.png" alt="logo and banner"/></div>
           </div>
           <div id="centre">
               <div id="main" class="style1">   
-                    <p>Welcome to the home of the 7th Val d'Isère Advanced Course on Shoulder 
+<%-- Impression de variables --%>
+					<p>Au moment de l'exécution de ce script, nous sommes le <%= date %>.</p>
+					<p>Cette page a été affichée <%= nombreVisites %> fois!</p>
+                    <p> to the home of the 7th Val d'Isère Advanced Course on Shoulder 
                         Arthroscopy. As many of you may know, this edition will take place in Val 
                         d'Isère from <em>January 18th to January 23rd 2009</em>. </p>
                     <p><em>Your attention please: 350 seats available and numbers of places are limited we count now 300 registered persons. Do not waiting if you want take part</em></p>
