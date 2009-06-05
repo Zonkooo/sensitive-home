@@ -1,0 +1,111 @@
+/* CSS Document */
+.style1 {font-family: Verdana, Arial, Helvetica, sans-serif}
+.style2 {color: #E70F26}
+.style6 {font-family: Verdana, Arial, Helvetica, sans-serif; color: #013B60; }
+h1
+{
+    color:#000000;
+    text-decoration:underline;
+}
+em
+{
+     color:#E70F26;
+     font-style:normal;
+     text-decoration:underline;
+}
+body {
+	font-family:Verdana, Helvetica, sans-serif;
+	font-size: 0.8em;
+	font-weight:bold;
+	margin:10px 0;
+	padding: 0;
+	color: #013B60;
+	text-align:left;
+	/*background: white url(image_de_fond.png) no-repeat right bottom;*/
+	background: #D6D7D9 url(montagne.jpg) repeat-y center top;
+}
+#all
+{
+    width: 824px;
+	margin-left: auto;
+	margin-right:auto;
+	/*background: #D6D7D9 url(montagne.jpg) repeat-y center top;*/
+}
+#haut
+{
+    width:824px;
+    margin:inherit;
+}
+#centre
+{
+    width:824px;
+    margin:inherit;
+}
+#bas
+{
+    clear:both;
+    width:824px;
+    height:90px;
+    margin:inherit;
+    text-align:center;
+    background: url(bas.png) center top;
+}
+#main{
+	width: 724px;
+	float: right;
+}
+#menu
+{
+    
+    float: left;
+	width: 100px;
+}
+
+#photo
+{
+    float: left;
+}
+#ban
+{
+    float: right;
+}
+.colonne
+{
+    float:left;
+    width: 320px;
+}
+.lien_menu
+{
+    text-align:center;
+    padding:5px 10px 10px 5px;
+    font-weight:bold;
+    font-size: 1em;
+    height: 60px;
+    color: #FFFFFF;
+    background: url(bouton.png) no-repeat center top;
+}
+#select
+{
+    font-style:italic;
+}
+#menu em
+{
+    text-decoration:none;
+    color:White;
+}
+#menu a:link {
+	font-weight: bold;
+	color: #b8e3bb;
+	text-decoration: none;
+}
+
+#menu a:visited {
+	font-weight: bold;
+	color: #d2ffe0;
+	text-decoration: none;
+}
+#menu a:hover, a:active {
+	font-weight: bold;
+	color: #d2ffe0;
+	text-decoration: underline;
+}
