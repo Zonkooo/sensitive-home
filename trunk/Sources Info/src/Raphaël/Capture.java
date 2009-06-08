@@ -7,10 +7,17 @@ import javax.sound.sampled.*;
  */
 class Capture implements Runnable
 {
-    public static void main(String s[])
+    public static void main(String args[])
     {
-        Capture capture = new Capture(44100, 16, 1);
-        System.out.println("hello");
+        Capture capture = null;        
+        if(args.length == 3) //chargement des paramètres depuis la ligne de commande
+            capture = new Capture(Float.parseFloat(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+        else //chargement des params par defaut
+        {
+            System.out.println("arguments ignorés");
+            capture = new Capture();
+        }
+        
         capture.start();
         try { Thread.sleep(1000); } //enregistrement pendant 1 seconde
         catch (InterruptedException ie) {;}
@@ -21,12 +28,13 @@ class Capture implements Runnable
     Thread thread;
     String errStr = null;
     double duration = 0.0;
+    
     //format de capture
     AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED; //ALAW - ULAW - PCM_SIGNED - PCM-UNSIGNED
+    boolean bigEndian = true;
     float sampleRate; //44100 - 22050 - 16000 - 11025 - 8000
     int sampleSizeInBits; // 16 - 8
     int channels; //2 = stereo - 1 = mono
-    boolean bigEndian = true;
 
     /**
      * Ce constructeur permet de spécifier 
@@ -49,9 +57,9 @@ class Capture implements Runnable
      */
     public Capture()
     {
-        sampleRate = 44100; //44100 - 22050 - 16000 - 11025 - 8000
-        sampleSizeInBits = 16; // 16 - 8
-        channels = 2; //2 = stereo - 1 = mono
+        this.sampleRate = 44100; //44100 - 22050 - 16000 - 11025 - 8000
+        this.sampleSizeInBits = 16; // 16 - 8
+        this.channels = 1; //2 = stereo - 1 = mono
     }
     
 
@@ -85,12 +93,6 @@ class Capture implements Runnable
 
         // define the required attributes for our line, 
         // and make sure a compatible line is supported.
-
-        AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED; //ALAW - ULAW - PCM_SIGNED - PCM-UNSIGNED
-        float sampleRate = 8000; //44100 - 22050 - 16000 - 11025 - 8000
-        int sampleSizeInBits = 16; // 16 - 8
-        int channels = 1; //2 = stereo - 1 = mono
-        boolean bigEndian = true;
         AudioFormat format = new AudioFormat(encoding, sampleRate, sampleSizeInBits, channels, (sampleSizeInBits / 8) * channels, sampleRate, bigEndian);
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
 
@@ -124,12 +126,13 @@ class Capture implements Runnable
         int bufferLengthInFrames = line.getBufferSize() / 8;
         int bufferLengthInBytes = bufferLengthInFrames * frameSizeInBytes;
         byte[] data = new byte[bufferLengthInBytes];
-        int numBytesRead;
 
         line.start();
 
+        int numBytesRead;
         while (thread != null)
         {
+            //lecture de l'entrée dans data, en écrasant les données précédentes
             if ((numBytesRead = line.read(data, 0, bufferLengthInBytes)) == -1)
             {
                 break;
@@ -172,9 +175,13 @@ class Capture implements Runnable
             return;
         }
 
+        int[] realData = new int[audioBytes.length/frameSizeInBytes];
         for (int i = 0; i < audioBytes.length; i++)
         {
-            System.out.println(audioBytes[i]);
+            realData[i/frameSizeInBytes] += audioBytes[i] << ((frameSizeInBytes - 1 - i%frameSizeInBytes)*8);
+            
+            if(i%frameSizeInBytes == frameSizeInBytes - 1)
+                System.out.println(realData[i/frameSizeInBytes]);
         }
 
     //samplingGraph.createWaveForm(audioBytes);
