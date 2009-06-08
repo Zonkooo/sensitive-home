@@ -5,10 +5,14 @@
 import java.io.*;
 import javax.sound.sampled.*;
 
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 /** 
  * Reads data from the input channel and writes to the output stream
  */
-class Capture implements Runnable
+class Capture
 {
     /**
      * méthode de lancement (tests)
@@ -28,30 +32,24 @@ class Capture implements Runnable
             capture = new Capture();
         }
         
-        capture.start();
-        try { Thread.sleep(1000); } //enregistrement pendant 1 seconde
-        catch (InterruptedException ie) {;} //ceci n'arrive jamais
-        capture.stop();        
-        
-        int[] ad = capture.getAudioData();
+        int[] ad = capture.ecoute(1000); //capture pendant 1 seconde
         for (int i = 0; i < ad.length; i++)
         {
             System.out.println(ad[i]);
         }
     }
     
-    TargetDataLine line;
-    Thread thread;
-    String errStr = null;
+    
+    private TargetDataLine line;
     
     //format de capture
-    AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED; //ALAW - ULAW - PCM_SIGNED - PCM-UNSIGNED
-    boolean bigEndian = true;
-    float sampleRate; //44100 - 22050 - 16000 - 11025 - 8000
-    int sampleSizeInBits; // 16 - 8
-    int channels; //2 = stereo - 1 = mono
+    private AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED; //ALAW - ULAW - PCM_SIGNED - PCM-UNSIGNED
+    private boolean bigEndian = true;
+    private float sampleRate; //44100 - 22050 - 16000 - 11025 - 8000
+    private int sampleSizeInBits; // 16 - 8
+    private int channels; //2 = stereo - 1 = mono
     
-    int[] audioData; //resultat de la capture
+    private int[] audioData; //resultat de la capture
 
     /**
      * Ce constructeur permet de spécifier 
@@ -80,54 +78,15 @@ class Capture implements Runnable
         this.channels = 1; //2 = stereo - 1 = mono
     }
     
-    /**
-     * lance un thread qui écoute le micro
-     */
-    public void start()
-    {
-        thread = new Thread(this);
-        thread.setName("Capture");
-        thread.start(); //lance la méthode run
-    }
-
-    /**
-     * arrête l'écoute du micro
-     */
-    public void stop()
-    {
-        thread = null;
-    }
-
-    /**
-     * méthode d'arrêt propre pour les erreurs
-     * 
-     * @param message message d'erreur
-     */
-    private void shutDown(String message)
-    {
-        if ((errStr = message) != null && thread != null)
-        {
-            thread = null;
-            System.err.println(errStr);
-        }
-    }
+    private boolean elapsed = false; //utilisé par le timer
     
     /**
-     * retourne ce qui a été capturé entre les derniers appels de start et stop
+     * écoute le micro pendant millisec millisecondes
      * 
-     * @return données capturées
+     * @param millisec durée d'écoute
+     * @return données écoutées
      */
-    public int[] getAudioData()
-    {
-        return this.audioData;
-    }
-
-    /**
-     * implémentation de Runnable
-     * cette méthode est lancée quand 
-     * un thread initialisé avec this démarre (thread.start())
-     */
-    public void run()
+    public int[] ecoute(int millisec)
     {
         // define the required attributes for our line
         AudioFormat format = new AudioFormat(encoding, sampleRate, sampleSizeInBits, channels, (sampleSizeInBits / 8) * channels, sampleRate, bigEndian);
@@ -136,8 +95,8 @@ class Capture implements Runnable
         //make sure a compatible line is supported.
         if (!AudioSystem.isLineSupported(info))
         {
-            shutDown("Line matching " + info + " not supported.");
-            return;
+            System.out.println("Line matching " + info + " not supported.");
+            return null;
         }
 
         // get and open the target data line for capture.
@@ -148,13 +107,13 @@ class Capture implements Runnable
         }
         catch (LineUnavailableException ex)
         {
-            shutDown("Unable to open the line: " + ex);
-            return;
+            System.out.println("Unable to open the line: " + ex);
+            return null;
         }
         catch (Exception ex)
         {
-            shutDown(ex.toString());
-            return;
+            System.out.println(ex.toString());
+            return null;
         }
 
         //enregistrement
@@ -163,10 +122,20 @@ class Capture implements Runnable
         int bufferLengthInBytes = (line.getBufferSize() / 8)* frameSizeInBytes;
         byte[] data = new byte[bufferLengthInBytes]; //tampon de lecture
 
+        Timer timer = new Timer(millisec, new ActionListener()
+        {
+            public void actionPerformed(ActionEvent ae)
+            {
+                elapsed = true;
+            }
+        });
+        timer.setRepeats(false);
+        
         line.start(); //silence, ça tourne
-
+        timer.start();
+        
         int numBytesRead;
-        while (thread != null)
+        while (!elapsed)
         {
             //lecture de l'entrée dans data, en écrasant les données précédentes
             if ((numBytesRead = line.read(data, 0, bufferLengthInBytes)) == -1)
@@ -197,6 +166,7 @@ class Capture implements Runnable
         //ce qui nous permet de récupérer tout ce qu'on a mis dedans pendant le scan
         //et on le traite pour extraire les données
         audioData = traitementBytes(out.toByteArray(), sampleSizeInBits);
+        return audioData;
     }
     
     /**
