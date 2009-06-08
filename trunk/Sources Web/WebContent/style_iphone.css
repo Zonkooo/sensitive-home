@@ -5,52 +5,61 @@
 .style6 {font-family: Verdana, Arial, Helvetica, sans-serif; color: #013B60; }
 h1
 {
-    color:#941515;
+    color:#000000;
     text-decoration:underline;
 }
 em
 {
-     color:#941515;
+     color:#E70F26;
      font-style:normal;
      text-decoration:underline;
 }
 body {
-	background-color: #313634;
-	color: #C7CECF;
 	font-family:Verdana, Helvetica, sans-serif;
 	font-size: 0.8em;
 	font-weight:bold;
 	margin:10px 0;
 	padding: 0;
+	color: #013B60;
 	text-align:left;
+	/*background: white url(image_de_fond.png) no-repeat right bottom;*/
+	/*background: #D6D7D9 url(montagne.jpg) repeat-y center top;*/
 }
 #all
 {
+    width: 320px;
 	margin-left: auto;
 	margin-right:auto;
+	/*background: #D6D7D9 url(montagne.jpg) repeat-y center top;*/
+}
+#haut
+{
+    width:320px;
+    margin:inherit;
 }
 #centre
 {
-    width:824px;
+    width:320px;
     margin:inherit;
 }
 #bas
 {
     clear:both;
-    width:824px;
-    height:90px;
+    width:320px;
+    height:0px;
     margin:inherit;
     text-align:center;
+    /*background: url(bas.png) center top;*/
 }
 #main{
-	width: 524px;
+	width: 220px;
 	float: right;
 }
 #menu
 {
     
     float: left;
-	width: 200px;
+	width: 100px;
 }
 
 #photo
@@ -64,7 +73,7 @@ body {
 .colonne
 {
     float:left;
-    width: 320px;
+    width: 220px;
 }
 .lien_menu
 {
@@ -73,13 +82,8 @@ body {
     font-weight:bold;
     font-size: 1em;
     height: 60px;
-    color: #000001;
-    background-color: #5C0402;
-    -moz-border-radius : 10px;
-    margin: 10px;
-    border-color: #000001;
-    border-style: solid;
-    border-width: Medium;
+    color: #FFFFFF;
+    background: url(bouton.png) no-repeat center top;
 }
 #select
 {
@@ -88,21 +92,21 @@ body {
 #menu em
 {
     text-decoration:none;
-    color: #C7CECF;
+    color:White;
 }
 #menu a:link {
 	font-weight: bold;
-	color: #000001;
+	color: #b8e3bb;
 	text-decoration: none;
 }
 
 #menu a:visited {
 	font-weight: bold;
-	color: #000001;
+	color: #d2ffe0;
 	text-decoration: none;
 }
 #menu a:hover, a:active {
 	font-weight: bold;
-	color: #941515;
+	color: #d2ffe0;
 	text-decoration: underline;
 }
