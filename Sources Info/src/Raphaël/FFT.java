@@ -4,6 +4,19 @@
 
 public class FFT
 {
+    /**
+     * partie entière du logarithme base 2 de n
+     * @param n
+     * @return abs(log_2(n))
+     */
+    public static int lg(int n)
+    {
+        int r = 0;
+        while(n >> r != 0)
+            r++;
+        
+        return r - 1;
+    }
 
     int n, m;
     // Lookup tables.  Only need to recompute when size of FFT changes.
@@ -14,10 +27,9 @@ public class FFT
     public FFT(int n)
     {
         this.n = n;
-        this.m = (int) (Math.log(n) / Math.log(2));
 
         // Make sure n is a power of 2
-        if (n != (1 << m))
+        if (n != (1 << lg(n)))
         {
             throw new RuntimeException("FFT length must be power of 2");
         }
@@ -48,7 +60,7 @@ public class FFT
 
     protected void makeWindow()
     {
-        // Make a blackman window:
+        // Make a Blackman window:
         // w(n)=0.42-0.5cos{(2*PI*n)/(N-1)}+0.08cos{(4*PI*n)/(N-1)};
         window = new double[n];
         for (int i = 0; i < window.length; i++)
@@ -114,31 +126,35 @@ public class FFT
         }
     }
     
-    private double[] zeroPadding(double[] sig)
+    private static double[] zeroPadding(double[] sig)
     {
-        return null;
+        double[] padded = new double[1 << (lg(sig.length) + 1)];
+        for(int i = 0; i < sig.length; i++)
+            padded[i] = sig[i];
+        
+        return padded;
     }
 
     // Test the FFT to make sure it's working
     public static void main(String[] args)
     {
         Capture capture = new Capture();
-        capture.start();
-        try 
-        { Thread.sleep(1000); } //enregistrement pendant 1 seconde
-        catch (InterruptedException ie) 
-        { System.out.println(ie.toString());} //ceci n'arrive jamais
-        capture.stop();
+        int[] audio = capture.ecoute(1000);
         
-        int[] audio = capture.getAudioData();
+        //conversion en double
         double[] audioDouble = new double[audio.length];
         for(int i = 0; i < audio.length; i++)
             audioDouble[i] = (double)audio[i];
         
+       audioDouble = FFT.zeroPadding(audioDouble);
+        
         //TODO : zero padding
-        FFT fft = new FFT(42);
+        FFT fft = new FFT(audioDouble.length);
+        fft.fft(audioDouble);
         
-        
+        for(int i = 0; i < audioDouble.length; i++)
+            System.out.println(audioDouble[i]);
+            
 //        int N = 8;
 //
 //        FFT fft = new FFT(N);
