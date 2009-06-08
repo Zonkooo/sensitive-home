@@ -10,6 +10,13 @@ import javax.sound.sampled.*;
  */
 class Capture implements Runnable
 {
+    /**
+     * méthode de lancement (tests)
+     * peut prendre en paramètres des instructions sur le format de capture
+     * 
+     * @param args frequence et taille des echantillons et nombre de cannaux, ou rien du tout
+     */
+    @SuppressWarnings("empty-statement") //pour le catch de l'exception
     public static void main(String args[])
     {
         Capture capture = null;        
@@ -23,7 +30,7 @@ class Capture implements Runnable
         
         capture.start();
         try { Thread.sleep(1000); } //enregistrement pendant 1 seconde
-        catch (InterruptedException ie) {;}
+        catch (InterruptedException ie) {;} //ceci n'arrive jamais
         capture.stop();
     }
     
@@ -42,6 +49,7 @@ class Capture implements Runnable
      * Ce constructeur permet de spécifier 
      * les paramètres à utiliser pour la capture.
      * Par défaut, on est en 44,1 kHz, 16 bits, stereo
+     * 
      * @param sampleRate 44100 - 22050 - 16000 - 11025 - 8000
      * @param sampleSizeInBits 16 - 8
      * @param channels 2 = stereo - 1 = mono
@@ -64,19 +72,29 @@ class Capture implements Runnable
         this.channels = 1; //2 = stereo - 1 = mono
     }
     
-
+    /**
+     * lance un thread qui écoute le micro
+     */
     public void start()
     {
         thread = new Thread(this);
         thread.setName("Capture");
-        thread.start();
+        thread.start(); //lance la méthode run
     }
 
+    /**
+     * arrête l'écoute du micro
+     */
     public void stop()
     {
         thread = null;
     }
 
+    /**
+     * méthode d'arrêt propre pour les erreurs
+     * 
+     * @param message message d'erreur
+     */
     private void shutDown(String message)
     {
         if ((errStr = message) != null && thread != null)
@@ -86,15 +104,18 @@ class Capture implements Runnable
         }
     }
 
+    /**
+     * implémentation de Runnable
+     * cette méthode est lancée quand 
+     * un thread initialisé avec this démarre (thread.start())
+     */
     public void run()
     {
-        AudioInputStream audioInputStream = null;
-
-        // define the required attributes for our line, 
-        // and make sure a compatible line is supported.
+        // define the required attributes for our line
         AudioFormat format = new AudioFormat(encoding, sampleRate, sampleSizeInBits, channels, (sampleSizeInBits / 8) * channels, sampleRate, bigEndian);
         DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
 
+        //make sure a compatible line is supported.
         if (!AudioSystem.isLineSupported(info))
         {
             shutDown("Line matching " + info + " not supported.");
@@ -102,7 +123,6 @@ class Capture implements Runnable
         }
 
         // get and open the target data line for capture.
-
         try
         {
             line = (TargetDataLine) AudioSystem.getLine(info);
@@ -119,14 +139,13 @@ class Capture implements Runnable
             return;
         }
 
-        // play back the captured audio data
+        //enregistrement
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         int frameSizeInBytes = format.getFrameSize();
-        int bufferLengthInFrames = line.getBufferSize() / 8;
-        int bufferLengthInBytes = bufferLengthInFrames * frameSizeInBytes;
-        byte[] data = new byte[bufferLengthInBytes];
+        int bufferLengthInBytes = (line.getBufferSize() / 8)* frameSizeInBytes;
+        byte[] data = new byte[bufferLengthInBytes]; //tampon de lecture
 
-        line.start();
+        line.start(); //silence, ça tourne
 
         int numBytesRead;
         while (thread != null)
@@ -158,21 +177,8 @@ class Capture implements Runnable
 
         //on recharge tout le contenu de out dans un tableau de bytes
         //ce qui nous permet de récupérer tout ce qu'on a mis dedans pendant le scan
-        byte audioBytes[] = out.toByteArray();
-        ByteArrayInputStream bais = new ByteArrayInputStream(audioBytes);
-        audioInputStream = new AudioInputStream(bais, format, audioBytes.length / frameSizeInBytes);
-
-        try
-        {
-            audioInputStream.reset();
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-            return;
-        }
-
-        int[] audioData = traitementBytes(audioBytes, sampleSizeInBits);
+        //et on le traite pour extraire les données
+        int[] audioData = traitementBytes(out.toByteArray(), sampleSizeInBits);
         
         for (int i = 0; i < audioData.length; i++)
         {
@@ -180,6 +186,18 @@ class Capture implements Runnable
         }
     }
     
+    /**
+     * Convertit le flux de bytes reçu en un tableau d'int
+     * contenant les bonnes valeurs des samples
+     * (si on écoute en 16 bits, il y a 2 bytes par sample
+     * et il faut les concatener pour avoir la bonne valeur)
+     * 
+     * /!\ l'encodage doit être PCMsigned et BigEndian
+     * 
+     * @param audioBytes flux reçu
+     * @param sampleSize taille en bits d'un sample (8 ou 16)
+     * @return valeurs des samples
+     */
     private int[] traitementBytes(byte[] audioBytes, int sampleSize)
     {
         //on suppose qu'on est en PCMsigned, BigEndian
@@ -191,23 +209,20 @@ class Capture implements Runnable
             audioData = new int[nbSamples];
             for (int i = 0; i < nbSamples; i++)
             {
-                /* First byte is MSB (high order) */
                 int MSB = (int) audioBytes[2 * i];
-                /* Second byte is LSB (low order) */
                 int LSB = (int) audioBytes[2 * i + 1];
                 audioData[i] = MSB << 8 | (255 & LSB);
             }
-
         }
         else if (sampleSize == 8)
         {
             nbSamples = audioBytes.length;
             audioData = new int[nbSamples];
 
-            for (int i = 25; i < nbSamples; i++)
-            {
+            //si on est en 8 bits, les bytes contiennent déjà les données
+            //il suffit de tout recopier dans un tableau de int
+            for (int i = 0; i < nbSamples; i++)
                 audioData[i] = audioBytes[i];
-            }
         }
         
         return audioData;
