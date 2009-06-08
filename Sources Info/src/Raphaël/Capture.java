@@ -31,7 +31,13 @@ class Capture implements Runnable
         capture.start();
         try { Thread.sleep(1000); } //enregistrement pendant 1 seconde
         catch (InterruptedException ie) {;} //ceci n'arrive jamais
-        capture.stop();
+        capture.stop();        
+        
+        int[] ad = capture.getAudioData();
+        for (int i = 0; i < ad.length; i++)
+        {
+            System.out.println(ad[i]);
+        }
     }
     
     TargetDataLine line;
@@ -44,6 +50,8 @@ class Capture implements Runnable
     float sampleRate; //44100 - 22050 - 16000 - 11025 - 8000
     int sampleSizeInBits; // 16 - 8
     int channels; //2 = stereo - 1 = mono
+    
+    int[] audioData; //resultat de la capture
 
     /**
      * Ce constructeur permet de spécifier 
@@ -102,6 +110,16 @@ class Capture implements Runnable
             thread = null;
             System.err.println(errStr);
         }
+    }
+    
+    /**
+     * retourne ce qui a été capturé entre les derniers appels de start et stop
+     * 
+     * @return données capturées
+     */
+    public int[] getAudioData()
+    {
+        return this.audioData;
     }
 
     /**
@@ -178,12 +196,7 @@ class Capture implements Runnable
         //on recharge tout le contenu de out dans un tableau de bytes
         //ce qui nous permet de récupérer tout ce qu'on a mis dedans pendant le scan
         //et on le traite pour extraire les données
-        int[] audioData = traitementBytes(out.toByteArray(), sampleSizeInBits);
-        
-        for (int i = 0; i < audioData.length; i++)
-        {
-            System.out.println(audioData[i]);
-        }
+        audioData = traitementBytes(out.toByteArray(), sampleSizeInBits);
     }
     
     /**
@@ -201,30 +214,30 @@ class Capture implements Runnable
     private int[] traitementBytes(byte[] audioBytes, int sampleSize)
     {
         //on suppose qu'on est en PCMsigned, BigEndian
-        int[] audioData = null;
+        int[] intData = null;
         int nbSamples;
         if (sampleSize == 16)
         {
             nbSamples = audioBytes.length / 2;
-            audioData = new int[nbSamples];
+            intData = new int[nbSamples];
             for (int i = 0; i < nbSamples; i++)
             {
                 int MSB = (int) audioBytes[2 * i];
                 int LSB = (int) audioBytes[2 * i + 1];
-                audioData[i] = MSB << 8 | (255 & LSB);
+                intData[i] = MSB << 8 | (255 & LSB);
             }
         }
         else if (sampleSize == 8)
         {
             nbSamples = audioBytes.length;
-            audioData = new int[nbSamples];
+            intData = new int[nbSamples];
 
             //si on est en 8 bits, les bytes contiennent déjà les données
             //il suffit de tout recopier dans un tableau de int
             for (int i = 0; i < nbSamples; i++)
-                audioData[i] = audioBytes[i];
+                intData[i] = audioBytes[i];
         }
         
-        return audioData;
+        return intData;
     }
 } // End class Capture
