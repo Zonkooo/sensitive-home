@@ -1,4 +1,7 @@
-//import java.util.Vector;
+/*
+ * source : http://java.sun.com/products/java-media/sound/samples/JavaSoundDemo/
+ */
+
 import java.io.*;
 import javax.sound.sampled.*;
 
@@ -27,7 +30,6 @@ class Capture implements Runnable
     TargetDataLine line;
     Thread thread;
     String errStr = null;
-    double duration = 0.0;
     
     //format de capture
     AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED; //ALAW - ULAW - PCM_SIGNED - PCM-UNSIGNED
@@ -80,15 +82,12 @@ class Capture implements Runnable
         if ((errStr = message) != null && thread != null)
         {
             thread = null;
-            //samplingGraph.stop();
             System.err.println(errStr);
-        //samplingGraph.repaint();
         }
     }
 
     public void run()
     {
-        duration = 0.0;
         AudioInputStream audioInputStream = null;
 
         // define the required attributes for our line, 
@@ -137,6 +136,7 @@ class Capture implements Runnable
             {
                 break;
             }
+            //on utilise out pour stocker temporairement les bytes lus (?)
             out.write(data, 0, numBytesRead);
         }
 
@@ -156,14 +156,11 @@ class Capture implements Runnable
             ex.printStackTrace();
         }
 
-        // load bytes into the audio input stream for playback
-
+        //on recharge tout le contenu de out dans un tableau de bytes
+        //ce qui nous permet de récupérer tout ce qu'on a mis dedans pendant le scan
         byte audioBytes[] = out.toByteArray();
         ByteArrayInputStream bais = new ByteArrayInputStream(audioBytes);
         audioInputStream = new AudioInputStream(bais, format, audioBytes.length / frameSizeInBytes);
-
-        long milliseconds = (long) ((audioInputStream.getFrameLength() * 1000) / format.getFrameRate());
-        duration = milliseconds / 1000.0;
 
         try
         {
@@ -175,15 +172,44 @@ class Capture implements Runnable
             return;
         }
 
-        int[] realData = new int[audioBytes.length/frameSizeInBytes];
-        for (int i = 0; i < audioBytes.length; i++)
+        int[] audioData = traitementBytes(audioBytes, sampleSizeInBits);
+        
+        for (int i = 0; i < audioData.length; i++)
         {
-            realData[i/frameSizeInBytes] += audioBytes[i] << ((frameSizeInBytes - 1 - i%frameSizeInBytes)*8);
-            
-            if(i%frameSizeInBytes == frameSizeInBytes - 1)
-                System.out.println(realData[i/frameSizeInBytes]);
+            System.out.println(audioData[i]);
         }
+    }
+    
+    private int[] traitementBytes(byte[] audioBytes, int sampleSize)
+    {
+        //on suppose qu'on est en PCMsigned, BigEndian
+        int[] audioData = null;
+        int nbSamples;
+        if (sampleSize == 16)
+        {
+            nbSamples = audioBytes.length / 2;
+            audioData = new int[nbSamples];
+            for (int i = 0; i < nbSamples; i++)
+            {
+                /* First byte is MSB (high order) */
+                int MSB = (int) audioBytes[2 * i];
+                /* Second byte is LSB (low order) */
+                int LSB = (int) audioBytes[2 * i + 1];
+                audioData[i] = MSB << 8 | (255 & LSB);
+            }
 
-    //samplingGraph.createWaveForm(audioBytes);
+        }
+        else if (sampleSize == 8)
+        {
+            nbSamples = audioBytes.length;
+            audioData = new int[nbSamples];
+
+            for (int i = 25; i < nbSamples; i++)
+            {
+                audioData[i] = audioBytes[i];
+            }
+        }
+        
+        return audioData;
     }
 } // End class Capture
