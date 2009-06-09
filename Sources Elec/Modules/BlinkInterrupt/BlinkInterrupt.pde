@@ -1,17 +1,5 @@
+#include "WProgram.h"
 #include <avr/sleep.h>
-int ledPin = 13; // LED connected to digital pin 13
-//int wakePin = 2; // pin used for waking up
-#define BEDTIME 10 // durée à attendre avant de dormir
-short int isAsleep=false;
-short int LedOn = HIGH;
-int count = 0; // compteur
-
-void bedTime() {
-	isAsleep = true;
-}
-
-//
-
 /* Sleep Demo Serial
  * -----------------
  * Example code to demonstrate the sleep functions in an Arduino.
@@ -27,6 +15,18 @@ void bedTime() {
  *       until the system is functional at 100%!! (typically <1sec)
  *
  */
+
+
+int ledPin = 13; // LED connected to digital pin 13
+//int wakePin = 2; // pin used for waking up
+#define SLEEPTIMER 10 // durée à attendre avant de dormir
+short int isAsleep=false;
+short int LedOn = HIGH;
+int count = 0; // compteur
+
+void prepareForSleep() {
+	isAsleep = true;
+}
 
 void wakeUpNow() {
 	// execute code here after wake-up before returning to the loop() function
@@ -66,7 +66,7 @@ void sleepNow() {
 void setup() {
 	Serial.begin(9600); // permet de communiquer en Serial via Arduino IDE
 	pinMode(ledPin, OUTPUT); // sets the digital pin as output
-	attachInterrupt(1, bedTime, LOW);
+	attachInterrupt(1, prepareForSleep, LOW);
 	digitalWrite(ledPin, HIGH); // sets the LED on
 }
 
@@ -76,7 +76,7 @@ void loop() {
 	//	else LedOn=HIGH;
 
 	if (isAsleep)
-		bedTime();
+		prepareForSleep();
 	// display information about the counter
 	Serial.print("Awake for ");
 	Serial.print(count);
@@ -92,7 +92,7 @@ void loop() {
 			delay(100); // this delay is needed, the sleep 
 			//function will provoke a Serial error otherwise!!
 			count = 0;
-			bedTime(); // sleep function called here
+			prepareForSleep(); // sleep function called here
 		}
 		if (val == 'A') {
 			Serial.println("Woke up!"); // classic dummy message
@@ -100,12 +100,12 @@ void loop() {
 	}
 
 	// check if it should go to sleep because of time
-	if (count >= BEDTIME) {
+	if (count >= SLEEPTIMER) {
 		Serial.println("Timer: Entering Sleep mode");
 		delay(100); // this delay is needed, the sleep 
 		//function will provoke a Serial error otherwise!!
 		count = 0;
-		bedTime(); // sleep function called here
+		prepareForSleep(); // sleep function called here
 	}
 
 }

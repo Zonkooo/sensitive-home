@@ -1,6 +1,6 @@
 #include "WProgram.h"
 void onInterrupt();
-void bedTime();
+void prepareForSleep();
 void setup();
 void loop();
 int ledPin = 13;                // LED connected to digital pin 13
@@ -10,7 +10,7 @@ void onInterrupt(){
   isAsleep=true;
 }
 
-void bedTime()
+void prepareForSleep()
 {
   delay(20);
   int k;
@@ -36,7 +36,7 @@ void loop()                     // run over and over again
   delay(1000);                  // waits for a second
   digitalWrite(ledPin, LOW);    // sets the LED off
   delay(1000); 
-  if(isAsleep) bedTime();
+  if(isAsleep) prepareForSleep();
 }
 
 int main(void)
