@@ -22,13 +22,17 @@ const int sensorPins[4] = { 0, 0, 0, 0 };
  */
 const short int connectedSensors[4] = { false, false, false, false };
 
+
+// variables which will be used throughout the code
+Xbee xb = Xbee();
+uint8_t payload[] = { 0, 0 };
 /*
  * During the setup, the sensor module sends its ID over the network
  * (as a broadcast since it doesn't know the XBee receiver i.e. the multi-outlet).
  * 
  */
 void setup() {
-
+	xb.begin(9600);
 }
 
 void loop() {
