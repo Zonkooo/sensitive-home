@@ -4,6 +4,7 @@ int ledPin = 13; // LED connected to digital pin 13
 #define BEDTIME 10 // durée à attendre avant de dormir
 short int isAsleep=false;
 short int LedOn = HIGH;
+int count = 0; // compteur
 
 void bedTime() {
 	isAsleep = true;
