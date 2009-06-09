@@ -9,4 +9,13 @@ public class Multiprise {
 		nom =n;
 		prise = p;
 	}
+	
+	public void addPrise(Prise[] p)
+	{
+		prise = p;
+	}
+	
+	public Prise[] getPrises(){
+		return prise;
+	}
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<salle id='1'>
+<maison>
+<salle name="cuisine">
 	<module_capteurs id='1' multiprise='1'>
 		<capteur id='1'/>
 	</module_capteurs>
@@ -14,3 +15,19 @@
 		<prise5 type="temperature"/>
 	</multiprise>
 </salle>
+<salle name="salon">
+	<module_capteurs id='1' multiprise='1'>
+		<capteur id='1'/>
+	</module_capteurs>
+	<module_capteurs id='2' multiprise='1'>
+		<capteur id='1'/>
+	</module_capteurs>
+	<multiprise id='1'>
+		<prise1 type="lumiere"/>
+		<prise2 type="lumiere"/>
+		<prise3 type="lumiere"/>
+		<prise4 type="temperature"/>
+		<prise5 type="temperature"/>
+	</multiprise>
+</salle>
+</maison>
