@@ -1,16 +1,16 @@
 #include "WProgram.h"
 void onInterrupt();
-void interrupted();
+void bedTime();
 void setup();
 void loop();
 int ledPin = 13;                // LED connected to digital pin 13
-short int isInterrupted=false;
+short int isAsleep=false;
 
 void onInterrupt(){
-  isInterrupted=true;
+  isAsleep=true;
 }
 
-void interrupted()
+void bedTime()
 {
   delay(20);
   int k;
@@ -20,7 +20,7 @@ void interrupted()
       digitalWrite(ledPin, LOW);    // sets the LED off
       delay(200);
   }
-  isInterrupted=false;
+  isAsleep=false;
 }
 
 void setup()                    // run once, when the sketch starts
@@ -36,7 +36,7 @@ void loop()                     // run over and over again
   delay(1000);                  // waits for a second
   digitalWrite(ledPin, LOW);    // sets the LED off
   delay(1000); 
-  if(isInterrupted) interrupted();
+  if(isAsleep) bedTime();
 }
 
 int main(void)
