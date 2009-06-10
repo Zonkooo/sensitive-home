@@ -84,6 +84,7 @@ void setup() {
 	attachInterrupt(1, wakeUpNow, LOW);
 	digitalWrite(ledPin, HIGH); // sets the LED on
 	pwmLed(ledAwake,0,255);
+	pinMode(luxPin, INPUT);
 }
 
 void loop() {
