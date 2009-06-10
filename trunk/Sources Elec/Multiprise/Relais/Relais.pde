@@ -1,7 +1,8 @@
-int pinCmd = 4;
+int pinCmd = 12;
 short int cmd = true;
 void setup() {
 	Serial.begin(9600); // permet de communiquer en Serial via Arduino IDE
+	pinMode(pinCmd, OUTPUT); // sets the digital pin as output
 }
 
 void loop() {
@@ -10,10 +11,10 @@ void loop() {
 		int val = Serial.read();
 		if (val == 'O') {
 			Serial.println("Serial: Commande ON");
-			digitalWrite(12, HIGH);
+			digitalWrite(pinCmd, HIGH);
 		} else if (val == 'F') {
 			Serial.println("Serial: Commande OFF");
-			digitalWrite(12, LOW);
+			digitalWrite(pinCmd, LOW);
 		}
 	}
 }
