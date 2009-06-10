@@ -1,4 +1,4 @@
-package Eric;
+package eric;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -11,7 +11,7 @@ import java.io.OutputStreamWriter;
 	
 
 public class TransformateurHtml {
-	private static String fichier_Html = "fichier_html.txt";
+	private static String fichier_Html = "fichier_html.html";
 	private static String fichier_sortie = "fichier_java.txt";
 	public static void main(String[] args) {
 		try {
