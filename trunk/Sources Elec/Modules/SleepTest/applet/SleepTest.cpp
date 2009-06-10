@@ -36,11 +36,11 @@ void pwmLed(int pin, int start, int stop) {
 	int val;
 	if (start < stop) {
 		for (val=start; val < stop; val+=5) {
-			analogWrite(pin, val); delay(100);
+			analogWrite(pin, val); delay(25);
 		}
 	} else {
 		for (val=start; val > stop; val-=5) {
-			analogWrite(pin, val); delay(100);
+			analogWrite(pin, val); delay(25);
 		}
 	}
 }
@@ -55,9 +55,6 @@ void wakeUpNow() {
 	// we don't really need to execute any special functions here, since we
 	// just want the thing to wake up
 	digitalWrite(ledPin, HIGH); // sets the LED on
-	if (Serial.available())
-		Serial.println("Woke up!");
-	pwmLed(ledAwake, 64, 255);
 
 }
 
@@ -67,12 +64,12 @@ void sleepNow() {
 	int k;
 	for (k=3; k!=0; k--) {
 		digitalWrite(ledPin, HIGH); // sets the LED on
-		delay(250);
+		delay(100);
 		digitalWrite(ledPin, LOW); // sets the LED off
-		delay(250);
+		delay(100);
 	}
 	digitalWrite(ledPin, LOW); // on \u00e9teint cette LED
-	pwmLed(ledAwake,255,64); // on baisse \u00e0 50% la LED d'allumage
+	pwmLed(ledAwake,255,32); // on baisse la LED d'allumage
 
 
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN); // le microp ne se r\u00e9veille pas par du s\u00e9rie
@@ -84,7 +81,8 @@ void sleepNow() {
 	sleep_disable(); // first thing after waking from sleep
 	isAsleep=false;
 	detachInterrupt(0); // disables interrupt 0 on pin 2 so the wakeUpNow code will not be executed during normal running time. 
-
+	Serial.println("Woke up!");
+	pwmLed(ledAwake, 32, 255); // on r\u00e9allume la LED d'allumage
 }
 
 void setup() {
@@ -100,7 +98,7 @@ void loop() {
 		sleepNow();
 	}
 	luxVal += analogRead(luxPin);
-	luxVal /= (count+1);
+	luxVal /= 2; // on fait une moyenne sur deux valeurs
 
 	// compute the serial input
 //	if (Serial.available()) {
@@ -116,7 +114,7 @@ void loop() {
 		if (count >= SLEEPTIMER) {
 			Serial.print("Lux = ");
 			Serial.println(luxVal); // on envoie la valeur sur le port s\u00e9rie
-			Serial.println("Timer: Entering Sleep mode");
+			Serial.println("Going to sleep...");
 			delay(100); // this delay is needed, the sleep function will provoke a Serial error otherwise!! 
 			count = 0;
 			prepareForSleep(); // sleep function called here
