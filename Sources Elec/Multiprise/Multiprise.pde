@@ -27,6 +27,10 @@
  * 		- entre chaque paquet du firmware vérifie les commandes du serveur (prioritaire sur la màj)  
  * 
  */
+#include "Defines.h"
+//#include "XbeeCnx.h"
+//#include "MpCtrl.h"
+//#include "XportCnx.h"
 void setup(){
 	
 }
