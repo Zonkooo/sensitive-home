@@ -19,4 +19,14 @@
     <servlet-name>Menu</servlet-name>
     <url-pattern>/Menu</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Ajax</display-name>
+    <servlet-name>Ajax</servlet-name>
+    <servlet-class>Ajax</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Ajax</servlet-name>
+    <url-pattern>/Ajax</url-pattern>
+  </servlet-mapping>
 </web-app>
