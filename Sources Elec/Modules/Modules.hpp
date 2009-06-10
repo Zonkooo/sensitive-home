@@ -1,5 +1,5 @@
-#ifndef MAIN_HPP_
-#define MAIN_HPP_
+#ifndef MODULES_HPP_
+#define MODULES_HPP_
 #define SLEEPTIMER 3
 
 // définition des pins
@@ -20,4 +20,4 @@ bool isAsleep = false;
 int count = 0;
 // payload qui sera envoyé au XBee
 uint8_t payload[];
-#endif /*MAIN_HPP_*/
+#endif /*MODULES_HPP_*/
