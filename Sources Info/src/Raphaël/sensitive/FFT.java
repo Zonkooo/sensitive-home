@@ -1,8 +1,5 @@
 package sensitive;
 
-
-import sensitive.Capture;
-
 /*  
  *  source : http://www.ling.upenn.edu/~tklee/Projects/dsp/
  */
@@ -15,7 +12,8 @@ public class FFT
         Capture capture = new Capture();
         int[] audio = capture.ecoute(1000);
                 
-        double[] audioDouble = FFT.zeroPadding(audio);
+
+            double[] audioDouble = FFT.zeroPadding(normalize(audio));
         
         audioDouble = FFT.fftMag(audioDouble);
         
@@ -24,14 +22,34 @@ public class FFT
     }
     
     /**
+     * normalise le vecteur suivant la norme 1
+     * et le convertit en double[]
+     * 
+     * @param vect vecteur à normaliser
+     * @return vecteur normalisé
+     */
+    public static double[] normalize(int[] vect)
+    {
+        double som = 0;
+        double[] norm = new double[vect.length];
+        
+        for (int i = 0; i < vect.length; i++)
+            som += vect[i];
+        
+        for (int i = 0; i < vect.length; i++)
+            norm[i] = vect[i]/som;
+        
+        return norm;
+    }
+    
+    /**
      * Complete le signal sig avec des zeros 
      * jusqu'à atteindre une longeur qui soit une puissance de 2
-     * et le transforme en double au passage
      * 
      * @param sig signal originel
      * @return signal de longueur une puissance entière de 2
      */
-    private static double[] zeroPadding(int[] sig)
+    public static double[] zeroPadding(double[] sig)
     {
         double[] padded = new double[1 << (lg(sig.length) + 1)];
         for(int i = 0; i < sig.length; i++)
@@ -41,10 +59,9 @@ public class FFT
     }
     
     //TODO : comprendre & commenter
-    private static int bitrev(int j, int nu)
+    private static int bitrev(int j1, int nu)
     {
         int j2;
-        int j1 = j;
         int k = 0;
         for (int i = 1; i <= nu; i++)
         {
