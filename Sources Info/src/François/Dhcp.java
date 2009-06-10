@@ -17,15 +17,33 @@ public class Dhcp {
 			if(result.equals("s")){
 				System.out.println(calendar.getTime()+" -> pas de requetes reçues par le DHCP");
 			} else {
-			     StringTokenizer st = new StringTokenizer("Roamed from BSSID 00:12:44:BB:01:70");
-			     while (st.hasMoreTokens()) {
-			         System.out.println(st.nextToken());
+				StringTokenizer st = new StringTokenizer(result);
+				while (st.hasMoreTokens()) {
+					
+					//On regarde si la mac qui tente une requete dhcp est un module xport
+					//si oui on l'ajoute au dhcpd.conf
+					String stCourante = st.nextToken();
+					//taille d'une adresse MAC
+					if(stCourante.length()==17){
+						System.out.println(stCourante);
+						if(stCourante.substring(0, 8).equals("00:20:4A")){
+							
+						}
+						//on regarde si la MAC existe déjà dans le dhcpd.conf
+						//si oui on ne fait rien, sinon on l'ajoute au fichier 
+						
+						if(stCourante.equals("")){
+							
+						}
+					}
+
+
 			     }
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	      
+
 	      System.out.println(result);
 		
 
