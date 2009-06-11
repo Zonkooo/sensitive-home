@@ -3,22 +3,27 @@ package sensitive;
 /*  
  *  source : http://www.ling.upenn.edu/~tklee/Projects/dsp/
  */
-
 public class FFT
 {
     // Test the FFT to make sure it's working
     public static void main(String[] args)
     {
         Capture capture = new Capture();
-        int[] audio = capture.ecoute(1000);
-                
+        int[] audio;
+        double[] audioDouble1, audioDouble2;
+		
+		while(true)
+		{
+			audio = capture.getTap();
+			System.out.println("1");
+			audioDouble1 = FFT.fftMag(FFT.zeroPadding(normalize(audio)));
 
-            double[] audioDouble = FFT.zeroPadding(normalize(audio));
-        
-        audioDouble = FFT.fftMag(audioDouble);
-        
-        for(int i = 0; i < audioDouble.length; i++)
-            System.out.println(audioDouble[i]);
+			audio = capture.getTap();
+			System.out.println("2");
+			audioDouble2 = FFT.fftMag(FFT.zeroPadding(normalize(audio)));
+
+			System.out.println(correlation(audioDouble1, audioDouble2));
+		}
     }
     
     /**
@@ -51,7 +56,7 @@ public class FFT
      */
     public static double[] zeroPadding(double[] sig)
     {
-        double[] padded = new double[1 << (lg(sig.length) + 1)];
+        double[] padded = new double[1 << ((Outils.lg(sig.length)) + 1)];
         for(int i = 0; i < sig.length; i++)
             padded[i] = sig[i];
         
@@ -77,7 +82,7 @@ public class FFT
     {
         // assume n is a power of 2
         int n = x.length;
-        int nu = lg(n);
+        int nu = Outils.lg(n);
         int n2 = n / 2;
         int nu1 = nu - 1;
         double[] xre = new double[n];
@@ -140,17 +145,13 @@ public class FFT
         return mag;
     }
     
-    /**
-     * partie entière du logarithme base 2 de n
-     * @param n
-     * @return abs(log_2(n))
-     */
-    public static int lg(int n)
+    public static double correlation(double[] fft1, double[] fft2)
     {
-        int r = 0;
-        while(n >> r != 0)
-            r++;
-        
-        return r - 1;
+		double correlation = 0;
+		
+		for (int i = 0; i < fft2.length; i++)
+			correlation += fft2[i]*fft1[i];
+
+        return correlation;
     }
 }
