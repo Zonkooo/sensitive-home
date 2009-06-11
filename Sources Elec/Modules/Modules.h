@@ -18,8 +18,6 @@ int supVal2 = 0;
 bool isAsleep = false;
 // variable int permettant de compter le nombre de boucles dans loop()
 int count = 0;
-// payload qui sera envoyé au XBee
-//uint8_t payload[];
 #include <avr/sleep.h>
 #include <inttypes.h>
 // prototypes

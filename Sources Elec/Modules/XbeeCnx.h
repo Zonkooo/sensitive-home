@@ -16,19 +16,20 @@ const int statusLed = 13; // led interne au microcontrolleur
 const int errorLed = 0; // led externe.
 
 // définition des variables de communication
-XBee xb = XBee();
+XBee xbee = XBee();
 XBeeAddress64 xbAddr = XBeeAddress64(0x0013a200, 0x4008ebef);
 uint8_t rxOption = 0;
-uint8_t rxData = 0;
+uint8_t rxData[] = {0,0};
 uint8_t txOption = 0;
-uint8_t txData = 0;
+uint8_t txData[] = {0,0};
 
 // variables de réponse 
-Rx16Response rx16 = Rx16Response();
-Rx64Response rx64 = Rx64Response();
+XBeeResponse response = XBeeResponse(); 
+ZBRxResponse rx = ZBRxResponse();
+ModemStatusResponse msr = ModemStatusResponse();
 // variables de transfert (i.e. envoie)
-Tx64Request tx = Tx64Request(addr64, txData, sizeof(txData));
-TxStatusResponse txStatus = TxStatusResponse();
+ZBTxRequest tx = ZBTxRequest(xbAddr, txData, sizeof(txData));
+ZBTxStatusResponse txStatus = ZBTxStatusResponse();
 /* readXB permet de lire des données du XBee
  * Les données reçues sont écrites dans la variable rxData et accessible via son accesseur getRxData();
  */
@@ -39,7 +40,8 @@ void readXB();
  */
 void sendXB();
 /* sendBroadcast permet d'envoyer un message en broadcast (à tous les membres du réseau)
- * L'addresse xbAddr n'est modifiée que localement. Le payload doit être écrit par avance.
+ * Le payload doit être écrit par avance. Après l'appel à cette fonction il n'est pas nécessaire de remettre la
+ * bonne adresse XBee destinataire.
  */
 void sendBroadcast();
 /* setXBAddr permet de changer l'adresse du destinataire XBee.
@@ -47,7 +49,7 @@ void sendBroadcast();
 void setXBAddr(uint32_t msb, uint32_t lsb);
 /* setTxData permet de changer le payload, c'est-à-dire le message à être envoyé via XBee.
  */
-void setTxData(uint8_t newdata);
+void setTxData(uint8_t newdata[2]);
 /* getRxdata permet de lire les données reçues via XBee.
  */
 uint8_t getRxdata();
