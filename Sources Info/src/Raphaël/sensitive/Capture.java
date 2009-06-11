@@ -5,11 +5,9 @@ package sensitive;
  */
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.*;
-
-import javax.swing.Timer;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 /** 
  * Reads data from the input channel and writes to the output stream
@@ -17,42 +15,12 @@ import java.awt.event.ActionEvent;
 class Capture
 {    
     private static final int seuil = 700;
-    /**
-     * méthode de lancement (tests)
-     * peut prendre en paramètres des instructions sur le format de capture
-     * 
-     * @param args frequence et taille des echantillons et nombre de cannaux, ou rien du tout
-     */
-    @SuppressWarnings("empty-statement") //pour le catch de l'exception
-    public static void main(String args[])
-    {
-        Capture capture = null;        
-        if(args.length == 3) //chargement des paramètres depuis la ligne de commande
-            capture = new Capture(Float.parseFloat(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]));
-        else //chargement des params par defaut
-        {
-            System.out.println("arguments ignorés");
-            capture = new Capture();
-        }
-        
-        int[] ad = capture.ecoute(1000); //capture pendant 1 seconde
-        for (int i = 0; i < ad.length; i++)
-        {
-            System.out.println(ad[i]);
-        }
-    }
-    
     
     private TargetDataLine line;
-    
-    //format de capture
-    private AudioFormat.Encoding encoding = AudioFormat.Encoding.PCM_SIGNED; //ALAW - ULAW - PCM_SIGNED - PCM-UNSIGNED
-    private boolean bigEndian = true;
-    private float sampleRate; //44100 - 22050 - 16000 - 11025 - 8000
-    private int sampleSizeInBits; // 16 - 8
-    private int channels; //2 = stereo - 1 = mono
-    
-    private int[] audioData; //resultat de la capture
+	
+	AudioFormat format;
+		
+	private int bufferLengthInBytes;
 
     /**
      * Ce constructeur permet de spécifier 
@@ -65,9 +33,8 @@ class Capture
      */
     public Capture(float sampleRate, int sampleSizeInBits, int channels)
     {
-        this.sampleRate = sampleRate;
-        this.sampleSizeInBits = sampleSizeInBits;
-        this.channels = channels;
+        this.format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate, sampleSizeInBits, channels, (sampleSizeInBits / 8) * channels, sampleRate, true);
+		init();
     }
 
     /**
@@ -76,172 +43,76 @@ class Capture
      */
     public Capture()
     {
-        this.sampleRate = 44100; //44100 - 22050 - 16000 - 11025 - 8000
-        this.sampleSizeInBits = 16; // 16 - 8
-        this.channels = 1; //2 = stereo - 1 = mono
+		this(44100, 16, 1);
     }
-    
-    private boolean elapsed = false; //utilisé par le timer
-    
-    /**
-     * écoute le micro pendant millisec millisecondes
-     * 
-     * @param millisec durée d'écoute
-     * @return données écoutées
-     */
-    public int[] ecoute(int millisec)
+
+    public void init()
     {
-        // define the required attributes for our line
-        AudioFormat format = new AudioFormat(encoding, sampleRate, sampleSizeInBits, channels, (sampleSizeInBits / 8) * channels, sampleRate, bigEndian);
-        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+		// define the required attributes for our line
+		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
 
-        //make sure a compatible line is supported.
-        if (!AudioSystem.isLineSupported(info))
-        {
-            System.out.println("Line matching " + info + " not supported.");
-            return null;
-        }
+		//make sure a compatible line is supported.
+		if (!AudioSystem.isLineSupported(info))
+		{
+			System.out.println("Line matching " + info + " not supported.");
+			return;
+		}
 
-        // get and open the target data line for capture.
-        try
-        {
-            line = (TargetDataLine) AudioSystem.getLine(info);
-            line.open(format, line.getBufferSize());
-        }
-        catch (LineUnavailableException ex)
-        {
-            System.out.println("Unable to open the line: " + ex);
-            return null;
-        }
-        catch (Exception ex)
-        {
-            System.out.println(ex.toString());
-            return null;
-        }
+		// get the target data line for capture.
+		try
+		{
+			line = (TargetDataLine) AudioSystem.getLine(info);
+		}
+		catch (LineUnavailableException ex)
+		{
+			System.out.println("Unable to open the line: " + ex);
+			return;
+		}
+		catch (Exception ex)
+		{
+			System.out.println(ex.toString());
+			return;
+			}
 
-        //enregistrement
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        int frameSizeInBytes = format.getFrameSize();
-        int bufferLengthInBytes = (line.getBufferSize() / 8)* frameSizeInBytes;
-        byte[] data = new byte[bufferLengthInBytes]; //tampon de lecture
-
-        Timer timer = new Timer(millisec, new ActionListener()
-        {
-            public void actionPerformed(ActionEvent ae)
-            {
-                elapsed = true;
-            }
-        });
-        timer.setRepeats(false);
-        
-        line.start(); //silence, ça tourne
-        timer.start();
-        
-        int numBytesRead;
-        while (!elapsed)
-        {
-            //lecture de l'entrée dans data, en écrasant les données précédentes
-            if ((numBytesRead = line.read(data, 0, bufferLengthInBytes)) == -1)
-            {
-                break;
-            }
-            //on utilise out pour stocker temporairement les bytes lus (?)
-            out.write(data, 0, numBytesRead);
-        }
-
-        // we reached the end of the stream.  stop and close the line.
-        line.stop();
-        line.close();
-        line = null;
-
-        // stop and close the output stream
-        try
-        {
-            out.flush();
-            out.close();
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
-
-        //on recharge tout le contenu de out dans un tableau de bytes
-        //ce qui nous permet de récupérer tout ce qu'on a mis dedans pendant le scan
-        //et on le traite pour extraire les données
-        audioData = traitementBytes(out.toByteArray(), sampleSizeInBits);
-        return audioData;
+		bufferLengthInBytes = (line.getBufferSize() / 8) * format.getFrameSize();
     }
-    
+
     public int[] getTap()
     {
-        // define the required attributes for our line
-        AudioFormat format = new AudioFormat(encoding, sampleRate, sampleSizeInBits, channels, (sampleSizeInBits / 8) * channels, sampleRate, bigEndian);
-        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+		int[] audioData = null;
+		byte[] data = new byte[bufferLengthInBytes]; //tampon de lecture
 
-        //make sure a compatible line is supported.
-        if (!AudioSystem.isLineSupported(info))
-        {
-            System.out.println("Line matching " + info + " not supported.");
-            return null;
-        }
+		try
+		{
+			line.open(format, line.getBufferSize());
+		}
+		catch (LineUnavailableException ex)
+		{
+			System.out.println(ex.toString());
+		}
 
-        // get and open the target data line for capture.
-        try
-        {
-            line = (TargetDataLine) AudioSystem.getLine(info);
-            line.open(format, line.getBufferSize());
-        }
-        catch (LineUnavailableException ex)
-        {
-            System.out.println("Unable to open the line: " + ex);
-            return null;
-        }
-        catch (Exception ex)
-        {
-            System.out.println(ex.toString());
-            return null;
-        }
+		line.start(); //silence, ça tourne
 
-        //enregistrement
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        int frameSizeInBytes = format.getFrameSize();
-        int bufferLengthInBytes = (line.getBufferSize() / 8)* frameSizeInBytes;
-        byte[] data = new byte[bufferLengthInBytes]; //tampon de lecture
-		audioData = null;
-		
-        line.start(); //silence, ça tourne        
-        while(line.read(data, 0, bufferLengthInBytes) != -1)
-        {
-            if(Outils.getMax(traitementBytes(data, sampleSizeInBits)) >= Capture.seuil)
-            {
-                audioData = traitementBytes(data, sampleSizeInBits);
-            }
-            else if(audioData != null)
-            {
-                Outils.concatene(audioData, traitementBytes(data, sampleSizeInBits));
-                break;
-            }
-        }
+		while (line.read(data, 0, bufferLengthInBytes) != -1)
+		{
+			if (Outils.getMax(traitementBytes(data, format.getSampleSizeInBits())) >= Capture.seuil)
+			{
+			audioData = traitementBytes(data, format.getSampleSizeInBits());
+			}
+			else if (audioData != null)
+			{
+			Outils.concatene(audioData, traitementBytes(data, format.getSampleSizeInBits()));
+			break;
+			}
+		}
 
-        // we reached the end of the stream.  stop and close the line.
-        line.stop();
-        line.close();
-        line = null;
+		// we reached the end of the stream.  stop and close the line.
+		line.stop();
+		line.close();
 
-        // stop and close the output stream
-        try
-        {
-            out.flush();
-            out.close();
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
-
-        return audioData;
+		return audioData;
     }
-    
+
     /**
      * Convertit le flux de bytes reçu en un tableau d'int
      * contenant les bonnes valeurs des samples
