@@ -22,9 +22,7 @@ public class Dhcp {
 		GregorianCalendar calendar = new GregorianCalendar();
 		String resultLog = "pas de retour";
 		try {
-			System.out.println(sh.command("/etc/init.d/dhcp3-server start").consumeAsString());
-			System.out.println(sh.command("whoami").consumeAsString());
-			resultLog = sh.command("tail /var/log/syslog").consumeAsString();
+			resultLog = sh.command("tail /var/log/syslog | grep DHCPREQUEST").consumeAsString();
 			if(resultLog.equals("")){
 				System.out.println(calendar.getTime()+" -> pas de requetes reçues par le DHCP");
 			} else {
@@ -72,13 +70,19 @@ public class Dhcp {
 									PrintWriter fichierSortie = new PrintWriter (bw);
 									fichierSortie.println("host XPORT"+numeroXPORTaAjouter+"  {\n	hardware ethernet "+stCouranteLog+" ; fixed-address 192.168.0.1"+numeroXPORTaAjouter+";\n}");
 									fichierSortie.close();
-									System.out.println(sh.command("/etc/init.d/dhcp3-server").consumeAsString());
+									//On relance le serveur dhcp pour attribuer l'adresse ip au nouveau module xport
+									if(sh.command("sudo /etc/init.d/dhcp3-server force-reload").consumeAsString().equals(" * Starting DHCP server dhcpd3\n * check syslog for diagnostics.\n   ...fail!")){
+										System.out.println("Serveur DHCP n'a pas réussi à se relancer");
+									} else {
+										System.out.println("Serveur DHCP relancé");
+									}
 								}
-								//On relance le serveur dhcp pour attribuer l'adresse ip au nouveau module xport
 								catch (Exception e){
 									System.out.println(e.toString());
 								}
 							}
+						} else {
+							System.out.println("Une requete a été reçue mais ne vient pas d'un module XPORT");
 						}
 					}
 				}
