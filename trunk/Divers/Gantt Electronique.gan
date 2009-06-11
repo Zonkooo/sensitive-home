@@ -37,7 +37,7 @@
         <task id="1" name="IDE" color="#0000ff" meeting="false" start="2009-06-08" duration="1" complete="100" priority="1" expand="true"/>
         <task id="2" name="PCB Test" color="#0000ff" meeting="false" start="2009-06-08" duration="1" complete="0" priority="1" expand="true"/>
         <task id="4" name="Normes CE" color="#ff0000" meeting="false" start="2009-06-08" duration="1" complete="0" priority="1" expand="true"/>
-        <task id="6" name="Test Composants" color="#ff0000" meeting="false" start="2009-06-09" duration="1" complete="0" priority="1" expand="true"/>
+        <task id="6" name="Test Composants" color="#ff0000" meeting="false" start="2009-06-09" duration="1" complete="50" priority="1" expand="true"/>
         <task id="10" name="Xbee" color="#0000ff" meeting="false" start="2009-06-09" duration="1" complete="25" priority="1" expand="true">
             <depend id="5" type="2" difference="0" hardness="Strong"/>
         </task>
@@ -45,11 +45,11 @@
         <task id="7" name="Schematics 2 (avancé)" color="#ff0000" meeting="false" start="2009-06-08" duration="2" complete="0" priority="1" expand="true">
             <depend id="15" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="8" name="Programmation Skt500" color="#0000ff" meeting="false" start="2009-06-11" duration="1" complete="0" priority="1" expand="true"/>
+        <task id="8" name="Programmation Skt500" color="#0000ff" meeting="false" start="2009-06-11" duration="1" complete="30" priority="1" expand="true"/>
         <task id="9" name="Info-Elec" color="#ffffff" meeting="false" start="2009-06-12" duration="1" complete="0" priority="1" expand="true"/>
         <task id="15" name="Schematics 3 (Final)" color="#ff0000" meeting="false" start="2009-06-10" duration="3" complete="0" priority="1" expand="true"/>
         <task id="11" name="Milestone" color="#ffff00" meeting="true" start="2009-06-12" duration="1" complete="0" priority="1" expand="true"/>
-        <task id="12" name="Programmation µC" color="#00cfff" meeting="false" start="2009-06-15" duration="5" complete="0" priority="1" expand="true"/>
+        <task id="12" name="Programmation µC" color="#00cfff" meeting="false" start="2009-06-15" duration="5" complete="10" priority="1" expand="true"/>
         <task id="13" name="CPLD" color="#6a00ff" meeting="false" start="2009-06-15" duration="5" complete="0" priority="1" expand="true"/>
         <task id="14" name="Test Alim" color="#ff0000" meeting="false" start="2009-06-15" duration="5" complete="0" priority="1" expand="true"/>
         <task id="16" name="Milestone 2" color="#ffff00" meeting="true" start="2009-06-19" duration="1" complete="0" priority="1" expand="true"/>
@@ -64,47 +64,47 @@
         <resource id="3" name="Jérémy Paupardin" function="Default:0" contacts="" phone=""/>
     </resources>
     <allocations>
+        <allocation task-id="0" resource-id="0" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="0" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="0" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="0" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
-        <allocation task-id="0" resource-id="0" function="Default:0" responsible="false" load="100.0"/>
-        <allocation task-id="1" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="1" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
-        <allocation task-id="2" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="1" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="2" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="2" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="4" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="4" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="6" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="6" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
-        <allocation task-id="10" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="10" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
-        <allocation task-id="5" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="10" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="5" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="5" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="7" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="7" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
-        <allocation task-id="8" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="8" resource-id="0" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="8" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="9" resource-id="0" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="9" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="9" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="9" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
-        <allocation task-id="9" resource-id="0" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="15" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="15" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="12" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="14" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="14" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="18" resource-id="0" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="18" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="18" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="18" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
-        <allocation task-id="18" resource-id="0" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="19" resource-id="0" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="19" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="19" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="19" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
-        <allocation task-id="19" resource-id="0" function="Default:0" responsible="false" load="100.0"/>
+        <allocation task-id="20" resource-id="0" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="20" resource-id="2" function="Default:0" responsible="true" load="100.0"/>
         <allocation task-id="20" resource-id="1" function="Default:0" responsible="false" load="100.0"/>
         <allocation task-id="20" resource-id="3" function="Default:0" responsible="false" load="100.0"/>
-        <allocation task-id="20" resource-id="0" function="Default:0" responsible="false" load="100.0"/>
     </allocations>
     <vacations/>
     <taskdisplaycolumns>
