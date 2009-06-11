@@ -25,6 +25,9 @@
  * 
  */
 #include "Modules.h"
+#include "GenericFcts.h"
+#include "Hibernate.h"
+#include "XbeeCnx.h"
 
 void setup() {
 	Serial.begin(9600); // permet de communiquer en série via Arduino (à virer pour le produit final)
@@ -70,64 +73,4 @@ void loop() {
 	}
 	count++;
 	if(!isAsleep) delay(333); // on fait trois mesures
-}
-
-void pwm(int pin, int start, int stop) {
-	int val;
-	if (start < stop) {
-		for (val=start; val < stop; val+=5) {
-			analogWrite(pin, val);
-			delay(25);
-		}
-	} else {
-		for (val=start; val > stop; val-=5) {
-			analogWrite(pin, val);
-			delay(25);
-		}
-	}
-}
-/**
- * prepareSleepMode place une variable à true.
- * A la prochaine boucle de loop() le système va s'endormir.
- * On utilise une variable pour éviter un double appel à la fonction de sommeil ce qui aurait des
- * conséquences inconnues... 
- */
-void prepareSleepMode() {
-	isAsleep = true;
-}
-/**
- * justWokeUp est appelé dès le réveil du système.
- * Il est interdit d'utiliser des timers ou des connexions séries dans cette fonction.
- * Après l'appel à cette fonction, le code retourne dans loop() juste après l'appel à la fonction de sommeil.
- */
-void wakeUp() {
-	digitalWrite(ledInternal, HIGH); // sets the LED on
-}
-/**
- * sommeil permet de mettre le système en veille.
- * Pour avoir un avertissement, on fait rapidement clignoter la led interne (pin 13) pendant 2 secondes.
- * Enfin, on éteint cette led quand le système est en veille. On la rallume quand le système se réveille.
- */
-void sleepMode() {
-	delay(20);
-	int k;
-	for (k=3; k!=0; k--) {
-		digitalWrite(ledInternal, HIGH);
-		delay(100);
-		digitalWrite(ledInternal, LOW);
-		delay(100);
-	}
-	digitalWrite(ledInternal, LOW); // on éteint cette LED
-
-	// le mode de veille utilisé ne consomme de 100nA. Il ne peut être réveillé que par interruption.
-	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-	sleep_enable(); // non nécessaire: système de "sécurité" du microcontrolleur
-	// lorsque le pin 3 (d'où le 1) passe à la masse (LOW), la fonction wakeUp est appelée
-	attachInterrupt(1, wakeUp, LOW);
-	sleep_mode(); // met réellement le système en veille
-	// le programme continu à partir d'ici après le réveil	
-	sleep_disable();
-	isAsleep=false;
-	detachInterrupt(0); // disables interrupt 0 on pin 2 so the wakeUpNow code will not be executed during normal running time. 
-	Serial.println("Woke up!");
 }
