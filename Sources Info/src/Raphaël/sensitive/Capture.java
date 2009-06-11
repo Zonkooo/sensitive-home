@@ -15,7 +15,8 @@ import java.awt.event.ActionEvent;
  * Reads data from the input channel and writes to the output stream
  */
 class Capture
-{
+{    
+    private static final int seuil = 700;
     /**
      * méthode de lancement (tests)
      * peut prendre en paramètres des instructions sur le format de capture
@@ -168,6 +169,76 @@ class Capture
         //ce qui nous permet de récupérer tout ce qu'on a mis dedans pendant le scan
         //et on le traite pour extraire les données
         audioData = traitementBytes(out.toByteArray(), sampleSizeInBits);
+        return audioData;
+    }
+    
+    public int[] getTap()
+    {
+        // define the required attributes for our line
+        AudioFormat format = new AudioFormat(encoding, sampleRate, sampleSizeInBits, channels, (sampleSizeInBits / 8) * channels, sampleRate, bigEndian);
+        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+
+        //make sure a compatible line is supported.
+        if (!AudioSystem.isLineSupported(info))
+        {
+            System.out.println("Line matching " + info + " not supported.");
+            return null;
+        }
+
+        // get and open the target data line for capture.
+        try
+        {
+            line = (TargetDataLine) AudioSystem.getLine(info);
+            line.open(format, line.getBufferSize());
+        }
+        catch (LineUnavailableException ex)
+        {
+            System.out.println("Unable to open the line: " + ex);
+            return null;
+        }
+        catch (Exception ex)
+        {
+            System.out.println(ex.toString());
+            return null;
+        }
+
+        //enregistrement
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        int frameSizeInBytes = format.getFrameSize();
+        int bufferLengthInBytes = (line.getBufferSize() / 8)* frameSizeInBytes;
+        byte[] data = new byte[bufferLengthInBytes]; //tampon de lecture
+		audioData = null;
+		
+        line.start(); //silence, ça tourne        
+        while(line.read(data, 0, bufferLengthInBytes) != -1)
+        {
+            if(Outils.getMax(traitementBytes(data, sampleSizeInBits)) >= Capture.seuil)
+            {
+                audioData = traitementBytes(data, sampleSizeInBits);
+            }
+            else if(audioData != null)
+            {
+                Outils.concatene(audioData, traitementBytes(data, sampleSizeInBits));
+                break;
+            }
+        }
+
+        // we reached the end of the stream.  stop and close the line.
+        line.stop();
+        line.close();
+        line = null;
+
+        // stop and close the output stream
+        try
+        {
+            out.flush();
+            out.close();
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
+
         return audioData;
     }
     
