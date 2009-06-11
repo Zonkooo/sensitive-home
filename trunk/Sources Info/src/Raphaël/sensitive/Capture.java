@@ -5,8 +5,6 @@ package sensitive;
  */
 
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.*;
 
 /** 
@@ -14,7 +12,7 @@ import javax.sound.sampled.*;
  */
 class Capture
 {    
-    private static final int seuil = 700;
+    private static final int seuil = 700; //amplitude de declenchement du tap
     
     private TargetDataLine line;
 	
