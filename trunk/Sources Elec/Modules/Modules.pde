@@ -24,8 +24,7 @@
  * 		... TODO fin de conception MàJ 
  * 
  */
-#include "Modules.hpp"
-#include "Sensors.hpp"
+#include "Modules.h"
 
 void setup() {
 	Serial.begin(9600); // permet de communiquer en série via Arduino (à virer pour le produit final)
@@ -67,7 +66,7 @@ void loop() {
 		Serial.println("Going to sleep...");
 		delay(100); // this delay is needed, the sleep function will provoke a Serial error otherwise!! 
 		count = 0;
-		prepareForSleep(); // sleep function called here
+		prepareSleepMode(); // sleep function called here
 	}
 	count++;
 	if(!isAsleep) delay(333); // on fait trois mesures
