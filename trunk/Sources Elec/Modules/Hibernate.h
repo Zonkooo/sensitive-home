@@ -19,6 +19,6 @@ void wakeUp();
  * Pour avoir un avertissement, on fait rapidement clignoter la led interne (pin 13) pendant 2 secondes.
  * Enfin, on éteint cette led quand le système est en veille. On la rallume quand le système se réveille.
  */
-void sleepMode()
+void sleepMode();
 
 #endif /*HIBERNATE_H_*/

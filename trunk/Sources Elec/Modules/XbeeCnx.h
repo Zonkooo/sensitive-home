@@ -52,7 +52,7 @@ void setXBAddr(uint32_t msb, uint32_t lsb);
 void setTxData(uint8_t newdata[2]);
 /* getRxdata permet de lire les données reçues via XBee.
  */
-uint8_t getRxdata();
+uint8_t* getRxdata();
 /* initMPXBCnx est la fonction permettant de connecter le module de capteurs à la multiprise.
  */
 void initMPXBCnx();
