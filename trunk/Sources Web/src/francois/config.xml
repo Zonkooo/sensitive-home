@@ -1,33 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <maison>
-<salle name="cuisine">
-	<module_capteurs id='1' multiprise='1'>
-		<capteur id='1'/>
+
+<salle name="salon">
+	<module_capteurs id="101" multiprise="1">
+		<capteur id="101" type="lumiere" />
+		<capteur id="102" type="temperature" />
+		<capteur id="103" type="vide" />
+		<capteur id="104" type="vide" />
 	</module_capteurs>
-	<module_capteurs id='2' multiprise='1'>
-		<capteur id='1'/>
+	<module_capteurs id="201" multiprise="1">
+		<capteur id="201" type="lumiere" />
+		<capteur id="202" type="temperature" />
+		<capteur id="203" type="vide" />
+		<capteur id="204" type="vide" />
 	</module_capteurs>
-	<multiprise id='1'>
-		<prise1 type="lumiere"/>
-		<prise2 type="lumiere"/>
-		<prise3 type="lumiere"/>
-		<prise4 type="temperature"/>
-		<prise5 type="temperature"/>
+	<multiprise id="1">
+		<prise type="lumiere" />
+		<prise type="lumiere" />
+		<prise type="lumiere" />
+		<prise type="temperature" />
+		<prise type="temperature" />
 	</multiprise>
 </salle>
-<salle name="salon">
-	<module_capteurs id='1' multiprise='1'>
-		<capteur id='1'/>
+<salle name="cuisine">
+	<module_capteurs id="101" multiprise="1">
+		<capteur id="101" type="lumiere" />
+		<capteur id="102" type="temperature" />
+		<capteur id="103" type="vide" />
+		<capteur id="104" type="vide" />
 	</module_capteurs>
-	<module_capteurs id='2' multiprise='1'>
-		<capteur id='1'/>
+	<module_capteurs id="201" multiprise="1">
+		<capteur id="201" type="lumiere" />
+		<capteur id="202" type="temperature" />
+		<capteur id="203" type="vide" />
+		<capteur id="204" type="vide" />
 	</module_capteurs>
-	<multiprise id='1'>
-		<prise1 type="lumiere"/>
-		<prise2 type="lumiere"/>
-		<prise3 type="lumiere"/>
-		<prise4 type="temperature"/>
-		<prise5 type="temperature"/>
+	<multiprise id='2'>
+		<prise type="lumiere"/>
+		<prise type="lumiere"/>
+		<prise type="lumiere"/>
+		<prise type="temperature"/>
+		<prise type="temperature"/>
 	</multiprise>
 </salle>
 </maison>

@@ -37,7 +37,7 @@
           <div id="centre">
               <div id="main" class="style1">   
 <%-- Impression de variables --%>
-					<p>Au moment de l'execution de ce script, nous sommes le <%=date + Menu.response()%>.</p>
+					<p>Au moment de l'execution de ce script, nous sommes le <%=date%>.</p>
 					<p>Cette page a &eacute;t&eacute; affich&eacute;e <%=nombreVisites%> fois!</p>
               </div>
 
