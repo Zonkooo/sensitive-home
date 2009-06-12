@@ -1,7 +1,6 @@
 #include <XBee.h>
-
-#ifndef MODULES_HPP_
-#define MODULES_HPP_
+#include <avr/sleep.h>
+#include <inttypes.h>
 #define SLEEPTIMER 3
 
 // définition des pins
@@ -20,40 +19,13 @@ int supVal2 = 0;
 bool isAsleep = false;
 // variable int permettant de compter le nombre de boucles dans loop()
 int count = 0;
-#include <avr/sleep.h>
-#include <inttypes.h>
+
 // prototypes
 void pwm();
 void prepareSleepMode();
 void wakeUp();
 void sleepMode();
-/*void setup();
-void loop();
-void init();
 
-int main(void) {
-	init();
-	setup();
-	for (;;)
-		loop();
-	return 0;
-}
-*/
-#endif /*MODULES_HPP_*/
-
-/* Christopher Rabotin
- * Sensitive Home (http://sensitive-home.googlecode.com)
- * Created on Jun 11, 2009
- * 
- * Ce fichier est le header du fichier XbeeCnx.cpp.
- * Ce dernier contient les fonctions permettant d'exploiter la librairie Xbee
- * pour la communication Module de Capteurs <-> Mutliprise  
- */
-
-/* variables des LED de communication
- * La LED de statut est interne: elle n'a pas besoin d'être visible
- * La LED d'erreur est externe (et rouge): en cas d'erreur elle clignote pendant 5 secondes 
- */
 const int statusLed = 13; // led interne au microcontrolleur
 const int errorLed = 0; // led externe.
 
@@ -72,35 +44,52 @@ ModemStatusResponse msr = ModemStatusResponse();
 // variables de transfert (i.e. envoie)
 ZBTxRequest tx = ZBTxRequest(xbAddr, txData, sizeof(txData));
 ZBTxStatusResponse txStatus = ZBTxStatusResponse();
-/* readXB permet de lire des données du XBee
- * Les données reçues sont écrites dans la variable rxData et accessible via son accesseur getRxData();
- */
-void readXB();
-/* sendXB permet d'envoyer le payload à l'adresse XBee spécifiée. Cette addresse doit être modifiée via setXBAddr()
- * Il n'est pas nécessaire d'appeler cette fonction après l'appel à sendBroadcast(). 
- * Attention à bien écrire le payload à l'avance via la fonction setTxData().
- */
-void sendXB();
-/* sendBroadcast permet d'envoyer un message en broadcast (à tous les membres du réseau)
- * Le payload doit être écrit par avance. Après l'appel à cette fonction il n'est pas nécessaire de remettre la
- * bonne adresse XBee destinataire.
- */
-void sendBroadcast();
-/* setXBAddr permet de changer l'adresse du destinataire XBee.
- */
-void setXBAddr(uint32_t msb, uint32_t lsb);
-/* setTxData permet de changer le payload, c'est-à-dire le message à être envoyé via XBee.
- */
-void setTxData(uint8_t newdata[2]);
-/* getRxdata permet de lire les données reçues via XBee.
- */
-uint8_t* getRxdata();
-/* initMPXBCnx est la fonction permettant de connecter le module de capteurs à la multiprise.
- */
-void initMPXBCnx();
-extern "C" void __cxa_pure_virtual()
-{
-  while (1);
+
+void setup() {
+	xbee.begin(9600);
+	Serial.begin(9600); // permet de communiquer en série via Arduino (à virer pour le produit final)
+	attachInterrupt(1, wakeUp, LOW); // voir commentaire dans sleepMode
+	// on précise que les pin sont des pins de lecture:
+	pinMode(luxPin, INPUT);
+	pinMode(tempPin, INPUT);
+	pinMode(supPin1, INPUT);
+	pinMode(supPin2, INPUT);
+	// on allume la led interne
+	digitalWrite(ledInternal, HIGH);
+}
+
+void loop() {
+	if (isAsleep)
+		sleepMode();
+	// reinitialisation des valeurs de capteurs
+	luxVal = 0;
+	tempVal = 0;
+	supVal1 = 0;
+	supVal2 = 0;
+	// lecture capteurs
+	luxVal += analogRead(luxPin);
+	luxVal /= 2;
+	tempVal += analogRead(tempPin);
+	tempVal /= 2;
+	supVal1 += analogRead(supPin1);
+	supVal1 /= 2;
+	supVal2 += analogRead(supPin2);
+	supVal2 /= 2;
+
+	if (count >= SLEEPTIMER) {
+		// pour le moment, on affiche les données en série.
+		// Plus tard, on enverra sur le Xbee via la variable payLoad (uint8_t[]) 
+		Serial.print("luxVal = "); Serial.println(luxVal);
+		Serial.print("tempVal = "); Serial.println(tempVal);
+		Serial.print("supVal1 = "); Serial.println(supVal1);
+		Serial.print("supVal2 = "); Serial.println(supVal2);
+		Serial.println("Going to sleep...");
+		delay(100); // this delay is needed, the sleep function will provoke a Serial error otherwise!! 
+		count = 0;
+		prepareSleepMode(); // sleep function called here
+	}
+	count++;
+	if(!isAsleep) delay(333); // on fait trois mesures
 }
 
 void readXBee() {
@@ -177,32 +166,6 @@ void initMPXBCnx() {
 
 }
 
-#ifndef HIBERNATE_H_
-#define HIBERNATE_H_
-
-/**
- * prepareSleepMode place une variable à true.
- * A la prochaine boucle de loop() le système va s'endormir.
- * On utilise une variable pour éviter un double appel à la fonction de sommeil ce qui aurait des
- * conséquences inconnues... 
- */
-void prepareSleepMode();
-/**
- * justWokeUp est appelé dès le réveil du système.
- * Il est interdit d'utiliser des timers ou des connexions séries dans cette fonction.
- * Après l'appel à cette fonction, le code retourne dans loop() juste après l'appel à la fonction de sommeil.
- */
-void wakeUp();
-/**
- * sommeil permet de mettre le système en veille.
- * Pour avoir un avertissement, on fait rapidement clignoter la led interne (pin 13) pendant 2 secondes.
- * Enfin, on éteint cette led quand le système est en veille. On la rallume quand le système se réveille.
- */
-void sleepMode();
-
-#endif /*HIBERNATE_H_*/
-
-
 void prepareSleepMode() {
 	isAsleep = true;
 }
@@ -227,13 +190,6 @@ void sleepMode() {
 	detachInterrupt(0); // disables interrupt 0 on pin 2 so the wakeUpNow code will not be executed during normal running time. 
 	Serial.println("Woke up!");
 }
-/* Christopher Rabotin
- * Sensitive Home (http://sensitive-home.googlecode.com)
- * Created on Jun 11, 2009
- * 
- * La documentation des fonctions est dans GenericFcts.h
- */
-
 
 void pwm(int pin, int start, int stop) {
 	int val;
