@@ -1,55 +1,109 @@
 package sensitive;
 
+import java.util.ArrayList;
+
 /*  
  *  source : http://www.ling.upenn.edu/~tklee/Projects/dsp/
  */
+import java.util.Scanner;
 public class FFT
 {
     public static void main(String[] args)
     {
-        Capture capture = new Capture();
-        int[] audio;
-        double[] audioDouble1, audioDouble2;
+		Capture capture = new Capture();
+		int[] audio;
+		double[] audioDouble1, audioDouble2;
 		
-		//bouton 1
-		System.out.println("tapez le bouton 1");
-		audio = capture.getTap();
-		audioDouble1 = fftMag(zeroPadding(Outils.normalize(audio)));
-		System.out.println("encore !");
-		audio = capture.getTap();
-		audioDouble2 = fftMag(zeroPadding(Outils.normalize(audio)));
+		ArrayList<Bouton> btns = new ArrayList<Bouton>();
+		int k = 1;
 		
-		for(int i = 0; i < audioDouble1.length; i++)
-			audioDouble1[i] = audioDouble1[i] + audioDouble2[i];
-		Bouton b1 = new Bouton(audioDouble1);
+		Scanner sc = new Scanner(System.in);
+		System.out.println("nb de boutons à saisir ?\n");
+		int x = sc.nextInt();
 		
-		//bouton 2
-		System.out.println("tapez le bouton 2");
-		audio = capture.getTap();
-		audioDouble1 = fftMag(zeroPadding(Outils.normalize(audio)));
-		System.out.println("encore !");
-		audio = capture.getTap();
-		audioDouble2 = fftMag(zeroPadding(Outils.normalize(audio)));
-		
-		for(int i = 0; i < audioDouble1.length; i++)
-			audioDouble1[i] = audioDouble1[i] + audioDouble2[i];
-		Bouton b2 = new Bouton(audioDouble1);
+		while(k <= x)
+		{
+			System.out.println("tapez le bouton " + k++);
+			audio = capture.getTap();
+			audioDouble1 = fftMag(zeroPadding(Outils.normalize(audio)));
+			do
+			{
+				System.out.println("encore !");
+				audio = capture.getTap();
+				audioDouble2 = fftMag(zeroPadding(Outils.normalize(audio)));
+			} while(audioDouble1.length != audioDouble2.length);
+
+			for(int i = 0; i < audioDouble1.length; i++)
+				audioDouble1[i] = audioDouble1[i] + audioDouble2[i];
+			btns.add(new Bouton(audioDouble1));
+		}
 		
 		System.out.println();
 		
 		while(true)
 		{
 			audio = capture.getTap();
-			audioDouble1 = fftMag(zeroPadding(Outils.subMoy(Outils.normalize(audio))));
+			audioDouble1 = fftMag(zeroPadding(Outils.normalize(audio)));
 			
-			double c1 = b1.correlation(audioDouble1);
-			double c2 = b2.correlation(audioDouble1);
+			double cor, max = -1;
+			int indice = -1;
+			
+			for(int i = 0; i < btns.size(); i++)
+			{
+				cor = btns.get(i).correlation(audioDouble1);
+				if(cor > max)
+				{
+					max = cor;
+					indice = i;
+				}
+			}
 
-			if(c2 > c1)
-				System.out.println("bouton2");
-			else
-				System.out.println("bouton1");
+			System.out.println("bouton " + (indice + 1));
 		}
+			
+//		Capture capture = new Capture();
+//		int[] audio;
+//		double[] audioDouble1, audioDouble2;
+//		
+//		//bouton 1
+//		System.out.println("tapez le bouton 1");
+//		audio = capture.getTap();
+//		audioDouble1 = fftMag(zeroPadding(Outils.normalize(audio)));
+//		System.out.println("encore !");
+//		audio = capture.getTap();
+//		audioDouble2 = fftMag(zeroPadding(Outils.normalize(audio)));
+//		
+//		for(int i = 0; i < audioDouble1.length; i++)
+//			audioDouble1[i] = audioDouble1[i] + audioDouble2[i];
+//		Bouton b1 = new Bouton(audioDouble1);
+//		
+//		//bouton 2
+//		System.out.println("tapez le bouton 2");
+//		audio = capture.getTap();
+//		audioDouble1 = fftMag(zeroPadding(Outils.normalize(audio)));
+//		System.out.println("encore !");
+//		audio = capture.getTap();
+//		audioDouble2 = fftMag(zeroPadding(Outils.normalize(audio)));
+//		
+//		for(int i = 0; i < audioDouble1.length; i++)
+//			audioDouble1[i] = audioDouble1[i] + audioDouble2[i];
+//		Bouton b2 = new Bouton(audioDouble1);
+//		
+//		System.out.println();
+//		
+//		while(true)
+//		{
+//			audio = capture.getTap();
+//			audioDouble1 = fftMag(zeroPadding(Outils.subMoy(Outils.normalize(audio))));
+//			
+//			double c1 = b1.correlation(audioDouble1);
+//			double c2 = b2.correlation(audioDouble1);
+//
+//			if(c2 > c1)
+//				System.out.println("bouton2");
+//			else
+//				System.out.println("bouton1");
+//		}
     }
     
     /**
