@@ -7,43 +7,48 @@
  */
 public class ProfilGlobal 
 {
-	private String nom;
-	private int temperatureMin;
-	private int luminositeGlobale;
+	//TODO : attribuer un ID ?
+	protected String nom;
+	protected int temperature;
+	protected int luminosite;
 
 	public ProfilGlobal(String nom, int temperatureMin, int luminositeGlobale)
 	{
 		this.nom = nom;
-		this.temperatureMin = temperatureMin;
-		this.luminositeGlobale = luminositeGlobale;
+		this.temperature = temperatureMin;
+		this.luminosite = luminositeGlobale;
+	}
+
+	public ProfilGlobal()
+	{
 	}
 
 	//GETTERS
-	public int getLuminositeGlobale()
+	public int getLuminosite()
 	{
-		return luminositeGlobale;
+		return luminosite;
 	}
 	public String getNom()
 	{
 		return nom;
 	}
-	public int getTemperatureMin()
+	public int getTemperature()
 	{
-		return temperatureMin;
+		return temperature;
 	}
 	
 	//SETTERS
-	public void setLuminositeGlobale(int luminositeGlobale)
+	public void setLuminosite(int luminosite)
 	{
-		this.luminositeGlobale = luminositeGlobale;
+		this.luminosite = luminosite;
 	}
 	public void setNom(String nom)
 	{
 		this.nom = nom;
 	}
-	public void setTemperatureMin(int temperatureMin)
+	public void setTemperature(int temperature)
 	{
-		this.temperatureMin = temperatureMin;
+		this.temperature = temperature;
 	}
 	
 	
