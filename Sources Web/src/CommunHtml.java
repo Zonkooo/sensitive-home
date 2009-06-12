@@ -13,10 +13,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import francois.Xml_manipulation;
+
 public class CommunHtml {
 	public static void style(PrintWriter out, String userAgent)
 			throws IOException {
-
 		if (userAgent.contains("iPhone")) {
 			out.write("<style type=\"text/css\">");
 			out.write(" @import url(style_iphone.css);");
@@ -57,83 +58,7 @@ public class CommunHtml {
 			out.print("<p>Accueil</p>");
 			break;
 		case 2:
-			out.println("<FORM name= \"formulaire_capteur\" method=post>");
-			out.println("Configuration d'un module de capteur");
-			out.println("<TABLE BORDER=0>");
-			out.println("<TR>");
-			out.println("	<TD>Choix du module</TD>");
-			out.println("	<TD>");
-			out
-					.println("	<SELECT name=\"module\" onchange=\"document.formulaire_capteur.submit()\">");
-
-			String selected_module = request.getParameter("module");
-			for (int i = 1; i < 5; i++) {
-				String temp = "";
-				if (selected_module != null
-						&& Integer.parseInt(selected_module) == i) {
-					temp = "selected ";
-				} else {
-					temp = "";
-				}
-				out.println("<OPTION " + temp + "VALUE=\"" + i + "\">module "
-						+ i + "</OPTION>");
-			}
-			out.println("	</SELECT>");
-			out.println("	</TD>");
-			out.println("</TR>");
-			out.println("");
-			out.println("<TR>");
-			out.println("	<TD>Capteur 1</TD>");
-			out.println("	<TD>");
-			out.println("	<SELECT name=\"type1\">");
-
-			out.println("		<OPTION VALUE=\"V\">Vide</OPTION>");
-			out.println("		<OPTION VALUE=\"T\">Temperature</OPTION>");
-			out.println("		<OPTION VALUE=\"L\">Lumiere</OPTION>");
-			out.println("	</SELECT>");
-			out.println("	</TD>");
-			out.println("</TR>");
-			out.println("");
-			out.println("<TR>");
-			out.println("	<TD>Capteur 2</TD>");
-			out.println("	<TD>");
-			out.println("	<SELECT name=\"type2\">");
-			out.println("		<OPTION VALUE=\"V\">Vide</OPTION>");
-			out.println("		<OPTION VALUE=\"T\">Temperature</OPTION>");
-			out.println("		<OPTION VALUE=\"L\">Lumiere</OPTION>");
-			out.println("	</SELECT>");
-			out.println("	</TD>");
-			out.println("</TR>");
-			out.println("");
-			out.println("<TR>");
-			out.println("	<TD>Capteur 3</TD>");
-			out.println("	<TD>");
-			out.println("	<SELECT name=\"type3\">");
-			out.println("		<OPTION VALUE=\"V\">Vide</OPTION>");
-			out.println("		<OPTION VALUE=\"T\">Temperature</OPTION>");
-			out.println("		<OPTION VALUE=\"L\">Lumiere</OPTION>");
-			out.println("	</SELECT>");
-			out.println("	</TD>");
-			out.println("</TR>");
-			out.println("");
-			out.println("<TR>");
-			out.println("	<TD>Capteur 4</TD>");
-			out.println("	<TD>");
-			out.println("	<SELECT name=\"type4\">");
-			out.println("		<OPTION VALUE=\"V\">Vide</OPTION>");
-			out.println("		<OPTION VALUE=\"T\">Temperature</OPTION>");
-			out.println("		<OPTION VALUE=\"L\">Lumiere</OPTION>");
-			out.println("	</SELECT>");
-			out.println("	</TD>");
-			out.println("</TR>");
-			out.println("");
-			out.println("<TR>");
-			out.println("	<TD COLSPAN=2>");
-			out.println("	<INPUT type=\"submit\" value=\"Envoyer\">");
-			out.println("	</TD>");
-			out.println("</TR>");
-			out.println("</TABLE>");
-			out.println("</FORM>");
+			Formulaires.capteurs(out,request);
 			break;
 		case 3:
 

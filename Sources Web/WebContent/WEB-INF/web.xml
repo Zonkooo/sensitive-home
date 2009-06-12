@@ -11,13 +11,13 @@
   </welcome-file-list>
   <servlet>
     <description></description>
-    <display-name>Menu</display-name>
-    <servlet-name>Menu</servlet-name>
-    <servlet-class>Menu</servlet-class>
+    <display-name>Interface</display-name>
+    <servlet-name>Interface</servlet-name>
+    <servlet-class>Interface</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Menu</servlet-name>
-    <url-pattern>/Menu</url-pattern>
+    <servlet-name>Interface</servlet-name>
+    <url-pattern>/Interface</url-pattern>
   </servlet-mapping>
   <servlet>
     <description></description>

@@ -6,7 +6,7 @@ public class Lanceur {
 
 	
 	public static void main(String[] args){
-		new Config("src/francois/config.xml");
+		Xml_manipulation.creation_Hashmap("src/francois/config.xml");
 		
 	//	Dhcp.rechercheAdresseXport();
 		

@@ -8,11 +8,11 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.developpez.adiguba.shell.Shell;
+//import com.developpez.adiguba.shell.Shell;
 
 
 public class Dhcp {
-
+/*
 	public static void main(String[] args) {
 		rechercheAdresseXport();
 	}
@@ -91,4 +91,5 @@ public class Dhcp {
 			e.printStackTrace();
 		}
 	}
+	*/
 }

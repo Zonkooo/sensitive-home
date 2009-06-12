@@ -1,34 +1,59 @@
 package francois;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class Salle {
-	
-	String nom;
-	Multiprise multiprise;
-	int temperature;
-	int eclairage;
-	
-//	public Salle(String n, Multiprise mp, int t, int e){
-//		nom = n;
-//		multiprise = mp;
-//		temperature = t;
-//		eclairage = e;
-//	}
+	static final private int MAX = 10;
+	private String nom;
+	public HashMap<String, Multiprise> getHash_multiprise() {
+		return hash_multiprise;
+	}
+
+	public HashMap<String, Module> getHash_module() {
+		return hash_module;
+	}
+
+	public String getNom() {
+		return nom;
+	}
+
+	private HashMap<String, Multiprise> hash_multiprise;
+	private HashMap<String, Module> hash_module;
+	private int temperature;
+	private int eclairage;
 	
 	public Salle(String n) {
+		hash_multiprise = new HashMap<String, Multiprise>();
+		hash_module = new HashMap<String, Module>();
 		nom = n;
-		multiprise = null;
 		temperature = 0;
 		eclairage = 0;
 	}
 	
-	//n'ajoute pas une mp mais init celle de la salle (une seule mp pour l'instant)
 	public void addMultiprise(Multiprise mp){
-		multiprise = mp;
-		System.out.println("ajout de la mp: "+mp.nom+ " dans la salle: "+this.nom);
-		for(int a=0; a<5; a++){
-			System.out.println("prise"+a+": "+multiprise.getPrises()[a].type);
-		}
+		System.out.println(mp.getNom());
+		hash_multiprise.put(mp.getNom(), mp);
 	}
+	
+	public void addModule(Module mc){
+		hash_module.put(mc.getNom(), mc);
+	}
+	
+	public void getMultiprise(String id){
+		hash_multiprise.get(id);
+	}
+	
+	public void getModule(String id){
+		hash_module.get(id);
+	}
+	
+	public void remtMultiprise(String id){
+		hash_multiprise.remove(id);
+	}
+	
+	public void remModule(String id){
+		hash_module.remove(id);
+	}
+	
 }

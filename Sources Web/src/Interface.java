@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,24 +10,28 @@ import javax.servlet.http.HttpServletResponse;
 import org.jdom.*;
 import org.jdom.output.*;
 
+import francois.Salle;
+import francois.Xml_manipulation;
+
 
 /**
  * Servlet implementation class Menu
  */
-public class Menu extends HttpServlet {
+public class Interface extends HttpServlet {
+	private static HashMap<String, Salle> hashSalle;
 	private static final long serialVersionUID = 1L;
 
-	public static String response() {
-
-		return "ok test";
-	}
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Menu() {
+	public Interface() {
 		super();
-		// TODO Auto-generated constructor stub
+		hashSalle =Xml_manipulation.creation_Hashmap("../webapps/web_interface/WEB-INF/classes/francois/config.xml");
+	}
+
+	public static HashMap<String, Salle> getHashSalle() {
+		return hashSalle;
 	}
 
 	/**
@@ -39,7 +44,7 @@ public class Menu extends HttpServlet {
 		String page = request.getParameter("page");
 		PrintWriter out = response.getWriter();
 		out.println("<HTML>");
-		out.println("<HEAD><TITLE>" + page + "</TITLE></HEAD>");
+		out.println("<HEAD><TITLE>" + page+  "</TITLE></HEAD>");
 		out.println("<BODY>");
 		out.println("<script src=\"ajax.js\" type=\"text/javascript\"></script>");
 		String userAgent = request.getHeader("user-agent");
