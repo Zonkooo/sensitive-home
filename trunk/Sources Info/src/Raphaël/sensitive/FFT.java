@@ -5,40 +5,45 @@ package sensitive;
  */
 public class FFT
 {
-    // Test the FFT to make sure it's working
     public static void main(String[] args)
     {
         Capture capture = new Capture();
         int[] audio;
-        double[] audioDouble, bouton1, bouton2;
+        double[] audioDouble1, audioDouble2;
 		
+		//bouton 1
 		System.out.println("tapez le bouton 1");
 		audio = capture.getTap();
-		bouton1 = fftMag(zeroPadding(Outils.normalize(audio)));
+		audioDouble1 = fftMag(zeroPadding(Outils.normalize(audio)));
 		System.out.println("encore !");
 		audio = capture.getTap();
-		audioDouble = fftMag(zeroPadding(Outils.normalize(audio)));
+		audioDouble2 = fftMag(zeroPadding(Outils.normalize(audio)));
 		
-		for(int i = 0; i < bouton1.length; i++)
-			bouton1[i] = bouton1[i] + audioDouble[i];
+		for(int i = 0; i < audioDouble1.length; i++)
+			audioDouble1[i] = audioDouble1[i] + audioDouble2[i];
+		Bouton b1 = new Bouton(audioDouble1);
 		
+		//bouton 2
 		System.out.println("tapez le bouton 2");
 		audio = capture.getTap();
-		bouton2 = fftMag(zeroPadding(Outils.normalize(audio)));
+		audioDouble1 = fftMag(zeroPadding(Outils.normalize(audio)));
 		System.out.println("encore !");
 		audio = capture.getTap();
-		audioDouble = fftMag(zeroPadding(Outils.normalize(audio)));
+		audioDouble2 = fftMag(zeroPadding(Outils.normalize(audio)));
 		
-		for(int i = 0; i < bouton1.length; i++)
-			bouton2[i] = bouton2[i] + audioDouble[i];
+		for(int i = 0; i < audioDouble1.length; i++)
+			audioDouble1[i] = audioDouble1[i] + audioDouble2[i];
+		Bouton b2 = new Bouton(audioDouble1);
+		
+		System.out.println();
 		
 		while(true)
 		{
 			audio = capture.getTap();
-			audioDouble = fftMag(zeroPadding(Outils.subMoy(Outils.normalize(audio))));
+			audioDouble1 = fftMag(zeroPadding(Outils.subMoy(Outils.normalize(audio))));
 			
-			double c1 = correlation(audioDouble, bouton1);
-			double c2 = correlation(audioDouble, bouton2);
+			double c1 = b1.correlation(audioDouble1);
+			double c2 = b2.correlation(audioDouble1);
 
 			if(c2 > c1)
 				System.out.println("bouton2");
@@ -137,21 +142,10 @@ public class FFT
             k++;
         }
 
-        //mag[0] = (double) (Math.sqrt(xre[0] * xre[0] + xim[0] * xim[0])) / n;
         for (int i = 0; i < n / 2; i++)
         {
             mag[i] = (double) (Math.sqrt(xre[i] * xre[i] + xim[i] * xim[i]));
         }
         return mag;
-    }
-    
-    public static double correlation(double[] fft1, double[] fft2)
-    {
-		double correlation = 0;
-		
-		for (int i = 34; i < fft2.length/2; i++)
-			correlation += fft2[i]*fft1[i];
-
-        return correlation;
     }
 }
