@@ -1,5 +1,6 @@
 package francois;
 
+@Deprecated
 public class Profil {
 	
 	String nom;
