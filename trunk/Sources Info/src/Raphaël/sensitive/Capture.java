@@ -7,17 +7,17 @@ package sensitive;
 import java.io.*;
 import javax.sound.sampled.*;
 
-/** 
- * Reads data from the input channel and writes to the output stream
+/**
+ * enregistrement d'un vecteur d'entiers depuis le micro
+ * 
+ * @author raphael
  */
 class Capture
 {    
-    private static final int seuil = 350; //amplitude de declenchement du tap
+    private static final int seuil = 500; //amplitude de declenchement du tap
     
     private TargetDataLine line;
-	
-	AudioFormat format;
-		
+	private AudioFormat format;
 	private int bufferLengthInBytes;
 
     /**
@@ -41,10 +41,16 @@ class Capture
      */
     public Capture()
     {
-		this(44100, 16, 1);
+		this(44100, 16, 2);
     }
 
-    public void init()
+	/**
+	 * initialise l'entrée ligne pour une capture 
+	 * à partir des paramètres donnés au constructeur.
+	 * 
+	 * appellée dans le constructeur.
+	 */
+    private void init()
     {
 		// define the required attributes for our line
 		DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
@@ -70,14 +76,20 @@ class Capture
 		{
 			System.out.println(ex.toString());
 			return;
-			}
+		}
 
 		bufferLengthInBytes = (line.getBufferSize() / 8) * format.getFrameSize();
     }
 
-    public int[] getTap()
+	/**
+	 * écoute l'entrée ligne jusqu'à capter un signal
+	 * qui dépasse la valeur Capture.seuil.
+	 * 
+	 * @return un echantillon de taille 2*bufferLengthInBytes contenant le tap détecté.
+	 */
+    public int[][] getTap()
     {
-		int[] audioData = null;
+		int[][] audioData = null;
 		byte[] data = new byte[bufferLengthInBytes]; //tampon de lecture
 
 		try
@@ -93,14 +105,14 @@ class Capture
 
 		while (line.read(data, 0, bufferLengthInBytes) != -1)
 		{
-			if (Outils.getMax(traitementBytes(data, format.getSampleSizeInBits())) >= Capture.seuil)
+			if (Outils.getMax(traitementBytes(data)) >= Capture.seuil)
 			{
-			audioData = traitementBytes(data, format.getSampleSizeInBits());
+				audioData = traitementBytes(data);
 			}
 			else if (audioData != null)
 			{
-			Outils.concatene(audioData, traitementBytes(data, format.getSampleSizeInBits()));
-			break;
+				Outils.concatene(audioData, traitementBytes(data));
+				break;
 			}
 		}
 
@@ -116,6 +128,9 @@ class Capture
      * contenant les bonnes valeurs des samples
      * (si on écoute en 16 bits, il y a 2 bytes par sample
      * et il faut les concatener pour avoir la bonne valeur)
+	 * 
+	 * si il y a 2 cannaux, ils sont donnés séparemment 
+	 * dans ret[0][] et ret[1][]
      * 
      * /!\ l'encodage doit être PCMsigned et BigEndian
      * 
@@ -123,31 +138,36 @@ class Capture
      * @param sampleSize taille en bits d'un sample (8 ou 16)
      * @return valeurs des samples
      */
-    private int[] traitementBytes(byte[] audioBytes, int sampleSize)
+    private int[][] traitementBytes(byte[] audioBytes)
     {
         //on suppose qu'on est en PCMsigned, BigEndian
-        int[] intData = null;
+        int[][] intData = null;
+		int chan = format.getChannels();
         int nbSamples;
-        if (sampleSize == 16)
+		
+        if (format.getSampleSizeInBits() == 16)
         {
             nbSamples = audioBytes.length / 2;
-            intData = new int[nbSamples];
+            intData = new int[chan][nbSamples/chan];
+			int MSB, LSB;
             for (int i = 0; i < nbSamples; i++)
             {
-                int MSB = (int) audioBytes[2 * i];
-                int LSB = (int) audioBytes[2 * i + 1];
-                intData[i] = MSB << 8 | (255 & LSB);
+                MSB = (int) audioBytes[2 * i];
+                LSB = (int) audioBytes[2 * i + 1];
+                intData[i%chan][i/chan] = MSB << 8 | (255 & LSB);
             }
         }
-        else if (sampleSize == 8)
+        else if (format.getSampleSizeInBits() == 8)
         {
             nbSamples = audioBytes.length;
-            intData = new int[nbSamples];
 
             //si on est en 8 bits, les bytes contiennent déjà les données
             //il suffit de tout recopier dans un tableau de int
-            for (int i = 0; i < nbSamples; i++)
-                intData[i] = audioBytes[i];
+			//en intercalant 1/2 si on est en stereo
+			intData = new int[chan][nbSamples/chan];
+
+			for (int i = 0; i < nbSamples; i++)
+				intData[i%chan][i/chan] = audioBytes[i];
         }
         
         return intData;
