@@ -16,8 +16,8 @@ em
 }
 body {
 	width: 800px;
-	background-color: #D9D9D9;
-	color: #262626;
+	background-color: #F3FFE2;
+	color: #225378;
 	font-family:Verdana, Helvetica, sans-serif;
 	font-size: 0.8em;
 	font-weight:bold;
@@ -60,13 +60,10 @@ body {
     font-weight:bold;
     font-size: 1em;
     height: 30px;
-    color: #7A1818;
-    background-color: #8C8C8C;
+    color: #F3FFE2;
+    background-color: #225378;
     -moz-border-radius : 10px;
     margin: 10px;
-    border-color: #7A1818;
-    border-style: solid;
-    border-width: Medium;
 }
 #select
 {
@@ -79,17 +76,17 @@ body {
 }
 #menu a:link {
 	font-weight: bold;
-	color: #000001;
+	color: #F3FFE2;
 	text-decoration: none;
 }
 
 #menu a:visited {
 	font-weight: bold;
-	color: #000001;
+	color: #F3FFE2;
 	text-decoration: none;
 }
 #menu a:hover, a:active {
 	font-weight: bold;
-	color: #941515;
+	color: #FC9200;
 	text-decoration: underline;
 }
