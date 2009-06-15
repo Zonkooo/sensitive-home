@@ -4,13 +4,23 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <avr/pgmspace.h>
-// définition des pins
+// d\u00e9finition des pins
+#include "WProgram.h"
+void pwm(int pin, int start, int stop);
+void flash(int led, int times, int wait);
+void prepareSleepMode();
+void wakeUp();
+void sleepMode();
+int sendXB();
+void setTxData(uint8_t *newdata);
+void setup();
+void loop();
 const int ledInternal = 13;
 const int luxPin = 1;
 const int tempPin = 2;
 const int supPin1 = 3;
 const int supPin2 = 4;
-// définition des valeurs
+// d\u00e9finition des valeurs
 int luxVal = 0;
 int tempVal = 0;
 int supVal1 = 0;
@@ -59,13 +69,13 @@ void wakeUp() {
 void sleepMode() {
 	delay(20);
 
-	// le mode de veille utilisé ne consomme de 100nA. Il ne peut être réveillé que par interruption.
+	// le mode de veille utilis\u00e9 ne consomme de 100nA. Il ne peut \u00eatre r\u00e9veill\u00e9 que par interruption.
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-	sleep_enable(); // non nécessaire: système de "sécurité" du microcontrolleur
-	// lorsque le pin 3 (d'où le 1) passe à la masse (LOW), la fonction wakeUp est appelée
+	sleep_enable(); // non n\u00e9cessaire: syst\u00e8me de "s\u00e9curit\u00e9" du microcontrolleur
+	// lorsque le pin 3 (d'o\u00f9 le 1) passe \u00e0 la masse (LOW), la fonction wakeUp est appel\u00e9e
 	attachInterrupt(1, wakeUp, LOW);
-	sleep_mode(); // met réellement le système en veille
-	// le programme continu à partir d'ici après le réveil	
+	sleep_mode(); // met r\u00e9ellement le syst\u00e8me en veille
+	// le programme continu \u00e0 partir d'ici apr\u00e8s le r\u00e9veil	
 	sleep_disable();
 	isAsleep=false;
 	detachInterrupt(0); // disables interrupt 0 on pin 2 so the wakeUpNow code will not be executed during normal running time. 
@@ -76,13 +86,13 @@ void sleepMode() {
 
 #include <XBee.h>
 /* variables des LED de communication
- * La LED de statut est interne: elle n'a pas besoin d'être visible
+ * La LED de statut est interne: elle n'a pas besoin d'\u00eatre visible
  * La LED d'erreur est externe (et rouge): en cas d'erreur elle clignote pendant 5 secondes 
  */
 const int statusLed = 13; // led interne au microcontrolleur
 const int errorLed = 12; // led externe.
 
-// définition des variables de communication
+// d\u00e9finition des variables de communication
 XBee xbee = XBee();
 XBeeAddress64 xbAddr = XBeeAddress64(0x0013a200, 0x4008ebef);
 uint8_t rxOption = 0;
@@ -91,7 +101,7 @@ uint8_t txOption = 0;
 uint8_t *txData;
 uint8_t tmpData[64];
 
-// variables de réponse 
+// variables de r\u00e9ponse 
 XBeeResponse response = XBeeResponse();
 ZBRxResponse rx = ZBRxResponse();
 ModemStatusResponse msr = ModemStatusResponse();
@@ -106,9 +116,9 @@ ZBTxStatusResponse txStatus = ZBTxStatusResponse();
  if (xbee.getResponse().isAvailable()) {
  if (xbee.getResponse().getApiId() == ZB_RX_RESPONSE) {
  xbee.getResponse().getZBRxResponse(rx); // permet de renseigner la classe Rx
- if (rx.getOption() == ZB_PACKET_ACKNOWLEDGED) { // on a reçu un ACK
+ if (rx.getOption() == ZB_PACKET_ACKNOWLEDGED) { // on a re\u00e7u un ACK
  flash(statusLed, 1, 10);
- } else { // on a bien reçu une réponse mais l'envoyeur n'a reçu de ACK
+ } else { // on a bien re\u00e7u une r\u00e9ponse mais l'envoyeur n'a re\u00e7u de ACK
  flash(errorLed, 2, 20);
  }
  rxData[0] = rx.getData(0);
@@ -117,9 +127,9 @@ ZBTxStatusResponse txStatus = ZBTxStatusResponse();
  xbee.getResponse().getModemStatusResponse(msr);
  // the local XBee sends this response on certain events, like association/dissociation
 
- if (msr.getStatus() == ASSOCIATED) { // on est associé
+ if (msr.getStatus() == ASSOCIATED) { // on est associ\u00e9
  flash(statusLed, 10, 10);
- } else if (msr.getStatus() == DISASSOCIATED) { // on s'est fait désassocié
+ } else if (msr.getStatus() == DISASSOCIATED) { // on s'est fait d\u00e9sassoci\u00e9
  flash(errorLed, 10, 10);
  } else { /// tout autre statut
  flash(statusLed, 5, 10);
@@ -132,21 +142,21 @@ ZBTxStatusResponse txStatus = ZBTxStatusResponse();
 
 int sendXB() {
 	xbee.send(tx);
-	// après l'envoi d'un paquet, on attend un ACK et on laisse un timeout de 0.5 seconde.
+	// apr\u00e8s l'envoi d'un paquet, on attend un ACK et on laisse un timeout de 0.5 seconde.
 	if (xbee.readPacket(500)) {
-		// on a bien reçu quelque chose, reste à savoir ce que c'est...
+		// on a bien re\u00e7u quelque chose, reste \u00e0 savoir ce que c'est...
 		if (xbee.getResponse().getApiId() == ZB_TX_STATUS_RESPONSE) {
 			xbee.getResponse().getZBTxStatusResponse(txStatus);
 			// get the delivery status, the fifth byte
-			if (txStatus.getDeliveryStatus() == SUCCESS) { // c'est un succès, le paquet a bien été transmis!
+			if (txStatus.getDeliveryStatus() == SUCCESS) { // c'est un succ\u00e8s, le paquet a bien \u00e9t\u00e9 transmis!
 				flash(statusLed, 5, 50);
 				return 1;
-			} else { // erreur ... est-ce que le destinataire est bien allumé?
+			} else { // erreur ... est-ce que le destinataire est bien allum\u00e9?
 				flash(errorLed, 3, 500);
 				return 0;
 			}
 		}
-	} else { // le xbee local n'a pas généré de TX à temps (ne devrait pas arriver...)
+	} else { // le xbee local n'a pas g\u00e9n\u00e9r\u00e9 de TX \u00e0 temps (ne devrait pas arriver...)
 		flash(errorLed, 2, 50);
 		return -1;
 	}
@@ -154,9 +164,9 @@ int sendXB() {
 /*
  int sendBroadcast() {
  XBeeAddress64 bcAddr = XBeeAddress64(0x0, 0xfff);
- tx = ZBTxRequest(bcAddr, txData, sizeof(txData)); // on recrée l'objet
+ tx = ZBTxRequest(bcAddr, txData, sizeof(txData)); // on recr\u00e9e l'objet
  int rtn = sendXB();
- tx = ZBTxRequest(xbAddr, txData, sizeof(txData)); // on recrée l'objet d'origine
+ tx = ZBTxRequest(xbAddr, txData, sizeof(txData)); // on recr\u00e9e l'objet d'origine
  return rtn;
  }
 
@@ -181,9 +191,9 @@ void setTxData(uint8_t *newdata) {
 
 void setup() {
 	xbee.begin(9600);
-	Serial.begin(9600); // permet de communiquer en série via Arduino (à virer pour le produit final)
+	Serial.begin(9600); // permet de communiquer en s\u00e9rie via Arduino (\u00e0 virer pour le produit final)
 	attachInterrupt(1, wakeUp, LOW); // voir commentaire dans sleepMode
-	// on précise que les pin sont des pins de lecture:
+	// on pr\u00e9cise que les pin sont des pins de lecture:
 	pinMode(statusLed, OUTPUT);
 	pinMode(errorLed, OUTPUT);
 	pinMode(13, OUTPUT);
@@ -221,7 +231,7 @@ void loop() {
 		} else {
 			Serial.print("Erreur "); Serial.println(rtn);
 		}
-		/* pour le moment, on affiche les données en série.
+		/* pour le moment, on affiche les donn\u00e9es en s\u00e9rie.
 		 Plus tard, on enverra sur le Xbee via la variable payLoad (uint8_t[]) 
 		 */
 		Serial.print("luxVal = "); Serial.println(luxVal);
@@ -237,3 +247,16 @@ void loop() {
 	delay(333); /* one third of a second!*/
 
 }
+
+int main(void)
+{
+	init();
+
+	setup();
+    
+	for (;;)
+		loop();
+        
+	return 0;
+}
+

@@ -10,7 +10,6 @@ void wakeUp() {
 
 void sleepMode() {
 	delay(20);
-	flash(13,4,100);
 
 	// le mode de veille utilisé ne consomme de 100nA. Il ne peut être réveillé que par interruption.
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN);

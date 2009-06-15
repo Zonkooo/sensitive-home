@@ -24,8 +24,8 @@
  * 		... TODO fin de conception MàJ 
  * 
  */
-#include "GenericFcts.h"
 #include "Modules.h"
+#include "GenericFcts.h"
 #include "Hibernate.h"
 #include "XbeeCnx.h"
 
@@ -45,11 +45,6 @@ void setup() {
 void loop() {
 	if (isAsleep)
 		sleepMode();
-	// reinitialisation des valeurs de capteurs
-	luxVal = 0;
-	tempVal = 0;
-	supVal1 = 0;
-	supVal2 = 0;
 	// lecture capteurs
 	luxVal += analogRead(luxPin);
 	luxVal /= 2;
@@ -60,7 +55,7 @@ void loop() {
 	supVal2 += analogRead(supPin2);
 	supVal2 /= 2;
 
-	if (count >= SLEEPTIMER) {
+	/*if (count >= SLEEPTIMER) {
 		// pour le moment, on affiche les données en série.
 		// Plus tard, on enverra sur le Xbee via la variable payLoad (uint8_t[]) 
 		Serial.print("luxVal = "); Serial.println(luxVal);
@@ -71,7 +66,20 @@ void loop() {
 		delay(100); // this delay is needed, the sleep function will provoke a Serial error otherwise!! 
 		count = 0;
 		prepareSleepMode(); // sleep function called here
-	}
+	}*/
 	count++;
 	if(!isAsleep) delay(333); // on fait trois mesures
+	// envoie des données XBee
+	uint8_t tmpData[64];
+	sprintf_P((char*)tmpData, ("%i:%i:%i:%i"),luxVal,tempVal,supVal1,supVal2);
+	setTxData(tmpData);
+	int rtn = sendXB();
+	if(rtn == 0){
+		Serial.println("Erreur 0");
+	}else if(rtn == 1){
+		Serial.println("Succes 1");
+	}else{
+		Serial.print("Erreur "); Serial.println(rtn);
+	}
+	delay(1000); // one second!
 }

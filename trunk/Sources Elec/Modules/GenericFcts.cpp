@@ -23,10 +23,10 @@ void pwm(int pin, int start, int stop) {
 }
 
 void flash(int led, int times, int wait) {
-	int it;
 	bool state=true;
-	for (it=times*2; it > 0; it--) {
+	for (int it=times*2; it > 0; it--) {
 		digitalWrite(led, (state)?HIGH:LOW);
 		state = !state;
+		delay(wait);
 	}
 }
