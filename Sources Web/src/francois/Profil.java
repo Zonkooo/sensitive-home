@@ -9,9 +9,5 @@ public class Profil {
 	public Profil(String n, Multiprise m) {
 		nom = n;
 		mp = m;
-	}
-	
-	
-	
-	
+	}	
 }
