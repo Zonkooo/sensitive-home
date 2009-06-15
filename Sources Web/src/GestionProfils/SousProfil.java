@@ -1,8 +1,6 @@
 package GestionProfils;
 
-
-import GestionProfils.Salle;
-
+import java.util.HashMap;
 
 /**
  * un sous-profil est associé à une salle, 
@@ -10,17 +8,63 @@ import GestionProfils.Salle;
  * 
  * @author raphael
  */
-public class SousProfil extends ProfilGlobal
+public class SousProfil
 {
-	GestionProfils.Salle salle;
-	//TODO :
-	//de cette salle, on récupère l'ensemble de prises
-	//que l'on configure suivant le profil :
-	//on, off ou auto
+	private String nom;
+	private int temperature;
+	private int luminosite;
+	
+	private GestionProfils.Salle salle;
+	private HashMap<Prise, Etat> configPrises;
 
-	public SousProfil(String nom, int temperatureMin, int luminositeGlobale, Salle salle)
+	public SousProfil(int temperature, int luminosite, Salle salle)
 	{
-		super(nom, temperatureMin, luminositeGlobale);
+		this.temperature = temperature;
+		this.luminosite = luminosite;
 		this.salle = salle;
+		configPrises = new HashMap<Prise, Etat>();
+	}
+	
+	public void addPrise(Prise p, Etat e)
+	{
+		configPrises.put(p, e);
+	}
+	
+	//GETTERS
+	public int getLuminosite()
+	{
+		return luminosite;
+	}
+	public String getNom()
+	{
+		return nom;
+	}
+	public int getTemperature()
+	{
+		return temperature;
+	}
+	
+	//SETTERS
+	public void setLuminosite(int luminosite)
+	{
+		this.luminosite = luminosite;
+	}
+	public void setNom(String nom)
+	{
+		this.nom = nom;
+	}
+	public void setTemperature(int temperature)
+	{
+		this.temperature = temperature;
+	}
+
+	@Override public String toString()
+	{
+		return this.nom;
+	}
+	
+	@Override public boolean equals(Object o)
+	{
+		return (this.toString()).equals(o.toString());
 	}
 }

@@ -1,35 +1,49 @@
 package GestionProfils;
 
-import francois.*;
-import java.util.HashSet;
+import java.util.ArrayList;
 
-public class Salle {
-	
-	String nom;
-	Multiprise multiprise;
-	int temperature;
-	int eclairage;
-	
-//	public Salle(String n, Multiprise mp, int t, int e){
-//		nom = n;
-//		multiprise = mp;
-//		temperature = t;
-//		eclairage = e;
-//	}
-	
-	public Salle(String n) {
-		nom = n;
-		multiprise = null;
-		temperature = 0;
-		eclairage = 0;
+public class Salle
+{
+	private String nom;
+	private int currentTemperature;
+	private int currentLuminosite;
+
+	private ArrayList<Multiprise> multiprises;
+	private ArrayList<ModuleCapteurs> modules;
+
+	public Salle(String nom)
+	{
+		this.nom = nom;
+		this.currentTemperature = Capteur.VALEUR_INCONNUE;
+		this.currentLuminosite = Capteur.VALEUR_INCONNUE;
+		this.multiprises = new ArrayList<Multiprise>();
+		this.modules = new ArrayList<ModuleCapteurs>();
+	}
+
+	public String getNom()
+	{
+		return nom;
 	}
 	
-	//n'ajoute pas une mp mais init celle de la salle (une seule mp pour l'instant)
-	public void addMultiprise(Multiprise mp){
-		multiprise = mp;
-		System.out.println("ajout de la mp: "+mp.nom+ " dans la salle: "+this.nom);
-		for(int a=0; a<5; a++){
-			System.out.println("prise"+a+": "+multiprise.getPrises()[a].type);
-		}
+	public void addMultiprise(Multiprise mp)
+	{
+		//System.out.println("ajout de la MP " + mp + " à la salle " + this);
+		multiprises.add(mp);
+	}
+
+	public void addModule(ModuleCapteurs mc)
+	{
+		//System.out.println("ajout du module " + mc + " à la salle " + this);
+		modules.add(mc);
+	}
+
+	public void removeMultiprise(long ID)
+	{
+		//TODO
+	}
+
+	public void removeModule(long ID)
+	{
+		//TODO
 	}
 }

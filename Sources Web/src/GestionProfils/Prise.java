@@ -1,18 +1,19 @@
 package GestionProfils;
 
-public class Prise {
-	
-	static final boolean ON = true;
-	static final boolean OFF = false;
-	
-	String type;
-	int valeur;
-	boolean etat;
-	
-	public Prise(String t, int val, boolean e){
-		type = t;
-		valeur = val;
-		etat = e;
+public class Prise
+{
+	Etat etat;
+	Appareil app;
+
+	public Prise(Etat etat, Appareil app)
+	{
+		this.etat = etat;
+		this.app = app;
 	}
 	
+	public Prise(Appareil app)
+	{
+		this.etat = Etat.AUTO;
+		this.app = app;
+	}
 }

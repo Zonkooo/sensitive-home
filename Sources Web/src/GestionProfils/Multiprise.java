@@ -1,23 +1,28 @@
 package GestionProfils;
 
-import GestionProfils.Prise;
+public class Multiprise
+{
+	private long ID;
+	private Prise[] prises;
 
-public class Multiprise {
-	
-	String nom;
-	Prise[] prise;
-	
-	public Multiprise(String n, Prise[] p) {
-		nom =n;
-		prise = p;
-	}
-	
-	public void addPrise(Prise[] p)
+	public Multiprise(long ID, Prise[] prises)
 	{
-		prise = p;
+		this.ID = ID;
+		this.prises = prises.clone();
 	}
-	
-	public Prise[] getPrises(){
-		return prise;
+
+	public void setPrise(Prise p, int index)
+	{
+		prises[index] = p;
+	}
+
+	public Prise getPrise(int index)
+	{
+		return prises[index];
+	}
+
+	public long getID()
+	{
+		return ID;
 	}
 }
