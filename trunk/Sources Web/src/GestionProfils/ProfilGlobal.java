@@ -10,9 +10,9 @@ package GestionProfils;
 public class ProfilGlobal 
 {
 	//TODO : attribuer un ID ?
-	protected String nom;
-	protected int temperature;
-	protected int luminosite;
+	private String nom;
+	private int temperature;
+	private int luminosite;
 
 	public ProfilGlobal(String nom, int temperatureMin, int luminositeGlobale)
 	{
@@ -52,8 +52,6 @@ public class ProfilGlobal
 	{
 		this.temperature = temperature;
 	}
-	
-	
 
 	@Override public String toString()
 	{
