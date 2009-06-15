@@ -15,6 +15,11 @@ public class Multiprise
 	{
 		prises[index] = p;
 	}
+	
+	public void setEtat(Etat e, int index)
+	{
+		prises[index].setEtat(e);
+	}
 
 	public Prise getPrise(int index)
 	{

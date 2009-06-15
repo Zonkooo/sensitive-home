@@ -10,6 +10,9 @@ public class Salle
 
 	private ArrayList<Multiprise> multiprises;
 	private ArrayList<ModuleCapteurs> modules;
+	
+	private ArrayList<SousProfil> availablesProfils;
+	private SousProfil currentProfil;
 
 	public Salle(String nom)
 	{
@@ -20,9 +23,14 @@ public class Salle
 		this.modules = new ArrayList<ModuleCapteurs>();
 	}
 
-	public String getNom()
+	@Override public String toString()
 	{
 		return nom;
+	}
+	
+	@Override public boolean equals(Object o)
+	{
+		return this.toString().equals(o.toString());
 	}
 	
 	public void addMultiprise(Multiprise mp)
@@ -37,13 +45,52 @@ public class Salle
 		modules.add(mc);
 	}
 
-	public void removeMultiprise(long ID)
+	public void removeMultiprise(Multiprise m)
 	{
-		//TODO
+		multiprises.remove(m);
 	}
 
-	public void removeModule(long ID)
+	public void removeModule(ModuleCapteurs m)
 	{
-		//TODO
+		modules.remove(m);
+	}
+
+	/****************************
+	 ***   gestion profils   ***
+	 ***************************/
+	
+	public ArrayList<SousProfil> getAvailablesProfils()
+	{
+		return availablesProfils;
+	}
+
+	public SousProfil getCurrentProfil()
+	{
+		return currentProfil;
+	}
+	
+	public void switchProfil(SousProfil newProfil)
+	{
+		if(!(availablesProfils.contains(newProfil)))
+		{
+			System.err.println("Impossible d'appliquer le profil " + newProfil + " à la salle " + this);
+			return;
+		}
+			
+		for(Prise p : newProfil.getPrises())
+			p.getOwner().setEtat(newProfil.getEtat(p), p.getPosition());
+
+		this.currentProfil = newProfil;
+	}
+	
+	public void addProfil(SousProfil sp)
+	{
+		if(!(sp.getSalle().equals(this)))
+		{
+			System.err.println("Impossible d'ajouter le profil " + sp + " à la salle " + this);
+			return;
+		}
+		
+		this.availablesProfils.add(sp);
 	}
 }

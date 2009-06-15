@@ -1,6 +1,7 @@
 package GestionProfils;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * un sous-profil est associé à une salle, 
@@ -43,28 +44,21 @@ public class SousProfil
 	{
 		return temperature;
 	}
-	
-	//SETTERS
-	public void setLuminosite(int luminosite)
+	public Set<Prise> getPrises()
 	{
-		this.luminosite = luminosite;
+		return configPrises.keySet();
 	}
-	public void setNom(String nom)
+	public Etat getEtat(Prise p)
 	{
-		this.nom = nom;
+		return configPrises.get(p);
 	}
-	public void setTemperature(int temperature)
+	public Salle getSalle()
 	{
-		this.temperature = temperature;
+		return salle;
 	}
 
 	@Override public String toString()
 	{
 		return this.nom;
-	}
-	
-	@Override public boolean equals(Object o)
-	{
-		return (this.toString()).equals(o.toString());
 	}
 }
