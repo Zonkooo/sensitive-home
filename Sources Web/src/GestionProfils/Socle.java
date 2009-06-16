@@ -34,4 +34,9 @@ public abstract  class Socle
 	{
 		return ID;
 	}
+	
+	public int getCapacity()
+	{
+		return this.morceaux.length;
+	}
 }
