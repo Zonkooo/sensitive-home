@@ -19,7 +19,7 @@ public class Http {
 	        data += "&" + URLEncoder.encode("key2", "UTF-8") + "=" + URLEncoder.encode("value2", "UTF-8");
 	    
 	        // Send data
-	        URL url = new URL("http://www.siteduzero.com:80");
+	        URL url = new URL("http://192.168.0.11:31337");
 	        URLConnection conn = url.openConnection();
 	        conn.setDoOutput(true);
 //	        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
@@ -36,6 +36,7 @@ public class Http {
 //	        wr.close();
 	        rd.close();
 	    } catch (Exception e) {
+	    	System.err.println(e);
 	    }
 
 	}

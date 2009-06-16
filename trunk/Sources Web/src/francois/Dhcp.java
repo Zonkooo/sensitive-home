@@ -8,11 +8,12 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//import com.developpez.adiguba.shell.Shell;
+import com.developpez.adiguba.shell.Shell;
+
 
 
 public class Dhcp {
-/*
+
 	public static void main(String[] args) {
 		rechercheAdresseXport();
 	}
@@ -22,10 +23,11 @@ public class Dhcp {
 		GregorianCalendar calendar = new GregorianCalendar();
 		String resultLog = "pas de retour";
 		try {
-			resultLog = sh.command("tail /var/log/syslog | grep DHCPREQUEST").consumeAsString();
+			resultLog = sh.command("tail /var/log/syslog | grep DHCPDISCOVER").consumeAsString();
 			if(resultLog.equals("")){
 				System.out.println(calendar.getTime()+" -> pas de requetes reçues par le DHCP");
 			} else {
+				System.out.println(resultLog);
 				StringTokenizer stLog = new StringTokenizer(resultLog);
 				while (stLog.hasMoreTokens()) {
 
@@ -34,7 +36,7 @@ public class Dhcp {
 					String stCouranteLog = stLog.nextToken();
 					//longueur d'une adresse MAC
 					if(stCouranteLog.length()==17){
-						if(stCouranteLog.substring(0, 8).equals("00:20:4A")){
+						if(stCouranteLog.substring(0, 8).equalsIgnoreCase("00:20:4A")){
 							//on regarde si la MAC existe déjà dans le dhcpd.conf
 							//si oui on ne fait rien, sinon on l'ajoute au fichier 
 							String resultDhcp = sh.command("cat /etc/dhcp3/dhcpd.conf | grep hardware").consumeAsString();
@@ -91,5 +93,4 @@ public class Dhcp {
 			e.printStackTrace();
 		}
 	}
-	*/
 }
