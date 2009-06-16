@@ -12,6 +12,7 @@ package GestionProfils;
 public enum Appareil 
 {
 	RADIATEUR, 
-	LAMPE, 
+	LAMPE,
+	VIDE,
 	AUTRE;
 }
