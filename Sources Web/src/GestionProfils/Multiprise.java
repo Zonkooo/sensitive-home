@@ -17,7 +17,7 @@ public class Multiprise extends Socle
 		return (Prise)(super.getMorceau(index));
 	}
 	
-	public void setEtat(Etat e, int index)
+	public void setEtatPrise(Etat e, int index)
 	{
 		((Prise)(morceaux[index])).setEtat(e);
 	}
