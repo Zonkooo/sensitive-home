@@ -24,13 +24,13 @@
  * 		... TODO fin de conception MàJ 
  * 
  */
-#include "Modules.h"
 #include "GenericFcts.h"
 #include "Hibernate.h"
+#include "Modules.h"
 #include "XbeeCnx.h"
 
 void setup() {
-	xbee.begin(9600);
+	xb.begin(9600);
 	Serial.begin(9600); // permet de communiquer en série via Arduino (à virer pour le produit final)
 	attachInterrupt(1, wakeUp, LOW); // voir commentaire dans sleepMode
 	// on précise que les pin sont des pins de lecture:
@@ -70,6 +70,7 @@ void loop() {
 #endif
 		setTxData(tmpData);
 		int rtn = sendXB();
+#ifdef DEBUG
 		if (rtn == 0) {
 			Serial.println("Erreur 0");
 		} else if (rtn == 1) {
@@ -81,6 +82,7 @@ void loop() {
 		/* pour le moment, on affiche les données en série.
 		 Plus tard, on enverra sur le Xbee via la variable payLoad (uint8_t[]) 
 		 */
+
 		Serial.print("luxVal = ");
 		Serial.println(luxVal);
 		Serial.print("tempVal = ");
@@ -90,6 +92,7 @@ void loop() {
 		Serial.print("supVal2 = ");
 		Serial.println(supVal2);
 		Serial.println("Going to sleep...");
+#endif
 		delay(100); /* this delay is needed, the sleep function will provoke a Serial error otherwise!! */
 		count = 0;
 		luxVal = 0;

@@ -6,24 +6,17 @@
 #include <inttypes.h>
 #include <stdio.h>
 // définition des pins
-const int ledInternal = 13;
-const int luxPin = 1;
-const int tempPin = 2;
-const int supPin1 = 3;
-const int supPin2 = 4;
+static const int ledInternal = 13;
+static const int luxPin = 1;
+static const int tempPin = 2;
+static const int supPin1 = 3;
+static const int supPin2 = 4;
 // définition des valeurs
-int luxVal = 0;
-int tempVal = 0;
-int supVal1 = 0;
-int supVal2 = 0;
-uint8_t tmpData[64];
-// variable bool pour endormir
-bool isAsleep = false;
+static int luxVal = 0;
+static int tempVal = 0;
+static int supVal1 = 0;
+static int supVal2 = 0;
+
 // variable int permettant de compter le nombre de boucles dans loop()
-int count = 0;
-// prototypes
-void pwm();
-void prepareSleepMode();
-void wakeUp();
-void sleepMode();
+static int count = 0;
 #endif /*MODULES_HPP_*/

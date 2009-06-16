@@ -83,7 +83,7 @@ const int statusLed = 13; // led interne au microcontrolleur
 const int errorLed = 12; // led externe.
 
 // définition des variables de communication
-XBee xbee = XBee();
+XBee xb = XBee();
 XBeeAddress64 xbAddr = XBeeAddress64(0x0013a200, 0x4008ebef);
 uint8_t rxOption = 0;
 uint8_t *rxData;
@@ -131,12 +131,12 @@ ZBTxStatusResponse txStatus = ZBTxStatusResponse();
  }*/
 
 int sendXB() {
-	xbee.send(tx);
+	xb.send(tx);
 	// après l'envoi d'un paquet, on attend un ACK et on laisse un timeout de 0.5 seconde.
-	if (xbee.readPacket(500)) {
+	if (xb.readPacket(500)) {
 		// on a bien reçu quelque chose, reste à savoir ce que c'est...
-		if (xbee.getResponse().getApiId() == ZB_TX_STATUS_RESPONSE) {
-			xbee.getResponse().getZBTxStatusResponse(txStatus);
+		if (xb.getResponse().getApiId() == ZB_TX_STATUS_RESPONSE) {
+			xb.getResponse().getZBTxStatusResponse(txStatus);
 			// get the delivery status, the fifth byte
 			if (txStatus.getDeliveryStatus() == SUCCESS) { // c'est un succès, le paquet a bien été transmis!
 				flash(statusLed, 5, 50);
@@ -180,7 +180,7 @@ void setTxData(uint8_t *newdata) {
  }*/
 
 void setup() {
-	xbee.begin(9600);
+	xb.begin(9600);
 	Serial.begin(9600); // permet de communiquer en série via Arduino (à virer pour le produit final)
 	attachInterrupt(1, wakeUp, LOW); // voir commentaire dans sleepMode
 	// on précise que les pin sont des pins de lecture:

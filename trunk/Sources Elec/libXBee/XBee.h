@@ -20,7 +20,7 @@
 #ifndef XBee_h
 #define XBee_h
 
-#include <../libArduino.good/WProgram.h>
+#include <WProgram.h>
 #include <inttypes.h>
 
 #define SERIES_1

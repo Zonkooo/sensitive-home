@@ -1,3 +1,5 @@
+#ifndef XBEECNX_H_
+#define XBEECNX_H_
 /* Christopher Rabotin
  * Sensitive Home (http://sensitive-home.googlecode.com)
  * Created on Jun 11, 2009
@@ -9,7 +11,7 @@
 
 #include <../libXBee/XBee.h>
 #include "GenericFcts.h"
-#include <avr/pgmspace.h>
+
 /* variables des LED de communication
  * La LED de statut est interne: elle n'a pas besoin d'être visible
  * La LED d'erreur est externe (et rouge): en cas d'erreur elle clignote pendant 5 secondes 
@@ -18,20 +20,21 @@ const int statusLed = 13; // led interne au microcontrolleur
 const int errorLed = 0; // led externe.
 
 // définition des variables de communication
-XBee xbee = XBee();
-XBeeAddress64 xbAddr = XBeeAddress64(0x0013a200, 0x4008ebef);
-uint8_t rxOption = 0;
-uint8_t *rxData;
-uint8_t txOption = 0;
-uint8_t *txData;
+static XBee xb = XBee();
+static XBeeAddress64 xbAddr = XBeeAddress64(0x0013a200, 0x4008ebef);
+static uint8_t rxOption = 0;
+static uint8_t *rxData;
+static uint8_t txOption = 0;
+static uint8_t *txData;
+static uint8_t tmpData[64];
 
 // variables de réponse 
-XBeeResponse response = XBeeResponse(); 
-ZBRxResponse rx = ZBRxResponse();
-ModemStatusResponse msr = ModemStatusResponse();
+static XBeeResponse response = XBeeResponse(); 
+static ZBRxResponse rx = ZBRxResponse();
+static ModemStatusResponse msr = ModemStatusResponse();
 // variables de transfert (i.e. envoie)
-ZBTxRequest tx = ZBTxRequest(xbAddr, txData, sizeof(txData));
-ZBTxStatusResponse txStatus = ZBTxStatusResponse();
+static ZBTxRequest tx = ZBTxRequest(xbAddr, txData, sizeof(txData));
+static ZBTxStatusResponse txStatus = ZBTxStatusResponse();
 /* readXB permet de lire des données du XBee
  * Les données reçues sont écrites dans la variable rxData et accessible via son accesseur getRxData();
  */
@@ -59,3 +62,4 @@ uint8_t* getRxdata();
 /* initMPXBCnx est la fonction permettant de connecter le module de capteurs à la multiprise.
  */
 void initMPXBCnx();
+#endif /* XBEECNX */
