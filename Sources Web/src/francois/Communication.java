@@ -31,38 +31,31 @@ public class Communication {
 	String[] message_split;
 	
 	
-	public static void main(String[] args){
-		
-		
-		Communication communication = new Communication();
-		communication.analyseData("12:1:2:3:4");
-		communication.setup();
-		communication.sendMessage("Commande");
-		while(true){
-			communication.listen();
-		}
-		
-		
-	}
+//	public static void main(String[] args){
+//		
+//		
+//		Communication communication = new Communication();
+//		communication.analyseData("12:1:2:3:4");
+//		communication.setup();
+//		communication.sendMessage("Commande");
+//		while(true){
+//			communication.listen();
+//		}
+//		
+//		
+//	}
 	
-	
-	void setup(){
-//	  size(400,255);
-//	  background(0);
-//	  framerate(30);
-	  host = "192.168.0.11";  // define a host to communicate with. This can be a name or IP address
-	  port = 31337;              // define a port to contact on that host. Must be a number, typically 10001 for an XPort
+	public Communication(String ip){
+	  host = ip;
+	  port = 31337;
 	  checkConnection(host, port);        // subroutine to create a connection, via a socket, to the XPort
 	}
 
-
 	//envoie un message
 	public void sendMessage(String message){ //message du type /numéro de prise:valeur [0-255]\
-		for(int i=0;i<message.length();i++){
-			sendSomeData((byte)message.charAt(i));
-		}
+		
 	}
-	
+
 	//écoute sur le port série
 	void listen(){
 	  if (dataIsWaiting() == true) {      //  check to see if there's new data waiting to come in
@@ -148,7 +141,7 @@ public class Communication {
 
 
 	////////GET SOME DATA \\\\\\\\\\
-	byte getSomeData() {
+	public byte getSomeData() {
 	  byte inData = 0;               // declare and initialize the data variable
 	  try {
 	    if (myInputStream.available()>0) {  //   only read the byte if there's a byte to read [this is a redundant check]
@@ -165,7 +158,7 @@ public class Communication {
 
 
 	////////SEND SOME DATA\\\\\\\\\\
-	void sendSomeData(byte outData){
+	public void sendSomeData(byte outData){
 	  if (myOutputStream == null) { // if there's no active output stream
 	    try {
 	      myOutputStream = new DataOutputStream(mySocket.getOutputStream()); // create an new output stream from a particular socket
