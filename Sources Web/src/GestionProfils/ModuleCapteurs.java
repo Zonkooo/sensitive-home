@@ -1,28 +1,19 @@
 package GestionProfils;
 
-public class ModuleCapteurs
+public class ModuleCapteurs extends Socle
 {
-	long ID;
-	Capteur[] capteurs;
-
 	public ModuleCapteurs(long ID, Capteur[] capteurs)
 	{
-		this.ID = ID;
-		this.capteurs = capteurs;
+		super(ID, capteurs);
 	}
 
-	public long getID()
+	public void setCapteur(Capteur c)
 	{
-		return this.ID;
-	}
-
-	public void setCapteur(Capteur c, int index)
-	{
-		capteurs[index] = c;
+		super.setMorceau(c);
 	}
 
 	public Capteur getCapteurs(int index)
 	{
-		return capteurs[index];
+		return (Capteur)(super.getMorceau(index));
 	}
 }

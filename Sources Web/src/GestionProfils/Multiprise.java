@@ -1,33 +1,24 @@
 package GestionProfils;
 
-public class Multiprise
+public class Multiprise extends Socle
 {
-	private long ID;
-	private Prise[] prises;
-
-	public Multiprise(long ID, Prise[] prises)
+	public Multiprise(long ID, Prise[] morceaux)
 	{
-		this.ID = ID;
-		this.prises = prises.clone();
-	}
-
-	public void setPrise(Prise p, int index)
-	{
-		prises[index] = p;
+		super(ID, morceaux);
 	}
 	
-	public void setEtat(Etat e, int index)
+	public void setPrise(Prise p)
 	{
-		prises[index].setEtat(e);
+		super.setMorceau(p);
 	}
 
 	public Prise getPrise(int index)
 	{
-		return prises[index];
+		return (Prise)(super.getMorceau(index));
 	}
-
-	public long getID()
+	
+	public void setEtat(Etat e, int index)
 	{
-		return ID;
+		((Prise)(morceaux[index])).setEtat(e);
 	}
 }
