@@ -8,7 +8,8 @@ public class Client {
 
 	public static void main ( String [] argv ) throws Exception {
 //		Socket echoSocket = new Socket("192.168.182.21",7);
-		Socket echoSocket = new Socket("localhost",2004);
+		Socket echoSocket = new Socket("192.168.0.11",31337);
+		System.out.println(echoSocket);
 		PrintWriter out = new PrintWriter(echoSocket.getOutputStream(),true);
 		// true -> autoflush
 		BufferedReader in = new BufferedReader( new InputStreamReader(echoSocket.getInputStream()));

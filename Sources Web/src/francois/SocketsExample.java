@@ -23,10 +23,14 @@ public class SocketsExample {
 	byte myDataIn, myDataOut;           // declare some variables to store the data we're sending and receiving
 
 	public static void main(String[] args){
-		System.out.println("début");
 		SocketsExample socketsExample = new SocketsExample();
 		socketsExample.setup();
-		socketsExample.draw();
+		socketsExample.sendMessage("Pierre y dit de la merde");
+		while(true){
+			socketsExample.listen();
+		}
+		
+		
 	}
 	
 	
@@ -34,20 +38,35 @@ public class SocketsExample {
 //	  size(400,255);
 //	  background(0);
 //	  framerate(30);
-	  host = "xport3.faludi.com";  // define a host to communicate with. This can be a name or IP address
-	  port = 10001;                // define a port to contact on that host. Must be a number, typically 10001 for an XPort
+	  host = "192.168.0.11";  // define a host to communicate with. This can be a name or IP address
+	  port = 31337;              // define a port to contact on that host. Must be a number, typically 10001 for an XPort
+	  checkConnection(host, port);        // subroutine to create a connection, via a socket, to the XPort
 	}
 
 
-	void draw(){
-	  checkConnection(host, port);        // subroutine to create a connection, via a socket, to the XPort
+	//envoie un message
+	public void sendMessage(String message){
+		for(int i=0;i<message.length();i++){
+			sendSomeData((byte)message.charAt(i));
+		}
+	}
+	
+	//écoute sur le port série
+	void listen(){
 	  if (dataIsWaiting() == true) {      //  check to see if there's new data waiting to come in
 	    myDataIn = getSomeData();         //  ... and if there's new data, get it
+	    if(myDataIn=='/'){ //signal de début d'un message de type /MP-Capteur-valeur; en 3 fois 2octets
+	    	System.out.println("début d'un message");
+	    	String message = "";
+	    	while(myDataIn != ';'){ //on attend de recevoir le signal de fin d'un message
+	    		if (dataIsWaiting() == true && (myDataIn = getSomeData()) !=';') {
+	    			message = message + (char)myDataIn;
+	    		}
+	    	}
+	    	System.out.println("message reçu: "+message);
+	    }
 	  }
-	  myDataOut = 65;                     // create some placeholder data, in this case ASCII letter A
-	  sendSomeData(myDataOut);            // send the data out
 	}
-
 
 	////////CHECK CONNECTION\\\\\\\\
 	void checkConnection(String host, int port) {
