@@ -1,5 +1,4 @@
 # Arduino 0015 Makefile
-# Modified by Christopher Rabotin
 # Arduino adaptation by mellis, eighthave, oli.keller
 #
 # This makefile allows you to build sketches from the command line
@@ -35,17 +34,15 @@
 #
 # $Id$
 
-TARGET = Modules
-OUTPUT_DIR = .
-#bin
+#TARGET = $(notdir $(CURDIR))
+TARGET = ModulesBordel
 INSTALL_DIR = /home/noxon/softs/arduino-0016
 PORT = /dev/tty.USB*
 UPLOAD_RATE = 19200
 AVRDUDE_PROGRAMMER = stk500v1
 MCU = atmega168
 F_CPU = 16000000
-OTHER_C_INCLUDES = ../libXBee/XBee.c
-OTHER_CXX_INCLUDES = 
+
 ############################################################################
 # Below here nothing should be changed...
 
@@ -55,13 +52,9 @@ AVR_TOOLS_PATH = /opt/cross/bin
 SRC =  $(ARDUINO)/pins_arduino.c $(ARDUINO)/wiring.c \
 $(ARDUINO)/wiring_analog.c $(ARDUINO)/wiring_digital.c \
 $(ARDUINO)/wiring_pulse.c $(ARDUINO)/wiring_serial.c \
-$(ARDUINO)/wiring_shift.c $(ARDUINO)/WInterrupts.c \
-$(OTHER_C_INCLUDES)
-#/home/noxon/coding/C/Sensitive\ Home\ Elec/libXBee/Xbee.c
-
+$(ARDUINO)/wiring_shift.c $(ARDUINO)/WInterrupts.c
 CXXSRC = $(ARDUINO)/HardwareSerial.cpp $(ARDUINO)/WMath.cpp \
-$(ARDUINO)/Print.cpp $(OTHER_CXX_INCLUDES)
-
+$(ARDUINO)/Print.cpp
 FORMAT = ihex
 
 
@@ -102,7 +95,7 @@ LDFLAGS = -lm
 
 # Programming support using avrdude. Settings and variables.
 AVRDUDE_PORT = $(PORT)
-AVRDUDE_WRITE_FLASH = -U flash:w:$(OUTPUT_DIR)/$(TARGET).hex
+AVRDUDE_WRITE_FLASH = -U flash:w:applet/$(TARGET).hex
 AVRDUDE_FLAGS = -V -F -C $(INSTALL_DIR)/hardware/tools/avr/etc/avrdude.conf \
 -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \
 -b $(UPLOAD_RATE)
@@ -145,30 +138,30 @@ applet_files: $(TARGET).pde
 	# Then the .cpp file will be compiled. Errors during compile will
 	# refer to this new, automatically generated, file. 
 	# Not the original .pde file you actually edit...
-	test -d $(OUTPUT_DIR) || mkdir $(OUTPUT_DIR)
-	echo '#include "WProgram.h"' > $(OUTPUT_DIR)/$(TARGET).cpp
-	cat $(TARGET).pde >> $(OUTPUT_DIR)/$(TARGET).cpp
-	cat $(ARDUINO)/main.cxx >> $(OUTPUT_DIR)/$(TARGET).cpp
+	test -d applet || mkdir applet
+	echo '#include "WProgram.h"' > applet/$(TARGET).cpp
+	cat $(TARGET).pde >> applet/$(TARGET).cpp
+	cat $(ARDUINO)/main.cxx >> applet/$(TARGET).cpp
 
-elf: $(OUTPUT_DIR)/$(TARGET).elf
-hex: $(OUTPUT_DIR)/$(TARGET).hex
-eep: $(OUTPUT_DIR)/$(TARGET).eep
-lss: $(OUTPUT_DIR)/$(TARGET).lss 
-sym: $(OUTPUT_DIR)/$(TARGET).sym
+elf: applet/$(TARGET).elf
+hex: applet/$(TARGET).hex
+eep: applet/$(TARGET).eep
+lss: applet/$(TARGET).lss 
+sym: applet/$(TARGET).sym
 
 # Program the device.  
-upload: $(OUTPUT_DIR)/$(TARGET).hex
+upload: applet/$(TARGET).hex
 	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH)
 
 
 	# Display size of file.
-HEXSIZE = $(SIZE) --target=$(FORMAT) $(OUTPUT_DIR)/$(TARGET).hex
-ELFSIZE = $(SIZE)  $(OUTPUT_DIR)/$(TARGET).elf
+HEXSIZE = $(SIZE) --target=$(FORMAT) applet/$(TARGET).hex
+ELFSIZE = $(SIZE)  applet/$(TARGET).elf
 sizebefore:
-	@if [ -f $(OUTPUT_DIR)/$(TARGET).elf ]; then echo; echo $(MSG_SIZE_BEFORE); $(HEXSIZE); echo; fi
+	@if [ -f applet/$(TARGET).elf ]; then echo; echo $(MSG_SIZE_BEFORE); $(HEXSIZE); echo; fi
 
 sizeafter:
-	@if [ -f $(OUTPUT_DIR)/$(TARGET).elf ]; then echo; echo $(MSG_SIZE_AFTER); $(HEXSIZE); echo; fi
+	@if [ -f applet/$(TARGET).elf ]; then echo; echo $(MSG_SIZE_AFTER); $(HEXSIZE); echo; fi
 
 
 # Convert ELF to COFF for use in debugging / simulating in AVR Studio or VMLAB.
@@ -179,12 +172,12 @@ COFFCONVERT=$(OBJCOPY) --debugging \
 --change-section-address .eeprom-0x810000 
 
 
-coff: $(OUTPUT_DIR)/$(TARGET).elf
-	$(COFFCONVERT) -O coff-avr $(OUTPUT_DIR)/$(TARGET).elf $(TARGET).cof
+coff: applet/$(TARGET).elf
+	$(COFFCONVERT) -O coff-avr applet/$(TARGET).elf $(TARGET).cof
 
 
 extcoff: $(TARGET).elf
-	$(COFFCONVERT) -O coff-ext-avr $(OUTPUT_DIR)/$(TARGET).elf $(TARGET).cof
+	$(COFFCONVERT) -O coff-ext-avr applet/$(TARGET).elf $(TARGET).cof
 
 
 .SUFFIXES: .elf .hex .eep .lss .sym
@@ -205,11 +198,11 @@ extcoff: $(TARGET).elf
 	$(NM) -n $< > $@
 
 	# Link: create ELF output file from library.
-$(OUTPUT_DIR)/$(TARGET).elf: $(TARGET).pde $(OUTPUT_DIR)/core.a 
-	$(CC) $(ALL_CFLAGS) -o $@ $(OUTPUT_DIR)/$(TARGET).cpp -L. $(OUTPUT_DIR)/core.a $(LDFLAGS)
+applet/$(TARGET).elf: $(TARGET).pde applet/core.a 
+	$(CC) $(ALL_CFLAGS) -o $@ applet/$(TARGET).cpp -L. applet/core.a $(LDFLAGS)
 
-$(OUTPUT_DIR)/core.a: $(OBJ)
-	@for i in $(OBJ); do echo $(AR) rcs $(OUTPUT_DIR)/core.a $$i; $(AR) rcs $(OUTPUT_DIR)/core.a $$i; done
+applet/core.a: $(OBJ)
+	@for i in $(OBJ); do echo $(AR) rcs applet/core.a $$i; $(AR) rcs applet/core.a $$i; done
 
 
 
@@ -242,8 +235,8 @@ $(OUTPUT_DIR)/core.a: $(OBJ)
 
 # Target: clean project.
 clean:
-	$(REMOVE) $(OUTPUT_DIR)/$(TARGET).hex $(OUTPUT_DIR)/$(TARGET).eep $(OUTPUT_DIR)/$(TARGET).cof $(OUTPUT_DIR)/$(TARGET).elf \
-	$(OUTPUT_DIR)/$(TARGET).map $(OUTPUT_DIR)/$(TARGET).sym $(OUTPUT_DIR)/$(TARGET).lss $(OUTPUT_DIR)/core.a \
+	$(REMOVE) applet/$(TARGET).hex applet/$(TARGET).eep applet/$(TARGET).cof applet/$(TARGET).elf \
+	applet/$(TARGET).map applet/$(TARGET).sym applet/$(TARGET).lss applet/core.a \
 	$(OBJ) $(LST) $(SRC:.c=.s) $(SRC:.c=.d) $(CXXSRC:.cpp=.s) $(CXXSRC:.cpp=.d)
 
 .PHONY:	all build elf hex eep lss sym program coff extcoff clean applet_files sizebefore sizeafter

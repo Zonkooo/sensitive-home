@@ -7,7 +7,7 @@
  * pour la communication Module de Capteurs <-> Mutliprise  
  */
 
-#include <XBee.h>
+#include <../libXBee/XBee.h>
 /* variables des LED de communication
  * La LED de statut est interne: elle n'a pas besoin d'être visible
  * La LED d'erreur est externe (et rouge): en cas d'erreur elle clignote pendant 5 secondes 
