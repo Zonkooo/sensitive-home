@@ -32,6 +32,16 @@ public class Salle
 	{
 		return this.toString().equals(o.toString());
 	}
+
+	public ArrayList<ModuleCapteurs> getModules()
+	{
+		return modules;
+	}
+
+	public ArrayList<Multiprise> getMultiprises()
+	{
+		return multiprises;
+	}
 	
 	public void addMultiprise(Multiprise mp)
 	{
@@ -53,6 +63,12 @@ public class Salle
 	public void removeModule(ModuleCapteurs m)
 	{
 		modules.remove(m);
+	}
+	
+	public void addAppareil(Multiprise mp, int i, Appareil a)
+	{
+		Prise p = new Prise(a, mp, i);
+		mp.setPrise(p);
 	}
 
 	/****************************
