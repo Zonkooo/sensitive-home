@@ -12,5 +12,6 @@ package GestionProfils;
 public enum TypeCapteur 
 {
 	LUMINOSITE, 
-	TEMPERATURE;
+	TEMPERATURE,
+	RIEN;
 }

@@ -16,6 +16,11 @@ public class Capteur
 		this.type = type;
 	}
 
+	public Capteur()
+	{
+		this.type = TypeCapteur.RIEN;
+	}
+
 	public int getLastValeur()
 	{
 		return lastValeur;
