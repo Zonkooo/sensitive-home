@@ -1,6 +1,6 @@
 #ifndef MODULES_HPP_
 #define MODULES_HPP_
-#define SLEEPTIMER 3
+#define SLEEPTIMER 4
 #define DEBUG
 #include <avr/sleep.h>
 #include <inttypes.h>

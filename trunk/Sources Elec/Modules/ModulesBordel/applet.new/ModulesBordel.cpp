@@ -1,4 +1,4 @@
-#define SLEEPTIMER 3
+#define SLEEPTIMER 4
 #define DEBUG
 #include <avr/sleep.h>
 #include <inttypes.h>
@@ -68,7 +68,6 @@ void wakeUp() {
 
 void sleepMode() {
 	delay(20);
-
 	// le mode de veille utilis\u00e9 ne consomme de 100nA. Il ne peut \u00eatre r\u00e9veill\u00e9 que par interruption.
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 	sleep_enable(); // non n\u00e9cessaire: syst\u00e8me de "s\u00e9curit\u00e9" du microcontrolleur
@@ -207,8 +206,14 @@ void setup() {
 }
 
 void loop() {
-	if (isAsleep)
+	if (isAsleep) {
+		digitalWrite(ledInternal, LOW);
 		sleepMode();
+                delay(50);
+	}
+#ifdef DEBUG
+	Serial.print("Reading ... ");
+#endif
 	luxVal += analogRead(luxPin);
 	luxVal /= 2;
 	tempVal += analogRead(tempPin);
@@ -217,11 +222,12 @@ void loop() {
 	supVal1 /= 2;
 	supVal2 += analogRead(supPin2);
 	supVal2 /= 2;
-	/*        payload[0] = luxVal >> 8 & 0xff;
-	 payload[1] = luxVal & 0xff;*/
 	if (count >= SLEEPTIMER) {
 		uint8_t tmpData[64];
 		sprintf_P((char*)tmpData, "%i:%i:%i:%i",luxVal,tempVal,supVal1,supVal2);
+#ifdef DEBUG
+		Serial.print("Sending...");
+#endif
 		setTxData(tmpData);
 		int rtn = sendXB();
 		if(rtn == 0) {
@@ -243,8 +249,8 @@ void loop() {
 		count = 0; luxVal = 0; tempVal = 0; supVal1 = 0; supVal2=0;
 		prepareSleepMode(); /* sleep function called here*/
 	}
-        count++;
-	delay(333); /* one third of a second!*/
+	count++;
+	delay(100); /* one third of a second!*/
 
 }
 
