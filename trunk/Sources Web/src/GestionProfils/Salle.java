@@ -152,41 +152,51 @@ public class Salle
 	/*
 	 * Analyse la valeur des capteurs et envoie la commande en conséquence à la multiprise
 	 */
-	public void analyse(){
-		int temp_moyenne_courante = 0;
-		Collection<Integer> temp_courante_capteur = null;
+	public void analyse()
+	{
+		int temperature_moyenne_courante = 0;
+		int nb_capteurs_de_temperature = 0;
 		//on parcourt l'ensemble des modules de capteurs présents dans la pièce
-		Iterator<ModuleCapteurs> itMC = getModules().iterator();
-		while(itMC.hasNext()){
+		for (ModuleCapteurs mc : modules)
+		{
 			//on fait la moyenne des valeurs des capteurs de meme type
-			for(int i=0;i<4;i++){ //on parcourt les 4 capteurs de chaque module
-				Capteur capteurCourant = itMC.next().getCapteur(i);
-				if(capteurCourant.getType()==TypeMorceau.TEMPERATURE){
-					temp_courante_capteur.add(capteurCourant.getLastValeur());
-				} else if(capteurCourant.getType()==TypeMorceau.LUMINOSITE) {
-					System.out.println("Raphael s'occupe de toi");
-				} else {
-					System.out.println("type de capteur non géré");
+			for (int i = 0; i < mc.getCapacity(); i++)
+			{ //on parcourt les capteurs de chaque module
+				Capteur capteurCourant = mc.getCapteur(i);
+				
+				if(capteurCourant != null)
+				{
+					if (capteurCourant.getType() == TypeMorceau.TEMPERATURE)
+					{
+						temperature_moyenne_courante += capteurCourant.getLastValeur();
+						nb_capteurs_de_temperature++;
+					}
+					else if (capteurCourant.getType() == TypeMorceau.LUMINOSITE)
+					{
+						System.out.println("Raphael s'occupe de toi");
+					}
+					else
+					{
+						System.out.println("type de capteur non géré");
+					}
 				}
 			}
 		}
-		//tous les capteurs ont été relevés, on s'occupe d'analyser et d'envoyer les commandes
 		
-		//température:
-		for (Integer temp : temp_courante_capteur) {
-			temp_moyenne_courante += temp;
-		}
-		temp_moyenne_courante = temp_moyenne_courante / temp_courante_capteur.size();
-		int commande = 0;
-		if(temp_moyenne_courante < currentProfil.getTemperature()){
-			commande = 1;	//on veut allumer le chauffage
-		} else {
-			commande = 0;	//on veut couper le chauffage
-		}
-		for (Multiprise mp : getMultiprises()) {
-			for(int i=0;i<5;i++){
-				if(mp.getPrise(i).getType()==TypeMorceau.LUMINOSITE){
-					mp.communication.sendMessage("/"+i+":"+commande);
+		if(nb_capteurs_de_temperature != 0)
+			temperature_moyenne_courante /= nb_capteurs_de_temperature;
+		
+		//tous les capteurs ont été relevés, on s'occupe d'analyser et d'envoyer les commandes
+
+		int commande = (temperature_moyenne_courante < currentProfil.getTemperature()) ? 1 : 0;
+		
+		for (Multiprise mp : getMultiprises())
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				if (mp.getPrise(i).getType() == TypeMorceau.LUMINOSITE)
+				{
+					mp.sendMessage("/" + i + ":" + commande);
 				}
 			}
 		}
