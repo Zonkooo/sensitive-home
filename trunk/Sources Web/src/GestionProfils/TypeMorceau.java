@@ -14,5 +14,5 @@ public enum TypeMorceau
 	LUMINOSITE, 
 	TEMPERATURE,
 	VIDE,
-	RIEN;
+	AUTRE;
 }
