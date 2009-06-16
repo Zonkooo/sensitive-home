@@ -8,6 +8,8 @@
  */
 
 #include <../libXBee/XBee.h>
+#include "GenericFcts.h"
+#include <avr/pgmspace.h>
 /* variables des LED de communication
  * La LED de statut est interne: elle n'a pas besoin d'être visible
  * La LED d'erreur est externe (et rouge): en cas d'erreur elle clignote pendant 5 secondes 
