@@ -42,6 +42,21 @@ public class Maison
 	{
 		this.salles.remove(s);
 	}
+
+	public ArrayList<ProfilGlobal> getAvailablesProfils()
+	{
+		return availablesProfils;
+	}
+
+	public ProfilGlobal getCurrentProfil()
+	{
+		return currentProfil;
+	}
+
+	public ArrayList<Salle> getSalles()
+	{
+		return salles;
+	}
 	
 	public void addProfil(ProfilGlobal p)
 	{
