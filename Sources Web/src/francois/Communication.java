@@ -90,7 +90,7 @@ public class Communication {
 				if(moduleCourant.getID()==Long.parseLong(message_split[0])){
 					System.out.println("le message provient de la salle: "+salleCourante);
 					for(int i=0;i<4;i++){ //on modifie la valeur du capteur à partir du message reçu
-						moduleCourant.getCapteurs(i).setLastValeur(Integer.parseInt(message_split[i+1]));
+						moduleCourant.getCapteur(i).setLastValeur(Integer.parseInt(message_split[i+1]));
 					}
 				}
 			}
