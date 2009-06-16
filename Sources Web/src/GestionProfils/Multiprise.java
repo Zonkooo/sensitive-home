@@ -2,6 +2,11 @@ package GestionProfils;
 
 public class Multiprise extends Socle
 {
+	public Multiprise(long ID)
+	{
+		super(ID);
+	}
+	
 	public Multiprise(long ID, Prise[] morceaux)
 	{
 		super(ID, morceaux);

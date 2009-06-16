@@ -69,8 +69,7 @@ public class Xml_manipulation {
 			System.out.println(courant.getAttributeValue("name"));
 			if (courant.getName().equalsIgnoreCase("salle")) {
 				salle_courante = new Salle(courant.getAttributeValue("name"));
-				hashSalle
-						.put(courant.getAttributeValue("name"), salle_courante);
+				hashSalle.put(courant.getAttributeValue("name"), salle_courante);
 
 				List mpList = courant.getChildren("multiprise");
 				Iterator imp = mpList.iterator();
@@ -79,23 +78,7 @@ public class Xml_manipulation {
 					Element[] prises_xml = (Element[]) mpCourante.getChildren().toArray(new Element[mpCourante.getChildren().size()]);
 					Prise[] prises = new Prise[mpCourante.getChildren().size()];
 					for (int j = 0; j < prises_xml.length; j++) {
-						char type = prises_xml[j].getAttributeValue("type").charAt(0);
-						TypeMorceau typeMorceau;
-						switch(type){
-						case 'T':
-							typeMorceau = ;
-							break;
-						case 'L':
-							typeMorceau = Appareil.LAMPE;
-							break;
-						case 'V':
-							typeMorceau = Appareil.VIDE;
-							break;
-						case 'A':
-							typeMorceau = Appareil.AUTRE;
-							break;
-						}
-						prises[j] = new Prise(appareil,multiprise_courante,j);
+						prises[j] = new Prise(getType(prises_xml[j].getAttributeValue("type")),multiprise_courante,j);
 						//	new Prise(prises_xml[j].getAttributeValue("type"), 0, false);
 					}
 					multiprise_courante = new Multiprise(Integer.parseInt(mpCourante.getAttributeValue("id")), prises);
@@ -107,27 +90,11 @@ public class Xml_manipulation {
 				Iterator imc = mcList.iterator();
 				while (imc.hasNext()) {
 					Element mcCourant = (Element) imc.next();
-					Element[] capteurs_xml = (Element[]) mcCourant
-							.getChildren()
-							.toArray(
-									new Element[mcCourant.getChildren().size()]);
+					Element[] capteurs_xml = (Element[]) mcCourant.getChildren().toArray(new Element[mcCourant.getChildren().size()]);
 					Capteur[] capteurs = new Capteur[mcCourant.getChildren()
 							.size()];
-					for (int j = 0; j < capteurs_xml.length; j++) {
-						char type = capteurs_xml[j].getAttributeValue("type").charAt(0);
-						TypeMorceau type_capteur;
-						switch(type){
-						case 'T':
-							type_capteur = TypeMorceau.TEMPERATURE;
-							break;
-						case 'L':
-							type_capteur = TypeMorceau.LUMINOSITE;
-							break;
-						case 'V':
-							type_capteur = TypeMorceau.RIEN;
-							break;
-						}
-						capteurs[j] = new Capteur(type_capteur );
+					for (int j = 0; j < capteurs_xml.length; j++) {						
+						capteurs[j] = new Capteur(getType(capteurs_xml[j].getAttributeValue("type")),module_courant,j );
 					}
 					module_courant = new ModuleCapteurs(Integer.parseInt(mcCourant
 							.getAttributeValue("id")), capteurs);
@@ -138,4 +105,24 @@ public class Xml_manipulation {
 		}
 		return hashSalle;
 	}
+	private static TypeMorceau getType(String type){
+		char type_c = type.charAt(0);
+		TypeMorceau typeMorceau;
+		switch(type_c){
+		case 'T':
+			typeMorceau = TypeMorceau.TEMPERATURE;
+			break;
+		case 'L':
+			typeMorceau = TypeMorceau.LUMINOSITE;
+			break;
+		case 'V':
+			typeMorceau = TypeMorceau.VIDE;
+			break;
+		default:
+			typeMorceau = TypeMorceau.AUTRE;
+			break;
+		}
+		return typeMorceau;
+	}
 }
+
