@@ -2,6 +2,10 @@
 #define HIBERNATE_H_
 #include <avr/sleep.h>
 #include "WProgram.h"
+#include "Modules.h"
+
+// variable bool pour endormir
+static bool isAsleep = false;
 /**
  * prepareSleepMode place une variable à true.
  * A la prochaine boucle de loop() le système va s'endormir.

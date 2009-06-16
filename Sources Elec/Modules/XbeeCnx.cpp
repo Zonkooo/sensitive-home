@@ -1,11 +1,11 @@
 #include "XbeeCnx.h"
 void readXBee() {
 
-	xbee.readPacket();
+	xb.readPacket();
 
-	if (xbee.getResponse().isAvailable()) {
-		if (xbee.getResponse().getApiId() == ZB_RX_RESPONSE) {
-			xbee.getResponse().getZBRxResponse(rx); // permet de renseigner la classe Rx
+	if (xb.getResponse().isAvailable()) {
+		if (xb.getResponse().getApiId() == ZB_RX_RESPONSE) {
+			xb.getResponse().getZBRxResponse(rx); // permet de renseigner la classe Rx
 			if (rx.getOption() == ZB_PACKET_ACKNOWLEDGED) { // on a reçu un ACK
 				flash(statusLed, 1, 10);
 			} else { // on a bien reçu une réponse mais l'envoyeur n'a reçu de ACK
@@ -13,8 +13,8 @@ void readXBee() {
 			}
 			rxData[0] = rx.getData(0);
 			rxData[1] = rx.getData(1);
-		} else if (xbee.getResponse().getApiId() == MODEM_STATUS_RESPONSE) {
-			xbee.getResponse().getModemStatusResponse(msr);
+		} else if (xb.getResponse().getApiId() == MODEM_STATUS_RESPONSE) {
+			xb.getResponse().getModemStatusResponse(msr);
 			// the local XBee sends this response on certain events, like association/dissociation
 
 			if (msr.getStatus() == ASSOCIATED) { // on est associé
@@ -31,12 +31,12 @@ void readXBee() {
 }
 
 int sendXB() {
-	xbee.send(tx);
+	xb.send(tx);
 	// après l'envoi d'un paquet, on attend un ACK et on laisse un timeout de 0.5 seconde.
-	if (xbee.readPacket(500)) {
+	if (xb.readPacket(500)) {
 		// on a bien reçu quelque chose, reste à savoir ce que c'est...
-		if (xbee.getResponse().getApiId() == ZB_TX_STATUS_RESPONSE) {
-			xbee.getResponse().getZBTxStatusResponse(txStatus);
+		if (xb.getResponse().getApiId() == ZB_TX_STATUS_RESPONSE) {
+			xb.getResponse().getZBTxStatusResponse(txStatus);
 			// get the delivery status, the fifth byte
 			if (txStatus.getDeliveryStatus() == SUCCESS) { // c'est un succès, le paquet a bien été transmis!
 				flash(statusLed, 5, 50); return 1;
@@ -63,7 +63,8 @@ void setXBAddr(uint32_t msb, uint32_t lsb) {
 }
 
 void setTxData(uint8_t newdata[]) {
-	strcpy_P(txData, newdata);
+	//strcpy_P(txData, newdata);
+	txData = newdata;
 }
 
 uint8_t* getRxdata() {

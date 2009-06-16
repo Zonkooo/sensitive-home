@@ -21,5 +21,7 @@ void sleepMode() {
 	sleep_disable();
 	isAsleep=false;
 	detachInterrupt(0); // disables interrupt 0 on pin 2 so the wakeUpNow code will not be executed during normal running time. 
+#ifdef DEBUG
 	Serial.println("Woke up!");
+#endif
 }

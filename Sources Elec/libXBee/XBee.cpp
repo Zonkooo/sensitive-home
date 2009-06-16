@@ -21,6 +21,11 @@
 #include "WProgram.h"
 #include "HardwareSerial.h"
 
+extern "C"void __cxa_pure_virtual(void){
+	// call to a pure virtual function happened ... wow, should never happen ... stop
+	while(1);
+}
+
 XBeeResponse::XBeeResponse() {
 
 }
@@ -107,7 +112,7 @@ uint8_t ZBTxStatusResponse::getFrameId() {
 }
 
 uint16_t ZBTxStatusResponse::getRemoteAddress() {
-	return  (getFrameData()[1] << 8) + getFrameData()[2];
+	return (getFrameData()[1] << 8) + getFrameData()[2];
 }
 
 uint8_t ZBTxStatusResponse::getTxRetryCount() {
@@ -140,7 +145,7 @@ XBeeAddress64& ZBRxResponse::getRemoteAddress64() {
 }
 
 uint16_t ZBRxResponse::getRemoteAddress16() {
-	return 	(getFrameData()[8] << 8) + getFrameData()[9];
+	return (getFrameData()[8] << 8) + getFrameData()[9];
 }
 
 uint8_t ZBRxResponse::getOption() {
@@ -173,7 +178,8 @@ void XBeeResponse::getZBRxResponse(XBeeResponse &rxResponse) {
 
 #endif
 
-RxDataResponse::RxDataResponse() : XBeeResponse() {
+RxDataResponse::RxDataResponse() :
+	XBeeResponse() {
 
 }
 
@@ -264,7 +270,7 @@ void XBeeResponse::getRx16Response(XBeeResponse &rx16Response) {
 	rx16->setFrameData(getFrameData());
 	setCommon(rx16Response);
 
-//	rx16->getRemoteAddress16().setAddress((getFrameData()[0] << 8) + getFrameData()[1]);
+	//	rx16->getRemoteAddress16().setAddress((getFrameData()[0] << 8) + getFrameData()[1]);
 }
 
 uint8_t Rx64Response::getRssiOffset() {
@@ -295,7 +301,7 @@ uint8_t& ModemStatusResponse::getStatus() {
 
 void XBeeResponse::getModemStatusResponse(XBeeResponse &modemStatusResponse) {
 
-	ModemStatusResponse* modem = static_cast<ModemStatusResponse*>(&modemStatusResponse);
+	ModemStatusResponse* modem =static_cast <ModemStatusResponse*>(&modemStatusResponse);
 
 	// pass pointer array to subclass
 	modem->setFrameData(getFrameData());
@@ -340,7 +346,8 @@ void XBee::resetResponse() {
 	_response.reset();
 }
 
-XBee::XBee(): _response(XBeeResponse()) {
+XBee::XBee() :
+	_response(XBeeResponse()) {
 	_pos = 0;
 	_escape = false;
 	_checksumTotal = 0;
@@ -397,17 +404,17 @@ bool XBee::readPacket(int timeout) {
 
 	unsigned long start = millis();
 
-    while (int((millis() - start)) < timeout) {
+	while (int((millis() - start)) < timeout) {
 
-     	readPacket();
+		readPacket();
 
-     	if (getResponse().isAvailable()) {
-     		return true;
-     	}
-    }
+		if (getResponse().isAvailable()) {
+			return true;
+		}
+	}
 
-    // timed out
-    return false;
+	// timed out
+	return false;
 }
 void XBee::readPacket() {
 	// reset previous response
@@ -415,17 +422,17 @@ void XBee::readPacket() {
 		resetResponse();
 	}
 
-    while (Serial.available()) {
+	while (Serial.available()) {
 
-        b = Serial.read();
+		b = Serial.read();
 
-        if (_pos > 0 && b == START_BYTE && ATAP == 2) {
-        	// new packet start before previous packeted completed -- discard previous packet and start over
-        	// TODO set warn byte
-        	resetResponse();
-        }
+		if (_pos > 0&& b == START_BYTE && ATAP == 2) {
+			// new packet start before previous packeted completed -- discard previous packet and start over
+			// TODO set warn byte
+			resetResponse();
+		}
 
-		if (_pos > 0 && b == ESCAPE) {
+		if (_pos > 0&& b == ESCAPE) {
 			if (Serial.available()) {
 				b = Serial.read();
 				b = 0x20 ^ b;
@@ -446,69 +453,70 @@ void XBee::readPacket() {
 			_checksumTotal+= b;
 		}
 
-        switch(_pos) {
-			case 0:
-		        if (b == START_BYTE) {
-		        	_pos++;
-		        }
-
-		        break;
-			case 1:
-				// length msb
-				_response.setMsbLength(b);
+		switch (_pos) {
+		case 0:
+			if (b == START_BYTE) {
 				_pos++;
+			}
 
-				break;
-			case 2:
-				// length lsb
-				_response.setLsbLength(b);
-				_pos++;
+			break;
+		case 1:
+			// length msb
+			_response.setMsbLength(b);
+			_pos++;
 
-				break;
-			case 3:
-				_response.setApiId(b);
-				_pos++;
+			break;
+		case 2:
+			// length lsb
+			_response.setLsbLength(b);
+			_pos++;
 
-				break;
-			default:
+			break;
+		case 3:
+			_response.setApiId(b);
+			_pos++;
 
-				if (_pos > MAX_PACKET_SIZE) {
-					// exceed max size.  should never occur
-					_response.setError(true);
-					return;
-				}
+			break;
+		default:
 
-				// check if we're at the end of the packet
-				// packet length does not include start, length, or checksum bytes, so add 3
-				if (_pos == (_response.getPacketLength() + 3)) {
-					// verify checksum
-					if ((_checksumTotal & 0xff) == 0xff) {
-						_response.setChecksum(b);
-						_response.setAvailable(true);
-					} else {
-						// checksum failed
-						_response.setError(true);
-					}
+			if (_pos > MAX_PACKET_SIZE) {
+				// exceed max size.  should never occur
+				_response.setError(true);
+				return;
+			}
 
-					// minus 4 because we start after start,msb,lsb,api
-					_response.setFrameLength(_pos - 4);
-
-					// reset state vars
-					_pos = 0;
-
-					_checksumTotal = 0;
-
-					return;
+			// check if we're at the end of the packet
+			// packet length does not include start, length, or checksum bytes, so add 3
+			if (_pos == (_response.getPacketLength() + 3)) {
+				// verify checksum
+				if ((_checksumTotal & 0xff) == 0xff) {
+					_response.setChecksum(b);
+					_response.setAvailable(true);
 				} else {
-					// add to packet array, starting with the fourth byte of the apiFrame
-					_response.getFrameData()[_pos - 4] = b;
-					_pos++;
+					// checksum failed
+					_response.setError(true);
 				}
-        }
-    }
+
+				// minus 4 because we start after start,msb,lsb,api
+				_response.setFrameLength(_pos - 4);
+
+				// reset state vars
+				_pos = 0;
+
+				_checksumTotal = 0;
+
+				return;
+			} else {
+				// add to packet array, starting with the fourth byte of the apiFrame
+				_response.getFrameData()[_pos - 4] = b;
+				_pos++;
+			}
+		}
+	}
 }
 
-XBeeRequest::XBeeRequest(uint8_t apiId, uint8_t frameId, uint16_t frameDataLength, uint8_t* payloadPtr, uint8_t payloadLength) {
+XBeeRequest::XBeeRequest(uint8_t apiId, uint8_t frameId,
+		uint16_t frameDataLength, uint8_t* payloadPtr, uint8_t payloadLength) {
 	_apiId = apiId;
 	_frameId = frameId;
 	_frameDataLength = frameDataLength;
@@ -566,11 +574,13 @@ XBeeAddress::XBeeAddress() {
 //}
 
 
-XBeeAddress64::XBeeAddress64() : XBeeAddress() {
+XBeeAddress64::XBeeAddress64() :
+	XBeeAddress() {
 
 }
 
-XBeeAddress64::XBeeAddress64(uint32_t msb, uint32_t lsb) : XBeeAddress() {
+XBeeAddress64::XBeeAddress64(uint32_t msb, uint32_t lsb) :
+	XBeeAddress() {
 	_msb = msb;
 	_lsb = lsb;
 }
@@ -591,7 +601,6 @@ void XBeeAddress64::setLsb(uint32_t lsb) {
 	_lsb = lsb;
 }
 
-
 #ifdef SERIES_2
 // calls superclass constructor
 ZBTxRequest::ZBTxRequest(XBeeAddress64 &addr64, uint16_t addr16, uint8_t broadcastRadius, uint8_t option, uint8_t *data, uint8_t dataLength, uint8_t frameId): XBeeRequest(ZB_TX_REQUEST, frameId, ZB_TX_API_LENGTH, data, dataLength) {
@@ -609,19 +618,19 @@ ZBTxRequest::ZBTxRequest(XBeeAddress64 &addr64, uint8_t *data, uint8_t dataLengt
 }
 
 void ZBTxRequest::assembleFrame() {
-		// build frame data from components and returns
-		XBeeRequest::getPacket()[5] = (_addr64.getMsb() >> 24) & 0xff;
-		XBeeRequest::getPacket()[6] = (_addr64.getMsb() >> 16) & 0xff;
-		XBeeRequest::getPacket()[7] = (_addr64.getMsb() >> 8) & 0xff;
-		XBeeRequest::getPacket()[8] = _addr64.getMsb() & 0xff;
-		XBeeRequest::getPacket()[9] = (_addr64.getLsb() >> 24) & 0xff;
-		XBeeRequest::getPacket()[10] = (_addr64.getLsb() >> 16) & 0xff;
-		XBeeRequest::getPacket()[11] = (_addr64.getLsb() >> 8) & 0xff;
-		XBeeRequest::getPacket()[12] = _addr64.getLsb() & 0xff;
-		XBeeRequest::getPacket()[13] = (_addr16 >> 8) & 0xff;
-		XBeeRequest::getPacket()[14] = _addr16 & 0xff;
-		XBeeRequest::getPacket()[15] = _broadcastRadius;
-		XBeeRequest::getPacket()[16] = _option;
+	// build frame data from components and returns
+	XBeeRequest::getPacket()[5] = (_addr64.getMsb() >> 24) & 0xff;
+	XBeeRequest::getPacket()[6] = (_addr64.getMsb() >> 16) & 0xff;
+	XBeeRequest::getPacket()[7] = (_addr64.getMsb() >> 8) & 0xff;
+	XBeeRequest::getPacket()[8] = _addr64.getMsb() & 0xff;
+	XBeeRequest::getPacket()[9] = (_addr64.getLsb() >> 24) & 0xff;
+	XBeeRequest::getPacket()[10] = (_addr64.getLsb() >> 16) & 0xff;
+	XBeeRequest::getPacket()[11] = (_addr64.getLsb() >> 8) & 0xff;
+	XBeeRequest::getPacket()[12] = _addr64.getLsb() & 0xff;
+	XBeeRequest::getPacket()[13] = (_addr16 >> 8) & 0xff;
+	XBeeRequest::getPacket()[14] = _addr16 & 0xff;
+	XBeeRequest::getPacket()[15] = _broadcastRadius;
+	XBeeRequest::getPacket()[16] = _option;
 }
 
 XBeeAddress64& ZBTxRequest::getAddress64() {
@@ -692,7 +701,6 @@ void Tx16Request::setOption(uint8_t option) {
 	_option = option;
 }
 
-
 Tx64Request::Tx64Request(XBeeAddress64 &addr64, uint8_t option, uint8_t *data, uint8_t dataLength, uint8_t frameId) : XBeeRequest(TX_64_REQUEST, frameId, TX_64_API_LENGTH, data, dataLength) {
 	_addr64 = addr64;
 	_option = option;
@@ -716,7 +724,6 @@ void Tx64Request::assembleFrame() {
 
 	XBeeRequest::getPacket()[13] = _option;
 }
-
 
 XBeeAddress64& Tx64Request::getAddress64() {
 	return _addr64;
@@ -742,40 +749,41 @@ void Tx64Request::setOption(uint8_t option) {
 
 void XBeeRequest::assemblePacket() {
 
-		getPacket()[0] = START_BYTE;
-		// compute packet length
-		// frameData length does not include apiId and frameId, so add 2
-		getPacket()[1] = ((getPayloadLength() + getFrameDataLength() + 2) >> 8) & 0xff;
-		getPacket()[2] = (getPayloadLength() + getFrameDataLength() + 2) & 0xff;
+	getPacket()[0] = START_BYTE;
+	// compute packet length
+	// frameData length does not include apiId and frameId, so add 2
+	getPacket()[1] = ((getPayloadLength() + getFrameDataLength() + 2) >> 8)
+			& 0xff;
+	getPacket()[2] = (getPayloadLength() + getFrameDataLength() + 2) & 0xff;
 
-		// calls subclass
-		assembleFrame();
+	// calls subclass
+	assembleFrame();
 
-		getPacket()[3] = _apiId;
-		getPacket()[4] = _frameId;
+	getPacket()[3] = _apiId;
+	getPacket()[4] = _frameId;
 
-		// checksum includes all bytes except start/length and of course checksum
-		//uint8_t checksum = computeChecksum(getPacket(), _frameDataLength + 2, 3);
+	// checksum includes all bytes except start/length and of course checksum
+	//uint8_t checksum = computeChecksum(getPacket(), _frameDataLength + 2, 3);
 
-		uint8_t checksum = 0;
+	uint8_t checksum = 0;
 
-		// compute checksum, start at api id
-		for (int i = 0; i < getFrameDataLength() + 2; i++) {
-			checksum+= getPacket()[i + API_ID_INDEX];
+	// compute checksum, start at api id
+	for (int i = 0; i < getFrameDataLength() + 2; i++) {
+		checksum+= getPacket()[i + API_ID_INDEX];
+	}
+
+	// add payload to checksum
+	if (getPayloadLength() > 0) {
+		for (int i = 0; i < getPayloadLength(); i++) {
+			checksum+= getPayload()[i];
 		}
+	}
 
-		// add payload to checksum
-		if (getPayloadLength() > 0) {
-			for (int i = 0; i < getPayloadLength(); i++) {
-				checksum+= getPayload()[i];
-			}
-		}
+	// perform 2s complement
+	checksum = 0xff - checksum;
 
-		// perform 2s complement
-		checksum = 0xff - checksum;
-
-		// set checksum as last byte in packet
-		getPacket()[getFrameDataLength() + PACKET_OVERHEAD_LENGTH - 1] = checksum;
+	// set checksum as last byte in packet
+	getPacket()[getFrameDataLength() + PACKET_OVERHEAD_LENGTH - 1] = checksum;
 }
 
 // TODO need subclass of XBeeRequest that supports frame id and
@@ -808,7 +816,8 @@ void XBee::send(XBeeRequest &request) {
 	request.assemblePacket();
 
 	// first send everything but the checksum
-	for (int i = 0; i < request.getFrameDataLength() + PACKET_OVERHEAD_LENGTH - 1; i++) {
+	for (int i = 0; i < request.getFrameDataLength() + PACKET_OVERHEAD_LENGTH
+			- 1; i++) {
 		if (i == 0) {
 			// escape special bytes, but not the start byte!
 			sendByte(request.getPacket()[i], false);

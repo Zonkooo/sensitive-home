@@ -31,7 +31,7 @@
 #include "XbeeCnx.h"
 
 void setup() {
-	xbee.begin(9600);
+	xb.begin(9600);
 	Serial.begin(9600); // permet de communiquer en série via Arduino (à virer pour le produit final)
 	attachInterrupt(1, wakeUp, LOW); // voir commentaire dans sleepMode
 	// on précise que les pin sont des pins de lecture:
