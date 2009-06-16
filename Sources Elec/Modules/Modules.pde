@@ -43,9 +43,14 @@ void setup() {
 }
 
 void loop() {
-	if (isAsleep)
+	if (isAsleep) {
+		digitalWrite(ledInternal, LOW);
 		sleepMode();
-	// lecture capteurs
+	}
+#ifdef DEBUG
+	Serial.print("Reading ... ");
+	Serial.println(count);
+#endif
 	luxVal += analogRead(luxPin);
 	luxVal /= 2;
 	tempVal += analogRead(tempPin);
@@ -54,32 +59,46 @@ void loop() {
 	supVal1 /= 2;
 	supVal2 += analogRead(supPin2);
 	supVal2 /= 2;
-
-	/*if (count >= SLEEPTIMER) {
-		// pour le moment, on affiche les données en série.
-		// Plus tard, on enverra sur le Xbee via la variable payLoad (uint8_t[]) 
-		Serial.print("luxVal = "); Serial.println(luxVal);
-		Serial.print("tempVal = "); Serial.println(tempVal);
-		Serial.print("supVal1 = "); Serial.println(supVal1);
-		Serial.print("supVal2 = "); Serial.println(supVal2);
+	/*        payload[0] = luxVal >> 8 & 0xff;
+	 payload[1] = luxVal & 0xff;*/
+	if (count >= SLEEPTIMER) {
+		uint8_t tmpData[64];
+		sprintf_P((char*)tmpData, "%i:%i:%i:%i",luxVal,tempVal,supVal1,supVal2);
+#ifdef DEBUG
+		Serial.print("Sending: ");
+		Serial.println((char*)tmpData);
+#endif
+		setTxData(tmpData);
+		int rtn = sendXB();
+		if (rtn == 0) {
+			Serial.println("Erreur 0");
+		} else if (rtn == 1) {
+			Serial.println("Succes 1");
+		} else {
+			Serial.print("Erreur ");
+			Serial.println(rtn);
+		}
+		/* pour le moment, on affiche les données en série.
+		 Plus tard, on enverra sur le Xbee via la variable payLoad (uint8_t[]) 
+		 */
+		Serial.print("luxVal = ");
+		Serial.println(luxVal);
+		Serial.print("tempVal = ");
+		Serial.println(tempVal);
+		Serial.print("supVal1 = ");
+		Serial.println(supVal1);
+		Serial.print("supVal2 = ");
+		Serial.println(supVal2);
 		Serial.println("Going to sleep...");
-		delay(100); // this delay is needed, the sleep function will provoke a Serial error otherwise!! 
+		delay(100); /* this delay is needed, the sleep function will provoke a Serial error otherwise!! */
 		count = 0;
-		prepareSleepMode(); // sleep function called here
-	}*/
-	count++;
-	if(!isAsleep) delay(333); // on fait trois mesures
-	// envoie des données XBee
-	uint8_t tmpData[64];
-	sprintf_P((char*)tmpData, ("%i:%i:%i:%i"),luxVal,tempVal,supVal1,supVal2);
-	setTxData(tmpData);
-	int rtn = sendXB();
-	if(rtn == 0){
-		Serial.println("Erreur 0");
-	}else if(rtn == 1){
-		Serial.println("Succes 1");
-	}else{
-		Serial.print("Erreur "); Serial.println(rtn);
+		luxVal = 0;
+		tempVal = 0;
+		supVal1 = 0;
+		supVal2=0;
+		prepareSleepMode(); /* sleep function called here*/
 	}
-	delay(1000); // one second!
+	count++;
+	delay(100); /* one third of a second!*/
+
 }
