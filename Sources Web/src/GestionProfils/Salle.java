@@ -1,5 +1,6 @@
 package GestionProfils;
 
+import Jama.Matrix;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -109,10 +110,20 @@ public class Salle
 	 ***   Calibrage lampes   ***
 	 ****************************/
 	
-	public void calibrationLampes()
+	private Matrix A;
+	private ArrayList<Prise> lampes;
+	private ArrayList<Capteur> photocapteurs;
+	
+	/**
+	 * calibre les lampes en les allumant à 100% une à une
+	 * et en observant leur effet sur les capteurs.
+	 * 
+	 * @return
+	 */
+	public Matrix calibrationLampes()
 	{
-		ArrayList<Prise> lampes = new ArrayList<Prise>();
-		ArrayList<Capteur> photocapteurs = new ArrayList<Capteur>();
+		lampes = new ArrayList<Prise>();
+		photocapteurs = new ArrayList<Capteur>();
 		
 		for (Multiprise multiprise : multiprises.values())
 		{
@@ -137,13 +148,46 @@ public class Salle
 			}
 		}
 
+		A = new Matrix(lampes.size(), photocapteurs.size());
 
-		for (Prise prise : lampes)
+		for (int i = 0; i < lampes.size(); i++)
 		{
-			prise.setEtat(Etat.ON);
+			lampes.get(i).setEtat(Etat.ON);
 			
+			try { Thread.sleep(1000); }
+			catch(InterruptedException ie)
+			{ System.out.println(ie); }
+			
+			for (int j = 0; j < photocapteurs.size(); j++)
+			{
+				A.set(i, j, photocapteurs.get(j).getLastValeur());
+			}
+			lampes.get(i).setEtat(Etat.OFF);
+		}
+		
+		return A;
+	}
+	
+	public HashMap<Prise, Integer> getCommandesLampes()
+	{
+		double[] vals = new double[A.getColumnDimension()];
+		for (int i = 0; i < vals.length; i++)
+		{
+			vals[i] = currentProfil.getLuminosite() - photocapteurs.get(i).getLastValeur();
 		}
 
+		Matrix b = new Matrix(vals, 1);
+		
+		Matrix x = A.solve(b);
+		
+		HashMap<Prise, Integer> ret = new HashMap<Prise, Integer>();
+		
+		for (int i = 0; i < lampes.size(); i++)
+		{
+			ret.put(lampes.get(i), (int)Math.round(x.get(i, 1)));
+		}
+		
+		return ret;
 	}
 	
 	/*
