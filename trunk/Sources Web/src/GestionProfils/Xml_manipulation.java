@@ -75,14 +75,13 @@ public class Xml_manipulation {
 				Iterator imp = mpList.iterator();
 				while (imp.hasNext()) {
 					Element mpCourante = (Element) imp.next();
+					multiprise_courante = new Multiprise(Integer.parseInt(mpCourante.getAttributeValue("id")),5);
 					Element[] prises_xml = (Element[]) mpCourante.getChildren().toArray(new Element[mpCourante.getChildren().size()]);
-					Prise[] prises = new Prise[mpCourante.getChildren().size()];
 					for (int j = 0; j < prises_xml.length; j++) {
-						prises[j] = new Prise(getType(prises_xml[j].getAttributeValue("type")),multiprise_courante,j);
+						multiprise_courante.setPrise(new Prise(getType(prises_xml[j].getAttributeValue("type")),multiprise_courante,j));
 						//	new Prise(prises_xml[j].getAttributeValue("type"), 0, false);
 					}
-					multiprise_courante = new Multiprise(Integer.parseInt(mpCourante.getAttributeValue("id")), prises);
-
+					
 					salle_courante.addMultiprise(multiprise_courante);
 				}
 
@@ -90,15 +89,12 @@ public class Xml_manipulation {
 				Iterator imc = mcList.iterator();
 				while (imc.hasNext()) {
 					Element mcCourant = (Element) imc.next();
+					module_courant = new ModuleCapteurs(Integer.parseInt(mcCourant.getAttributeValue("id")),4);
 					Element[] capteurs_xml = (Element[]) mcCourant.getChildren().toArray(new Element[mcCourant.getChildren().size()]);
-					Capteur[] capteurs = new Capteur[mcCourant.getChildren()
-							.size()];
+					Capteur[] capteurs = new Capteur[mcCourant.getChildren().size()];
 					for (int j = 0; j < capteurs_xml.length; j++) {						
-						capteurs[j] = new Capteur(getType(capteurs_xml[j].getAttributeValue("type")),module_courant,j );
+						module_courant.setCapteur(new Capteur(getType(capteurs_xml[j].getAttributeValue("type")),module_courant,j ));
 					}
-					module_courant = new ModuleCapteurs(Integer.parseInt(mcCourant
-							.getAttributeValue("id")), capteurs);
-					System.out.println(mcCourant.getAttributeValue("id"));
 					salle_courante.addModule(module_courant);
 				}
 			}

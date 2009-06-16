@@ -6,15 +6,16 @@ package GestionProfils;
  */
 public abstract  class Socle 
 {
-	protected long ID;
+	protected int ID;
 	protected Morceau[] morceaux;
 	
-	public Socle(long ID)
+	public Socle(int ID,int taille)
 	{
 		this.ID = ID;
+		morceaux = new Morceau[taille];
 	}
 
-	public Socle(long ID, Morceau[] morceaux)
+	public Socle(int ID, Morceau[] morceaux)
 	{
 		this.ID = ID;
 		this.morceaux = morceaux;
@@ -30,7 +31,7 @@ public abstract  class Socle
 		return morceaux[index];
 	}
 
-	public long getID()
+	public int getID()
 	{
 		return ID;
 	}
