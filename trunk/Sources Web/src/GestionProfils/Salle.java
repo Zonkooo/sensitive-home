@@ -1,5 +1,6 @@
 package GestionProfils;
 
+import Jama.Matrix;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -99,31 +100,47 @@ public class Salle {
 	 *** Calibrage lampes ***
 	 ****************************/
 
-	public void calibrationLampes() {
+	public void calibrationLampes()
+	{
 		ArrayList<Prise> lampes = new ArrayList<Prise>();
 		ArrayList<Capteur> photocapteurs = new ArrayList<Capteur>();
 
-		for (Multiprise multiprise : multiprises) {
-			for (int i = 0; i < multiprise.getCapacity(); i++) {
+		for (Multiprise multiprise : multiprises)
+		{
+			for (int i = 0; i < multiprise.getCapacity(); i++)
+			{
 				Prise p = multiprise.getPrise(i);
-				if (p != null && p.getType() == TypeMorceau.LUMINOSITE) {
+				if (p != null && p.getType() == TypeMorceau.LUMINOSITE)
+				{
 					p.setEtat(Etat.OFF);
 					lampes.add(p);
 				}
 			}
 		}
 
-		for (ModuleCapteurs moduleCapteurs : modules) {
-			for (int i = 0; i < moduleCapteurs.getCapacity(); i++) {
+		for (ModuleCapteurs moduleCapteurs : modules)
+		{
+			for (int i = 0; i < moduleCapteurs.getCapacity(); i++)
+			{
 				Capteur c = moduleCapteurs.getCapteur(i);
 				if (c != null && c.getType() == TypeMorceau.LUMINOSITE)
+				{
 					photocapteurs.add(c);
+				}
 			}
 		}
 
-		for (Prise prise : lampes) {
-			prise.setEtat(Etat.ON);
+		Matrix m = new Matrix(lampes.size(), photocapteurs.size());
 
+		for (int i = 0; i < lampes.size(); i++)
+		{
+			lampes.get(i).setEtat(Etat.ON);
+			//TODO attendre 1 seconde
+			for (int j = 0; j < photocapteurs.size(); j++)
+			{
+				m.set(i, j, photocapteurs.get(j).getLastValeur());
+			}
+			lampes.get(i).setEtat(Etat.OFF);
 		}
 
 	}
