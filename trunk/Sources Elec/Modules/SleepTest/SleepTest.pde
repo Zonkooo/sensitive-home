@@ -111,7 +111,7 @@ void loop() {
 			Serial.println("Going to sleep...");
 			delay(100); // this delay is needed, the sleep function will provoke a Serial error otherwise!! 
 			count = 0;
-			prepareForSleep(); // sleep function called here
+			//prepareForSleep(); // sleep function called here
 		}
 		count++;
 		delay(333); // on fait trois mesures
