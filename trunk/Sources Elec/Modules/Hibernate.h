@@ -1,6 +1,7 @@
 #ifndef HIBERNATE_H_
 #define HIBERNATE_H_
-
+#include <avr/sleep.h>
+#include "WProgram.h"
 /**
  * prepareSleepMode place une variable à true.
  * A la prochaine boucle de loop() le système va s'endormir.

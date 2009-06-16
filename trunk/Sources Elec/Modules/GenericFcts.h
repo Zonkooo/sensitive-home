@@ -7,7 +7,7 @@
  
 #ifndef GENERICFCTS_H_
 #define GENERICFCTS_H_
-
+#include "WProgram.h"
 /* pwm permet de gérer le PWM d'une sortie (pin).
  * Cette fonction peut augmenter comme descendre progressivement.
  * Il suffit de renseigner start et stop (respectivement début et fin).

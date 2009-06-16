@@ -36,8 +36,9 @@
 # $Id$
 
 TARGET = Modules
-OUTPUT_DIR = .
-#bin
+OUTPUT_DIR = bin
+
+CORE_A = 168core.a
 INSTALL_DIR = /home/noxon/softs/arduino-0016
 PORT = /dev/tty.USB*
 UPLOAD_RATE = 19200
@@ -45,7 +46,7 @@ AVRDUDE_PROGRAMMER = stk500v1
 MCU = atmega168
 F_CPU = 16000000
 OTHER_C_INCLUDES = ../libXBee/XBee.c
-OTHER_CXX_INCLUDES = 
+OTHER_CXX_INCLUDES =  GenericFcts.cpp XbeeCnx.cpp Hibernate.cpp
 ############################################################################
 # Below here nothing should be changed...
 
@@ -146,9 +147,11 @@ applet_files: $(TARGET).pde
 	# refer to this new, automatically generated, file. 
 	# Not the original .pde file you actually edit...
 	test -d $(OUTPUT_DIR) || mkdir $(OUTPUT_DIR)
-	echo '#include "WProgram.h"' > $(OUTPUT_DIR)/$(TARGET).cpp
-	cat $(TARGET).pde >> $(OUTPUT_DIR)/$(TARGET).cpp
-	cat $(ARDUINO)/main.cxx >> $(OUTPUT_DIR)/$(TARGET).cpp
+	echo '#include "WProgram.h"' > $(TARGET).cpp
+#	echo '#include "WProgram.h"' > $(OUTPUT_DIR)/$(TARGET).cpp
+#	cat $(TARGET).pde >> $(OUTPUT_DIR)/$(TARGET).cpp
+	cat $(TARGET).pde >> $(TARGET).cpp
+	cat $(ARDUINO)/main.cxx >> $(TARGET).cpp
 
 elf: $(OUTPUT_DIR)/$(TARGET).elf
 hex: $(OUTPUT_DIR)/$(TARGET).hex
@@ -205,11 +208,11 @@ extcoff: $(TARGET).elf
 	$(NM) -n $< > $@
 
 	# Link: create ELF output file from library.
-$(OUTPUT_DIR)/$(TARGET).elf: $(TARGET).pde $(OUTPUT_DIR)/core.a 
-	$(CC) $(ALL_CFLAGS) -o $@ $(OUTPUT_DIR)/$(TARGET).cpp -L. $(OUTPUT_DIR)/core.a $(LDFLAGS)
+$(OUTPUT_DIR)/$(TARGET).elf: $(TARGET).pde $(OUTPUT_DIR)/$(CORE_A) 
+	$(CC) $(ALL_CFLAGS) -o $@ $(TARGET).cpp -L. $(OUTPUT_DIR)/$(CORE_A) $(LDFLAGS)
 
-$(OUTPUT_DIR)/core.a: $(OBJ)
-	@for i in $(OBJ); do echo $(AR) rcs $(OUTPUT_DIR)/core.a $$i; $(AR) rcs $(OUTPUT_DIR)/core.a $$i; done
+$(OUTPUT_DIR)/$(CORE_A): $(OBJ)
+	@for i in $(OBJ); do echo $(AR) rcs $(OUTPUT_DIR)/$(CORE_A) $$i; $(AR) rcs $(OUTPUT_DIR)/$(CORE_A) $$i; done
 
 
 
@@ -243,7 +246,7 @@ $(OUTPUT_DIR)/core.a: $(OBJ)
 # Target: clean project.
 clean:
 	$(REMOVE) $(OUTPUT_DIR)/$(TARGET).hex $(OUTPUT_DIR)/$(TARGET).eep $(OUTPUT_DIR)/$(TARGET).cof $(OUTPUT_DIR)/$(TARGET).elf \
-	$(OUTPUT_DIR)/$(TARGET).map $(OUTPUT_DIR)/$(TARGET).sym $(OUTPUT_DIR)/$(TARGET).lss $(OUTPUT_DIR)/core.a \
+	$(OUTPUT_DIR)/$(TARGET).map $(OUTPUT_DIR)/$(TARGET).sym $(OUTPUT_DIR)/$(TARGET).lss $(OUTPUT_DIR)/$(CORE_A) \
 	$(OBJ) $(LST) $(SRC:.c=.s) $(SRC:.c=.d) $(CXXSRC:.cpp=.s) $(CXXSRC:.cpp=.d)
 
 .PHONY:	all build elf hex eep lss sym program coff extcoff clean applet_files sizebefore sizeafter
