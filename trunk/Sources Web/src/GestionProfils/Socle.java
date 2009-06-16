@@ -8,6 +8,11 @@ public abstract  class Socle
 {
 	protected long ID;
 	protected Morceau[] morceaux;
+	
+	public Socle(long ID)
+	{
+		this.ID = ID;
+	}
 
 	public Socle(long ID, Morceau[] morceaux)
 	{
