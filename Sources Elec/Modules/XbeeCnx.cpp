@@ -1,4 +1,4 @@
-#include "XBeeCnx.h"
+#include "XbeeCnx.h"
 void readXBee() {
 
 	xbee.readPacket();

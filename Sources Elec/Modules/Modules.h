@@ -2,7 +2,7 @@
 #define MODULES_HPP_
 #define SLEEPTIMER 4
 #define DEBUG
-#include <avr/sleep.h>
+
 #include <inttypes.h>
 #include <stdio.h>
 // définition des pins
