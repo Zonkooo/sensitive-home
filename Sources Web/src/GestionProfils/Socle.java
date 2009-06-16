@@ -20,7 +20,7 @@ public abstract  class Socle
 		morceaux[m.getPosition()] = m;
 	}
 	
-	protected Prise getMorceau(int index)
+	protected Morceau getMorceau(int index)
 	{
 		return morceaux[index];
 	}
