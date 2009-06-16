@@ -7,8 +7,6 @@ import java.util.Iterator;
 public class Salle
 {
 	private String nom;
-	private int currentTemperature;
-	private int currentLuminosite;
 
 	private ArrayList<Multiprise> multiprises;
 	private ArrayList<ModuleCapteurs> modules;
@@ -19,8 +17,6 @@ public class Salle
 	public Salle(String nom)
 	{
 		this.nom = nom;
-		this.currentTemperature = Capteur.VALEUR_INCONNUE;
-		this.currentLuminosite = Capteur.VALEUR_INCONNUE;
 		this.multiprises = new ArrayList<Multiprise>();
 		this.modules = new ArrayList<ModuleCapteurs>();
 	}
@@ -112,6 +108,47 @@ public class Salle
 		this.availablesProfils.add(sp);
 	}
 	
+	/****************************
+	 ***   Calibrage lampes   ***
+	 ****************************/
+	
+	public void calibrationLampes()
+	{
+		ArrayList<Prise> lampes = new ArrayList<Prise>();
+		ArrayList<Capteur> photocapteurs = new ArrayList<Capteur>();
+		
+		for (Multiprise multiprise : multiprises)
+		{
+			for(int i = 0; i < multiprise.getCapacity(); i++)
+			{
+				Prise p = multiprise.getPrise(i);
+				if(p != null && p.getType() == TypeMorceau.LUMINOSITE)
+				{
+					p.setEtat(Etat.OFF);
+					lampes.add(p);
+				}
+			}
+		}
+		
+		for (ModuleCapteurs moduleCapteurs : modules)
+		{
+			for(int i = 0; i < moduleCapteurs.getCapacity(); i++)
+			{
+				Capteur c = moduleCapteurs.getCapteur(i);
+				if(c != null && c.getType() == TypeMorceau.LUMINOSITE)
+					photocapteurs.add(c);
+			}
+		}
+
+
+		for (Prise prise : lampes)
+		{
+			prise.setEtat(Etat.ON);
+			
+		}
+
+	}
+	
 	/*
 	 * Analyse la valeur des capteurs et envoie la commande en conséquence à la multiprise
 	 */
@@ -123,7 +160,7 @@ public class Salle
 		while(itMC.hasNext()){
 			//on fait la moyenne des valeurs des capteurs de meme type
 			for(int i=0;i<4;i++){ //on parcourt les 4 capteurs de chaque module
-				Capteur capteurCourant = itMC.next().getCapteurs(i);
+				Capteur capteurCourant = itMC.next().getCapteur(i);
 				if(capteurCourant.getType()==TypeMorceau.TEMPERATURE){
 					temp_courante_capteur.add(capteurCourant.getLastValeur());
 				} else if(capteurCourant.getType()==TypeMorceau.LUMINOSITE) {
