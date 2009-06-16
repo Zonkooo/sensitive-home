@@ -13,6 +13,7 @@ import com.developpez.adiguba.shell.Shell;
 
 
 public class Dhcp {
+	//TODO: virer le main qui ne sert que pour les tests
 
 	public static void main(String[] args) {
 		rechercheAdresseXport();
