@@ -65,7 +65,7 @@ public class Salle
 		modules.remove(m);
 	}
 	
-	public void addAppareil(Multiprise mp, int i, Appareil a)
+	public void addAppareil(Multiprise mp, int i, TypeMorceau a)
 	{
 		Prise p = new Prise(a, mp, i);
 		mp.setPrise(p);
@@ -94,7 +94,7 @@ public class Salle
 		}
 			
 		for(Prise p : newProfil.getPrises())
-			p.getOwner().setEtat(newProfil.getEtat(p), p.getPosition());
+			p.getOwner().setEtatPrise(newProfil.getEtat(p), p.getPosition());
 
 		this.currentProfil = newProfil;
 	}
