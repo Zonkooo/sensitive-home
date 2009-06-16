@@ -80,19 +80,19 @@ public class Xml_manipulation {
 					Prise[] prises = new Prise[mpCourante.getChildren().size()];
 					for (int j = 0; j < prises_xml.length; j++) {
 						char type = prises_xml[j].getAttributeValue("type").charAt(0);
-						Appareil appareil;
+						TypeMorceau typeMorceau;
 						switch(type){
 						case 'T':
-							appareil = Appareil.RADIATEUR;
+							typeMorceau = ;
 							break;
 						case 'L':
-							appareil = Appareil.LAMPE;
+							typeMorceau = Appareil.LAMPE;
 							break;
 						case 'V':
-							appareil = Appareil.VIDE;
+							typeMorceau = Appareil.VIDE;
 							break;
 						case 'A':
-							appareil = Appareil.AUTRE;
+							typeMorceau = Appareil.AUTRE;
 							break;
 						}
 						prises[j] = new Prise(appareil,multiprise_courante,j);

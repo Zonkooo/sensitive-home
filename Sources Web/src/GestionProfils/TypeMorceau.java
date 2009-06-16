@@ -13,5 +13,6 @@ public enum TypeMorceau
 {
 	LUMINOSITE, 
 	TEMPERATURE,
+	AUTRE,
 	RIEN;
 }
