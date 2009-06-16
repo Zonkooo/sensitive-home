@@ -1,5 +1,9 @@
 package sensitive;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
 /**
  * représente une zone sur la surface tactile
  * et lui associe une fft, pour l'identifier ensuite.
@@ -8,15 +12,19 @@ package sensitive;
  */
 public class Bouton 
 {
+	ArrayList<ActionListener> listeners;
+	
 	private double[][] fft;
 
 	/**
 	 * créé un bouton en enregistrant sa signature sonore en fft
+	 * les deux cannaux (eventuels) de la FFT doivent être en fft[0] et fft[1]
 	 * 
 	 * @param fft
 	 */
 	public Bouton(double[][] fft)
 	{
+		this.listeners = new ArrayList<ActionListener>();
 		this.fft = new double[fft.length][fft[0].length];
 		
 		//duplication du tableau
@@ -48,4 +56,26 @@ public class Bouton
 
         return correlation;
     }
+	
+	/**********************************
+	 ***   Gestion des evenements   ***
+	 **********************************/
+	
+	public void addListener(ActionListener al)
+	{
+		this.listeners.add(al);
+	}
+	
+	public void removeListener(ActionListener al)
+	{
+		this.listeners.remove(al);
+	}
+	
+	public void pressButton()
+	{
+		ActionEvent e = new ActionEvent(this, 0, "");
+		
+		for (ActionListener actionListener : listeners)
+			actionListener.actionPerformed(e);
+	}
 }

@@ -177,7 +177,7 @@ public class FFT
 
         for (int i = 0; i < n/2; i++)
         {
-            mag[i] = (double) (Math.sqrt(xre[i] * xre[i] + xim[i] * xim[i]));
+            mag[i] = (double)(xre[i] * xre[i] + xim[i] * xim[i]);
         }
         return mag;
     }
