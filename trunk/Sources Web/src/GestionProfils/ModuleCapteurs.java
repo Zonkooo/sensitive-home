@@ -17,7 +17,7 @@ public class ModuleCapteurs extends Socle
 		super.setMorceau(c);
 	}
 
-	public Capteur getCapteurs(int index)
+	public Capteur getCapteur(int index)
 	{
 		return (Capteur)(super.getMorceau(index));
 	}
