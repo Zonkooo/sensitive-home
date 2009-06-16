@@ -9,7 +9,7 @@ package GestionProfils;
  *
  * @author raphael
  */
-public enum TypeCapteur 
+public enum TypeMorceau 
 {
 	LUMINOSITE, 
 	TEMPERATURE,

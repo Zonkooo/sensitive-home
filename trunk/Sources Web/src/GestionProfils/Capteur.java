@@ -4,42 +4,16 @@ package GestionProfils;
  *
  * @author raphael
  */
-public class Capteur 
+public class Capteur extends Morceau
 {
 	public final static int VALEUR_INCONNUE = Integer.MIN_VALUE;
 	
-	private TypeCapteur type;
+	private TypeMorceau type;
 	private int lastValeur;
 
-	public Capteur(TypeCapteur type)
+	public Capteur(TypeMorceau type, Socle owner, int position)
 	{
-		this.type = type;
-	}
-
-	public Capteur()
-	{
-		this.type = TypeCapteur.RIEN;
-	}
-
-	public int getLastValeur()
-	{
-		return lastValeur;
-	}
-
-	public TypeCapteur getType()
-	{
-		return type;
-	}
-
-	public void setLastValeur(int lastValeur)
-	{
-		this.lastValeur = lastValeur;
-	}
-
-	public void setType(TypeCapteur type)
-	{
-		this.type = type;
-	}
-	
-	
+		super(type,owner, position);
+		lastValeur =0;
+	}	
 }
