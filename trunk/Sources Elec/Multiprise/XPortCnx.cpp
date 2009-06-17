@@ -7,16 +7,6 @@ extern "C"void __cxa_pure_virtual(void){
 	// call to a pure virtual function happened ... wow, should never happen ... stop
 	while(1);
 }
-void initXPortCnx() {
-	if (hasBeenInit)
-		return;
-	Serial.begin(9600);
-}
-
-void sendXPort(const char* data) {
-	Serial.print(data);
-}
-
 void recvXPort() {
 	time = millis();
 	if(Serial.available() <= 0) return;

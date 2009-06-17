@@ -29,7 +29,6 @@
  */
 //#include "XbeeCnx.h"
 //#include "MpCtrl.h"
-#define DEBUG
 #include "XPortCnx.h"
 /* A MODIFIER!!
  * ATTENTION: les deux premières sont des prises NORMALES les autres PWM
@@ -37,20 +36,16 @@
 #define NB_PRISES 5
 /* prises définit les pins qui contrôlent les prises. La commande contient le numéro de la prise et non le pin associé.
  */
-const int prises[NB_PRISES] = { 7, 8, 9, 10, 11 };
+int prises[NB_PRISES] = { 7, 8, 9, 10, 11 };
 int valueI, priseI;
 char valueC[3], ackMsg[recvMsgLength+4], *recvXP, priseC[1];
-#ifdef DEBUG
-bool found = false;
-#endif
 
 void setup() {
-	initXPortCnx();
+	Serial.begin(9600);
 	int iterator;
 	for (iterator=0; iterator<NB_PRISES-1; iterator++) {
 		pinMode(prises[iterator], OUTPUT);
 	}
-	pinMode(13, OUTPUT);
 }
 
 void loop() {
@@ -73,13 +68,15 @@ void loop() {
 			resetRecvBuffer();
 			return;
 		}
-		sprintf(ackMsg, "[%i] sur pin [%i]", valueI, prises[priseI]);
-		sendXPort(ackMsg);
+		/*sprintf(ackMsg, "%i pin %i", valueI, prises[priseI]);
+		ackMsg[recvMsgLength+4]=0;
+		Serial.print(ackMsg);
+		ackMsg[0]=0; // reset variable*/
 		if (priseI < 2) { // c'est une prise ON/OFF
 #ifdef DEBUG
 			if (valueI != 0&& valueI != 1) {
 				sprintf(ackMsg, "Valeur:[%i] fausse", valueI);
-				sendXPort(ackMsg);
+				Serial.print(ackMsg);
 			}
 #endif
 			digitalWrite(prises[priseI], (valueI==1) ? HIGH : LOW);
@@ -87,7 +84,7 @@ void loop() {
 			analogWrite(prises[priseI], valueI);
 		}
 		sprintf(ackMsg, "/ACK:%s", &recvXP[1]);
-		sendXPort(ackMsg);
+		Serial.print(ackMsg);
 		resetRecvBuffer();
 	}
 	// test XBee
