@@ -31,15 +31,13 @@ public class Communication {
 	String[] message_split;
 	
 	
-//	public static void main(String[] args){
-//		Communication communication = new Communication("192.168.0.11");
-//		communication.analyseData("12:1:2:3:4");
-//		//communication.setup();
-//		communication.sendMessage("Commande");
-//		while(true){
-//			communication.listen();
-//		}
-//	}
+	public static void main(String[] args){
+		Communication communication = new Communication("192.168.0.11");
+		while(true){
+			communication.listen();
+			communication.sendSomeData((byte) 'a');
+		}
+	}
 	
 	public Communication(String ip){
 	  host = ip;
@@ -54,12 +52,11 @@ public class Communication {
 	    if(myDataIn=='/'){ //signal de début d'un message de type /adresse du module de capteur:val_cap1:val_cap2:val_cap3:val_cap4\
 	    	System.out.println("début d'un message");
 	    	String message = "";
-	    	while(myDataIn != ';'){ //on attend de recevoir le signal de fin d'un message
-	    		if (dataIsWaiting() == true && (myDataIn = getSomeData()) !=';') {
+	    	while(myDataIn != '\\'){ //on attend de recevoir le signal de fin d'un message
+	    		if (dataIsWaiting() == true && (myDataIn = getSomeData()) !='\\') {
 	    			message = message + (char)myDataIn;
 	    		}
 	    	}
-	    	System.out.println("message reçu: "+message);
 	    	analyseData(message);
 	    }
 	  }
@@ -69,20 +66,29 @@ public class Communication {
 		//on sait de quelle multiprise vient les données puisqu'on est conecté à celle-ci
 		//on a besoin de savoir de quel capteur viennent les données
 		message_split = message.split(":");
-		//on parcourt la liste de salles
-		for (Salle itS : Maison.getMaison().getSalles()) {
-			Salle salleCourante = itS;
-			//on parcourt la liste des modules de capteurs de la salle courante
-			for (ModuleCapteurs itMC : salleCourante.getModules().values()) {
-				//est-ce que le module dont on vient de recevoir les données est celui que l'on parcourt?
-				ModuleCapteurs moduleCourant = itMC;
-				if(moduleCourant.getID()==Long.parseLong(message_split[0])){
-					System.out.println("le message provient de la salle: "+salleCourante);
-					for(int i=0;i<4;i++){ //on modifie la valeur du capteur à partir du message reçu
-						moduleCourant.getCapteur(i).setLastValeur(Integer.parseInt(message_split[i+1]));
+		//On regarde si on a affaire à des données ou un accusé de réception
+		if(message_split.length==5){ //données car message de la forme /module:d0:d1:d2:d3\
+			System.out.println("Données d'un module de capteur: "+message);
+			//On met à jour la valeur des capteurs dont on vient de recevoir l'info
+			//On parcourt la liste de salles
+			for (Salle itS : Maison.getMaison().getSalles()) {
+				Salle salleCourante = itS;
+				//on parcourt la liste des modules de capteurs de la salle courante
+				for (ModuleCapteurs itMC : salleCourante.getModules().values()) {
+					//est-ce que le module dont on vient de recevoir les données est celui que l'on parcourt?
+					ModuleCapteurs moduleCourant = itMC;
+					if(moduleCourant.getID()==Long.parseLong(message_split[0])){
+						System.out.println("le message provient de la salle: "+salleCourante);
+						for(int i=0;i<4;i++){ //on modifie la valeur du capteur à partir du message reçu
+							moduleCourant.getCapteur(i).setLastValeur(Integer.parseInt(message_split[i+1]));
+						}
 					}
 				}
 			}
+		} else if(message_split.length==3){ //accusé car message de la forme /ACK:prise:val\
+			System.out.println("Accusé du message: "+message);
+		} else {
+			System.out.println("message de type inconnu: "+message);
 		}
 	}
 
@@ -118,7 +124,7 @@ public class Communication {
 	  try {
 	    if (myInputStream.available()>0) {      // check to see if any bytes are available
 	      bytesAvailable = true;                // ...and if they are set the variable to true
-	      System.out.println(myInputStream.available() + " bytes available...");
+//	      System.out.println(myInputStream.available() + " bytes available...");
 	    }
 	  }
 	  catch(Exception e) {
@@ -135,7 +141,7 @@ public class Communication {
 	  try {
 	    if (myInputStream.available()>0) {  //   only read the byte if there's a byte to read [this is a redundant check]
 	      inData = myInputStream.readByte();  // read a byte from the input stream
-	      System.out.println("data received: " + inData);
+//	      System.out.println("data received: " + (char)inData);
 	    }
 	  }
 	  catch(Exception e){
@@ -159,7 +165,7 @@ public class Communication {
 	  }
 	  try{
 	    myOutputStream.writeByte(outData); // write a byte to the output stream
-	    System.out.println("data sent: " + outData);
+//	    System.out.println("data sent: " + outData);
 	  }
 	  catch(Exception e){
 	    e.printStackTrace();
