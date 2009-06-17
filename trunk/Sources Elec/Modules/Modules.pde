@@ -34,39 +34,43 @@ void setup() {
 	Serial.begin(9600); // permet de communiquer en série via Arduino (à virer pour le produit final)
 	attachInterrupt(1, wakeUp, LOW); // voir commentaire dans sleepMode
 	// on précise que les pin sont des pins de lecture:
-	pinMode(luxPin, INPUT);
-	pinMode(tempPin, INPUT);
-	pinMode(supPin1, INPUT);
-	pinMode(supPin2, INPUT);
+	pinMode(sensor1Pin, INPUT);
+	pinMode(sensor2Pin, INPUT);
+	pinMode(sensor3Pin, INPUT);
+	pinMode(sensor4Pin, INPUT);
 	// on allume la led interne
 	digitalWrite(ledInternal, HIGH);
 }
 
 void loop() {
-	if (isAsleep) {
+	if (isAsleep()) {
+#ifdef DEBUG
+		Serial.print("Dodo: "); Serial.println((isAsleep())?"true":"false");
+		delay(100); // pour le Serial
+#endif
 		digitalWrite(ledInternal, LOW);
+		delay(50); // le temps d'éteindre la LED (on sait jamais...)
 		sleepMode();
 	}
 #ifdef DEBUG
 	Serial.print("Reading ... ");
 	Serial.println(count);
 #endif
-	luxVal += analogRead(luxPin);
-	luxVal /= 2;
-	tempVal += analogRead(tempPin);
-	tempVal /= 2;
-	supVal1 += analogRead(supPin1);
-	supVal1 /= 2;
-	supVal2 += analogRead(supPin2);
-	supVal2 /= 2;
-	/*        payload[0] = luxVal >> 8 & 0xff;
-	 payload[1] = luxVal & 0xff;*/
-	if (count >= SLEEPTIMER) {
+	sensor1Val += analogRead(sensor1Pin);
+	sensor1Val /= 2;
+	sensor2Val += analogRead(sensor2Pin);
+	sensor2Val /= 2;
+	sensor3Val += analogRead(sensor3Pin);
+	sensor3Val /= 2;
+	sensor4Val += analogRead(sensor4Pin);
+	sensor4Val /= 2;
+
+	if (count > SLEEPTIMER) {
 		uint8_t tmpData[64];
-		sprintf_P((char*)tmpData, "%i:%i:%i:%i",luxVal,tempVal,supVal1,supVal2);
+		//sprintf_P((char*)tmpData, "%i:%i:%i:%i",sensor1Val,sensor2Val,sensor3Val,sensor4Val);
 #ifdef DEBUG
-		Serial.print("Sending: ");
-		Serial.println((char*)tmpData);
+		Serial.print("Sending");
+		//Serial.println((char*)tmpData);
 #endif
 		setTxData(tmpData);
 		int rtn = sendXB();
@@ -83,22 +87,22 @@ void loop() {
 		 Plus tard, on enverra sur le Xbee via la variable payLoad (uint8_t[]) 
 		 */
 
-		Serial.print("luxVal = ");
-		Serial.println(luxVal);
-		Serial.print("tempVal = ");
-		Serial.println(tempVal);
-		Serial.print("supVal1 = ");
-		Serial.println(supVal1);
-		Serial.print("supVal2 = ");
-		Serial.println(supVal2);
+		Serial.print("sensor1Val = ");
+		Serial.println(sensor1Val);
+		Serial.print("sensor2Val = ");
+		Serial.println(sensor2Val);
+		Serial.print("sensor3Val = ");
+		Serial.println(sensor3Val);
+		Serial.print("sensor4Val = ");
+		Serial.println(sensor4Val);
 		Serial.println("Going to sleep...");
 #endif
 		delay(100); /* this delay is needed, the sleep function will provoke a Serial error otherwise!! */
 		count = 0;
-		luxVal = 0;
-		tempVal = 0;
-		supVal1 = 0;
-		supVal2=0;
+		sensor1Val = 0;
+		sensor2Val = 0;
+		sensor3Val = 0;
+		sensor4Val=0;
 		prepareSleepMode(); /* sleep function called here*/
 	}
 	count++;

@@ -4,8 +4,6 @@
 #include "WProgram.h"
 #include "Modules.h"
 
-// variable bool pour endormir
-static bool isAsleep = false;
 /**
  * prepareSleepMode place une variable à true.
  * A la prochaine boucle de loop() le système va s'endormir.
@@ -26,4 +24,5 @@ void wakeUp();
  */
 void sleepMode();
 
+bool isAsleep();
 #endif /*HIBERNATE_H_*/
