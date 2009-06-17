@@ -1,3 +1,4 @@
+#include "WProgram.h"
 /* Christopher Rabotin
  * Sensitive Home (http://sensitive-home.googlecode.com)
  * Created on Jun 10, 2009
@@ -92,4 +93,12 @@ void loop() {
 	}
 	// test XBee
 	delay(500); // A CHANGER!
+}
+int main(void) {
+	init();
+	setup();
+	for (;;) {
+		loop();
+	}
+	return 0;
 }
