@@ -8,6 +8,11 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import GestionProfils.Maison;
+import GestionProfils.Multiprise;
+import GestionProfils.Salle;
+import GestionProfils.Xml_manipulation;
+
 import com.developpez.adiguba.shell.Shell;
 
 
@@ -73,6 +78,12 @@ public class Dhcp {
 									PrintWriter fichierSortie = new PrintWriter (bw);
 									fichierSortie.println("host XPORT"+numeroXPORTaAjouter+"  {\n	hardware ethernet "+stCouranteLog+" ; fixed-address 192.168.0.1"+numeroXPORTaAjouter+";\n}");
 									fichierSortie.close();
+									//TODO: vérifier que la salle où l'on ajoute les nouveaux éléments s'appelle vide
+									for (Salle s : Maison.getMaison().getSalles()) {
+										if(s.toString().equals("vide")){
+											s.addMultiprise(new Multiprise(numeroXPORTaAjouter,5,"192.168.0.1"+numeroXPORTaAjouter));
+										}
+									}
 									//On relance le serveur dhcp pour attribuer l'adresse ip au nouveau module xport
 									if(sh.command("sudo /etc/init.d/dhcp3-server force-reload").consumeAsString().equals(" * Starting DHCP server dhcpd3\n * check syslog for diagnostics.\n   ...fail!")){
 										System.out.println("Serveur DHCP n'a pas réussi à se relancer");
