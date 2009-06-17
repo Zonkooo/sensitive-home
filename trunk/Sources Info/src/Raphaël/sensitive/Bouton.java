@@ -12,8 +12,7 @@ import java.util.ArrayList;
  */
 public class Bouton 
 {
-	ArrayList<ActionListener> listeners;
-	
+	private ArrayList<ActionListener> listeners;	
 	private double[][] fft;
 
 	/**
@@ -31,6 +30,39 @@ public class Bouton
 		for (int i = 0; i < fft.length; i++)
 			for (int j = 0; j < fft[0].length; j++)
 				this.fft[i][j] = fft[i][j];
+	}
+	
+	/**
+	 * construit un bouton en écoutant l'entrée passée en param
+	 * ce qui nécéssite donc une action de l'utilisateur
+	 * pendant ce constructeur, sans quoi il ne retournera pas.
+	 * 
+	 * @param capture entrée à écouter
+	 */
+	public Bouton(Capture capture)
+	{
+		int[][] audio;
+		double[][] audioDouble1 = new double[2][];
+		double[][] audioDouble2 = new double[2][];
+		
+		System.out.println("tapez !");
+		audio = capture.getTap();
+		audioDouble1[0] = Outils.normalize(FFT.fftMag(FFT.zeroPadding(audio[0])));
+		if(audio.length == 2)//stereo
+			audioDouble1[1] = Outils.normalize(FFT.fftMag(FFT.zeroPadding(audio[1])));
+
+		System.out.println("encore !");
+		audio = capture.getTap();
+		audioDouble2[0] = Outils.normalize(FFT.fftMag(FFT.zeroPadding(audio[0])));
+		if(audio.length == 2)//stereo
+			audioDouble2[1] = Outils.normalize(FFT.fftMag(FFT.zeroPadding(audio[1])));
+
+		//mix 2 coups
+		for(int i = 0; i < audioDouble1.length; i++)
+			for(int j = 0; j < audioDouble1[0].length; j++)
+				audioDouble1[i][j] = (audioDouble1[i][j] + audioDouble2[i][j])/2;
+			
+		this.fft = audioDouble1;
 	}
 	
 	/**
@@ -56,6 +88,39 @@ public class Bouton
 
         return correlation;
     }
+	
+	public static void traiterSignal(int[][] audio, ArrayList<Bouton> btns)
+	{
+		double[][] audioDouble = new double[2][];
+		
+		//Outils.reverse(audio[0]);
+		audioDouble[0] = Outils.normalize(FFT.fftMag(FFT.zeroPadding(audio[0])));
+		if(audio.length == 2)//stereo
+		{	
+			//Outils.reverse(audio[1]);
+			audioDouble[1] = Outils.normalize(FFT.fftMag(FFT.zeroPadding(audio[1])));
+		}
+
+//			for (int i = 0; i < audioDouble1[0].length; i++)
+//				System.out.println(audioDouble1[0][i]);
+
+		double cor, max = -1;
+		int indice = -1;
+
+		for(int i = 0; i < btns.size(); i++)
+		{
+			cor = btns.get(i).correlation(audioDouble);
+			System.out.println(cor);
+			if(cor > max)
+			{
+				max = cor;
+				indice = i;
+			}
+		}
+		
+		System.out.println("bouton " + (indice + 1));
+		//pressButton();
+	}
 	
 	/**********************************
 	 ***   Gestion des evenements   ***
