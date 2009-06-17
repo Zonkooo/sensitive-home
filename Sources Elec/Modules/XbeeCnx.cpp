@@ -72,7 +72,7 @@ uint8_t* getRxdata() {
 }
 
 void initMPXBCnx() {
-	uint8_t hello = {'3','C','8','7'};
+	uint8_t hello[] = {'3','C','8','7'};
 	setTxData(hello);
 	
 }

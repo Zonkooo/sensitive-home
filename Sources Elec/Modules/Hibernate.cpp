@@ -1,7 +1,14 @@
 #include "Hibernate.h"
+// variable bool pour endormir
+bool asleep = false;
+
+bool isAsleep(){
+	return asleep;
+}
 
 void prepareSleepMode() {
-	isAsleep = true;
+	Serial.println("In pSM");
+	asleep = true;
 }
 
 void wakeUp() {
@@ -10,7 +17,6 @@ void wakeUp() {
 
 void sleepMode() {
 	delay(20);
-
 	// le mode de veille utilisé ne consomme de 100nA. Il ne peut être réveillé que par interruption.
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 	sleep_enable(); // non nécessaire: système de "sécurité" du microcontrolleur
@@ -19,7 +25,7 @@ void sleepMode() {
 	sleep_mode(); // met réellement le système en veille
 	// le programme continu à partir d'ici après le réveil	
 	sleep_disable();
-	isAsleep=false;
+	asleep=false;
 	detachInterrupt(0); // disables interrupt 0 on pin 2 so the wakeUpNow code will not be executed during normal running time. 
 #ifdef DEBUG
 	Serial.println("Woke up!");
