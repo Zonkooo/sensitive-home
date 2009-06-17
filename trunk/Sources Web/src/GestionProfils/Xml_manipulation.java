@@ -75,7 +75,7 @@ public class Xml_manipulation {
 				Iterator imp = mpList.iterator();
 				while (imp.hasNext()) {
 					Element mpCourante = (Element) imp.next();
-					multiprise_courante = new Multiprise(Integer.parseInt(mpCourante.getAttributeValue("id")),5);
+					multiprise_courante = new Multiprise(Integer.parseInt(mpCourante.getAttributeValue("id")),5,mpCourante.getAttributeValue("ip"));
 					Element[] prises_xml = (Element[]) mpCourante.getChildren().toArray(new Element[mpCourante.getChildren().size()]);
 					for (int j = 0; j < prises_xml.length; j++) {
 						multiprise_courante.setPrise(new Prise(getType(prises_xml[j].getAttributeValue("type")),multiprise_courante,j));
@@ -101,7 +101,7 @@ public class Xml_manipulation {
 		}
 		return hashSalle;
 	}
-	private static TypeMorceau getType(String type){
+	public static TypeMorceau getType(String type){
 		char type_c = type.charAt(0);
 		TypeMorceau typeMorceau;
 		switch(type_c){
