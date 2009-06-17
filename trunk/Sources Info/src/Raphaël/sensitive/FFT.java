@@ -1,6 +1,6 @@
 package sensitive;
 
-/*  
+/*
  *  source : http://www.ling.upenn.edu/~tklee/Projects/dsp/
  */
 
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  * fft et utilitaires
- * 
+ *
  * @author raphael
  */
 public class FFT
@@ -17,30 +17,30 @@ public class FFT
     public static void main(String[] args)
     {
 		Capture capture = new Capture();
-		
+
 		ArrayList<Bouton> btns = new ArrayList<Bouton>();
 		int k = 1;
-		
+
 		Scanner sc = new Scanner(System.in);
 		System.out.println("nb de boutons à saisir ?\n");
-		int x = sc.nextInt();		
+		int x = sc.nextInt();
 		while(k <= x)
 		{
-			System.out.println("bouton " + k++);			
+			System.out.println("bouton " + k++);
 			btns.add(new Bouton(capture));
-		}		
+		}
 		System.out.println();
-				
+
 		while(true)
 		{
-			Bouton.traiterSignal(capture.getTap(), btns); 
+			Bouton.traiterSignal(capture.getTap(), btns);
 		}
     }
-    
+
     /**
-     * Complete le signal sig avec des zeros 
+     * Complete le signal sig avec des zeros
      * jusqu'à atteindre une longeur qui soit une puissance de 2
-     * 
+     *
      * @param sig signal originel
      * @return signal de longueur une puissance entière de 2
      */
@@ -49,10 +49,10 @@ public class FFT
         int[] padded = new int[1 << ((Outils.lg(sig.length)) + 1)];
         for(int i = 0; i < sig.length; i++)
             padded[i] = sig[i];
-        
+
         return padded;
     }
-    
+
     //TODO : comprendre & commenter
     private static int bitrev(int j1, int nu)
     {
@@ -79,10 +79,10 @@ public class FFT
         double[] xim = new double[n];
         double[] mag = new double[n2];
         double tr, ti, p, arg, c, s;
-		
+
         for (int i = 0; i < n; i++)
             xre[i] = (double)x[i];
-		
+
 		int k = 0;
         for (int l = 1; l <= nu; l++)
         {
@@ -127,7 +127,7 @@ public class FFT
 
         for (int i = 0; i < n/2; i++)
         {
-            mag[i] = (double)(xre[i] * xre[i] + xim[i] * xim[i]);
+            mag[i] = Math.sqrt(xre[i] * xre[i] + xim[i] * xim[i]);
         }
         return mag;
     }
