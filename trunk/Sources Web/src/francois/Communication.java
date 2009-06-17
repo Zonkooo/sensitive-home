@@ -32,28 +32,19 @@ public class Communication {
 	
 	
 //	public static void main(String[] args){
-//		
-//		
-//		Communication communication = new Communication();
+//		Communication communication = new Communication("192.168.0.11");
 //		communication.analyseData("12:1:2:3:4");
-//		communication.setup();
+//		//communication.setup();
 //		communication.sendMessage("Commande");
 //		while(true){
 //			communication.listen();
 //		}
-//		
-//		
 //	}
 	
 	public Communication(String ip){
 	  host = ip;
 	  port = 31337;
 	  checkConnection(host, port);        // subroutine to create a connection, via a socket, to the XPort
-	}
-
-	//envoie un message
-	public void sendMessage(String message){ //message du type /numéro de prise:valeur [0-255]\
-		
 	}
 
 	//écoute sur le port série
@@ -79,14 +70,12 @@ public class Communication {
 		//on a besoin de savoir de quel capteur viennent les données
 		message_split = message.split(":");
 		//on parcourt la liste de salles
-		Iterator<Salle> itS = Maison.getMaison().getSalles().iterator();
-		while(itS.hasNext()){
-			Salle salleCourante = itS.next();
+		for (Salle itS : Maison.getMaison().getSalles()) {
+			Salle salleCourante = itS;
 			//on parcourt la liste des modules de capteurs de la salle courante
-			Iterator<ModuleCapteurs> itMC = salleCourante.getModules().iterator();
-			while(itMC.hasNext()){
+			for (ModuleCapteurs itMC : salleCourante.getModules().values()) {
 				//est-ce que le module dont on vient de recevoir les données est celui que l'on parcourt?
-				ModuleCapteurs moduleCourant = itMC.next();
+				ModuleCapteurs moduleCourant = itMC;
 				if(moduleCourant.getID()==Long.parseLong(message_split[0])){
 					System.out.println("le message provient de la salle: "+salleCourante);
 					for(int i=0;i<4;i++){ //on modifie la valeur du capteur à partir du message reçu
@@ -94,7 +83,7 @@ public class Communication {
 					}
 				}
 			}
-		}		
+		}
 	}
 
 	////////CHECK CONNECTION\\\\\\\\
