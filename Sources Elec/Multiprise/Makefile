@@ -24,18 +24,18 @@
 #
 #  7. Type "make upload", reset your Arduino board.
 
-TARGET = Modules
+TARGET = XPortTest
 OUTPUT_DIR = bin
 PORT = /dev/ttyUSB*
-CORE_A = 168core.a
+CORE_A = 128core.a
 INSTALL_DIR = /home/noxon/softs/arduino-0016
 
 UPLOAD_RATE = 19200
 AVRDUDE_PROGRAMMER = stk500v1
-MCU = atmega168
+MCU = atmega128
 F_CPU = 16000000
-OTHER_C_INCLUDES = ../libXBee/XBee.c
-OTHER_CXX_INCLUDES =  GenericFcts.cpp XbeeCnx.cpp Hibernate.cpp
+OTHER_C_INCLUDES = ../AF_XPort/AF_XPort.c ../NewSoftSerial/NewSoftSerial.cpp ../libEEPROM/EEPROM.cpp
+#OTHER_CXX_INCLUDES =  GenericFcts.cpp XbeeCnx.cpp Hibernate.cpp
 ############################################################################
 # Below here nothing should be changed...
 

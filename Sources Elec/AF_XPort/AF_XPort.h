@@ -9,7 +9,9 @@
 #define ERROR_DISCONN 4
 
 #include <avr/pgmspace.h>
-
+#include <avr/io.h>
+#include "WProgram.h"
+#include "../NewSoftSerial/NewSoftSerial.h"
 
 class AF_XPort
 {
