@@ -12,7 +12,7 @@ import javax.sound.sampled.*;
  * 
  * @author raphael
  */
-class Capture
+public class Capture
 {    
     private static final int seuil = 500; //amplitude de declenchement du tap
     
@@ -105,16 +105,20 @@ class Capture
 
 		while (line.read(data, 0, bufferLengthInBytes) != -1)
 		{
-			if (Outils.getMax(traitementBytes(data)) >= Capture.seuil)
+			if (audioData == null && Outils.getMax(traitementBytes(data)) >= Capture.seuil)
 			{
 				audioData = traitementBytes(data);
 			}
 			else if (audioData != null)
 			{
-				Outils.concatene(audioData, traitementBytes(data));
-				break;
+				audioData = Outils.concatene(audioData, traitementBytes(data));
+				if(audioData[0].length > 20000)
+					break;
 			}
 		}
+		
+//		for (int i = 0; i < audioData[0].length; i++)
+//			System.out.println(audioData[0][i] + " " + audioData[1][i]);
 
 		// we reached the end of the stream.  stop and close the line.
 		line.stop();
