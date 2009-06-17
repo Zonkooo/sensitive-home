@@ -1,58 +1,128 @@
 package sensitive;
 
-/*
- *  source : http://www.ling.upenn.edu/~tklee/Projects/dsp/
- */
-
-import java.util.Scanner;
 import java.util.ArrayList;
 
-/**
- * fft et utilitaires
- *
- * @author raphael
+/*  
+ *  source : http://www.ling.upenn.edu/~tklee/Projects/dsp/
  */
+import java.util.Scanner;
 public class FFT
 {
     public static void main(String[] args)
     {
-		Capture capture = new Capture();
+                Capture capture = new Capture();
+                int[] audio;
+                double[] audioDouble1, audioDouble2;
+                
+                ArrayList<Bouton> btns = new ArrayList<Bouton>();
+                int k = 1;
+                
+                Scanner sc = new Scanner(System.in);
+                System.out.println("nb de boutons à saisir ?\n");
+                int x = sc.nextInt();
+                
+                while(k <= x)
+                {
+                        System.out.println("tapez le bouton " + k++);
+                        audio = capture.getTap();
+                        audioDouble1 = fftMag(zeroPadding(Outils.normalize(audio)));
+                        do
+                        {
+                                System.out.println("encore !");
+                                audio = capture.getTap();
+                                audioDouble2 = fftMag(zeroPadding(Outils.normalize(audio)));
+                        } while(audioDouble1.length != audioDouble2.length);
 
-		ArrayList<Bouton> btns = new ArrayList<Bouton>();
-		int k = 1;
+                        for(int i = 0; i < audioDouble1.length; i++)
+                                audioDouble1[i] = audioDouble1[i] + audioDouble2[i];
+                        btns.add(new Bouton(audioDouble1));
+                }
+                
+                System.out.println();
+                
+                while(true)
+                {
+                        audio = capture.getTap();
+                        audioDouble1 = fftMag(zeroPadding(Outils.normalize(audio)));
+                        
+                        double cor, max = -1;
+                        int indice = -1;
+                        
+                        for(int i = 0; i < btns.size(); i++)
+                        {
+                                cor = btns.get(i).correlation(audioDouble1);
+								System.out.println(cor);
+                                if(cor > max)
+                                {
+                                        max = cor;
+                                        indice = i;
+                                }
+                        }
 
-		Scanner sc = new Scanner(System.in);
-		System.out.println("nb de boutons à saisir ?\n");
-		int x = sc.nextInt();
-		while(k <= x)
-		{
-			System.out.println("bouton " + k++);
-			btns.add(new Bouton(capture));
-		}
-		System.out.println();
-
-		while(true)
-		{
-			Bouton.traiterSignal(capture.getTap(), btns);
-		}
+                        System.out.println("bouton " + (indice + 1));
+                }
+                        
+//              Capture capture = new Capture();
+//              int[] audio;
+//              double[] audioDouble1, audioDouble2;
+//              
+//              //bouton 1
+//              System.out.println("tapez le bouton 1");
+//              audio = capture.getTap();
+//              audioDouble1 = fftMag(zeroPadding(Outils.normalize(audio)));
+//              System.out.println("encore !");
+//              audio = capture.getTap();
+//              audioDouble2 = fftMag(zeroPadding(Outils.normalize(audio)));
+//              
+//              for(int i = 0; i < audioDouble1.length; i++)
+//                      audioDouble1[i] = audioDouble1[i] + audioDouble2[i];
+//              Bouton b1 = new Bouton(audioDouble1);
+//              
+//              //bouton 2
+//              System.out.println("tapez le bouton 2");
+//              audio = capture.getTap();
+//              audioDouble1 = fftMag(zeroPadding(Outils.normalize(audio)));
+//              System.out.println("encore !");
+//              audio = capture.getTap();
+//              audioDouble2 = fftMag(zeroPadding(Outils.normalize(audio)));
+//              
+//              for(int i = 0; i < audioDouble1.length; i++)
+//                      audioDouble1[i] = audioDouble1[i] + audioDouble2[i];
+//              Bouton b2 = new Bouton(audioDouble1);
+//              
+//              System.out.println();
+//              
+//              while(true)
+//              {
+//                      audio = capture.getTap();
+//                      audioDouble1 = fftMag(zeroPadding(Outils.subMoy(Outils.normalize(audio))));
+//                      
+//                      double c1 = b1.correlation(audioDouble1);
+//                      double c2 = b2.correlation(audioDouble1);
+//
+//                      if(c2 > c1)
+//                              System.out.println("bouton2");
+//                      else
+//                              System.out.println("bouton1");
+//              }
     }
-
+    
     /**
-     * Complete le signal sig avec des zeros
+     * Complete le signal sig avec des zeros 
      * jusqu'à atteindre une longeur qui soit une puissance de 2
-     *
+     * 
      * @param sig signal originel
      * @return signal de longueur une puissance entière de 2
      */
-    public static int[] zeroPadding(int[] sig)
+    public static double[] zeroPadding(double[] sig)
     {
-        int[] padded = new int[1 << ((Outils.lg(sig.length)) + 1)];
+        double[] padded = new double[65536/*1 << ((Outils.lg(sig.length)) + 1)*/];
         for(int i = 0; i < sig.length; i++)
             padded[i] = sig[i];
-
+        
         return padded;
     }
-
+    
     //TODO : comprendre & commenter
     private static int bitrev(int j1, int nu)
     {
@@ -68,7 +138,7 @@ public class FFT
     }
 
     //TODO : comprendre & commenter
-    public static double[] fftMag(int[] x)
+    public static double[] fftMag(double[] x)
     {
         // assume n is a power of 2
         int n = x.length;
@@ -79,11 +149,13 @@ public class FFT
         double[] xim = new double[n];
         double[] mag = new double[n2];
         double tr, ti, p, arg, c, s;
-
         for (int i = 0; i < n; i++)
-            xre[i] = (double)x[i];
-
-		int k = 0;
+        {
+            xre[i] = x[i];
+            xim[i] = 0.0;
+        }
+                
+                int k = 0;
         for (int l = 1; l <= nu; l++)
         {
             while (k < n)
@@ -125,9 +197,9 @@ public class FFT
             k++;
         }
 
-        for (int i = 0; i < n/2; i++)
+        for (int i = 0; i < n / 2; i++)
         {
-            mag[i] = Math.sqrt(xre[i] * xre[i] + xim[i] * xim[i]);
+            mag[i] = (double) (Math.sqrt(xre[i] * xre[i] + xim[i] * xim[i]));
         }
         return mag;
     }
