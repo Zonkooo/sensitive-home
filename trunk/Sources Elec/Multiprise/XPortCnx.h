@@ -18,13 +18,11 @@ static long time = 0;
 static bool hasBeenInit = false;
 /* recvDelay est le delais pendant lequel le microcontrolleur va essayer de lire des données séries (en ms)
  */
-static int recvDelay = 100;
+static int recvDelay = 1000;
 /* recvIt sert à se positionner dans la chaine reçue depuis le XPort
  */
 static int recvIt = 0;
-/* recvBuffer contient les données recues par le XPort
- */
-static char* recvBuffer;
+
 /* Cette méthode permet d'initialiser la connexion XPort<->PC
  */
 void initXPortCnx();
@@ -34,4 +32,10 @@ void sendXPort(const char* data);
 /* Cette méthode est appelée depuis la fonction loop() principale.
  */
 void recvXPort();
+/* la variable n'est pas déclarée en statique donc on a un getter.
+ */
+char *getRecvBuffer();
+/* afin de remettre à NULL la variable (pour ne pas envoyer 40 fois le même accusé), on remet la variable à NULL
+ */
+void resetRecvBuffer();
 #endif /*XPORTCNX_H_*/
