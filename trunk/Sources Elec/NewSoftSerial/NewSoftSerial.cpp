@@ -292,7 +292,9 @@ NewSoftSerial::NewSoftSerial(uint8_t receivePin, uint8_t transmitPin) :
   setTX(transmitPin);
   setRX(receivePin);
 }
-
+NewSoftSerial:: NewSoftSerial(unsigned char receivePin, unsigned char transmitPin){
+	NewSoftSerial(receivePin, transmitPin);
+}
 //
 // Public methods
 //
