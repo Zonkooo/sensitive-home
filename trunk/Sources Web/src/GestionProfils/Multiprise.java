@@ -34,8 +34,6 @@ public class Multiprise extends Socle {
 	 * envoie un message à la multiprise de la forme /numéro de prise:valeur [0-255]\ /x:xxx\
 	 */
 	public void sendMessage(String message) {
-		for (int i = 0; i < message.length(); i++) {
-			communication.sendSomeData((byte) message.charAt(i));
-		}
+		communication.addMessageToQueue(message);
 	}
 }
