@@ -228,7 +228,6 @@ public class Salle
 			temperature_moyenne_courante /= nb_capteurs_de_temperature;
 		
 		//tous les capteurs ont été relevés, on s'occupe d'analyser et d'envoyer les commandes
-
 		int commande = (temperature_moyenne_courante < currentProfil.getTemperature()) ? 1 : 0;
 		
 		for (Multiprise mp : getMultiprises().values())
