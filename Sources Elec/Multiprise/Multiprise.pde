@@ -34,9 +34,9 @@
  * ATTENTION: les deux premières sont des prises NORMALES les autres PWM
  */
 #define NB_PRISES 5
-const int prisesPWM[NB_PRISES-1] = { 1, 2, 3, 4, 5 };
+const int prises[NB_PRISES] = { 1, 2, 3, 4, 5 };
 int iterator,valueI,prise;
-char valueC[3]= { 0 };
+char *valueC,*ackMsg;
 #ifdef DEBUG
 bool found = false;
 #endif
@@ -60,7 +60,7 @@ void loop() {
 	if (recvBuffer[0]=='/'&& recvBuffer[6] == '\\') { // le message est complet
 		prise = recvBuffer[1];
 		valueC[3]= { 0 };
-		strncpy(valueC, recvBuffer[3], 3);
+		strncpy(valueC, &recvBuffer[3], 3);
 		valueI = atoi(valueC);
 		for (iterator = 0; iterator < NB_PRISES - 1; iterator++) {
 			if (prises[iterator] == prise) {
@@ -85,8 +85,7 @@ void loop() {
 			sendXPort("Prise non trouvée!");
 		}
 #endif
-		char* ackMsg;
-		sprintf(ackMsg, "/ACK:%s", recvBuffer[1]);
+		sprintf(ackMsg, "/ACK:%s", &recvBuffer[1]);
 		sendXPort(ackMsg);
 	} else {
 #ifdef DEBUG

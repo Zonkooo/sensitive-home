@@ -7,15 +7,24 @@
  */
 #ifndef XPORTCNX_H_
 #define XPORTCNX_H_
+/* recvMsgLength contient le nombre maximum d'octets que l'on lit du XPort
+ */
+const int recvMsgLength = 7;
+/* time est utilisé pour savoir le nombre de millisecondes depuis lequel on lit les données série
+ */
+static long time = 0;
 /* hasBeenInit permet de ne pas initialiser deux fois le module XPort
  */ 
-bool hasBeenInit = false;
+static bool hasBeenInit = false;
 /* recvDelay est le delais pendant lequel le microcontrolleur va essayer de lire des données séries (en ms)
  */
-int recvDelay = 100;
+static int recvDelay = 100;
+/* recvIt sert à se positionner dans la chaine reçue depuis le XPort
+ */
+static int recvIt = 0;
 /* recvBuffer contient les données recues par le XPort
  */
-char* recvBuffer;
+static char* recvBuffer;
 /* Cette méthode permet d'initialiser la connexion XPort<->PC
  */
 void initXPortCnx();
