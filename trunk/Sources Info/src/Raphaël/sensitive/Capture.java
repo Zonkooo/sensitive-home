@@ -14,7 +14,7 @@ import javax.sound.sampled.*;
  */
 public class Capture
 {    
-    private static final int seuil = 500; //amplitude de declenchement du tap
+    private static final int seuil = 750; //amplitude de declenchement du tap
     
     private TargetDataLine line;
 	private AudioFormat format;
@@ -87,9 +87,9 @@ public class Capture
 	 * 
 	 * @return un echantillon de taille 2*bufferLengthInBytes contenant le tap détecté.
 	 */
-    public int[][] getTap()
+    public int[] getTap()
     {
-		int[][] audioData = null;
+		int[] audioData = null;
 		byte[] data = new byte[bufferLengthInBytes]; //tampon de lecture
 
 		try
@@ -112,7 +112,7 @@ public class Capture
 			else if (audioData != null)
 			{
 				audioData = Outils.concatene(audioData, traitementBytes(data));
-				if(audioData[0].length > 20000)
+				if(audioData.length > 20000)
 					break;
 			}
 		}
@@ -142,7 +142,7 @@ public class Capture
      * @param sampleSize taille en bits d'un sample (8 ou 16)
      * @return valeurs des samples
      */
-    private int[][] traitementBytes(byte[] audioBytes)
+    private int[] traitementBytes(byte[] audioBytes)
     {
         //on suppose qu'on est en PCMsigned, BigEndian
         int[][] intData = null;
@@ -174,6 +174,6 @@ public class Capture
 				intData[i%chan][i/chan] = audioBytes[i];
         }
         
-        return intData;
+        return intData[0];
     }
 } // End class Capture
