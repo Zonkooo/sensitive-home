@@ -11,13 +11,10 @@ package francois;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import GestionProfils.Maison;
 import GestionProfils.ModuleCapteurs;
 import GestionProfils.Salle;
-import GestionProfils.SousProfil;
 	
 public class Communication {
 

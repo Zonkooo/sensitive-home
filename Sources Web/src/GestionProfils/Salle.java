@@ -236,7 +236,7 @@ public class Salle
 			{
 				if (mp.getPrise(i).getType() == TypeMorceau.LUMINOSITE)
 				{
-					mp.sendMessage("/" + i + ":" + commande);
+					mp.sendMessage("/" + i + ":00" + commande);
 				}
 			}
 		}
