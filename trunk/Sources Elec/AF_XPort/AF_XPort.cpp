@@ -1,9 +1,6 @@
-#include <avr/io.h>
-#include "WProgram.h"
-#include "NewSoftSerial.h"
 #include "AF_XPort.h"
-
-static NewSoftSerial xportserial = NewSoftSerial(0,0); // we dont know the pins yet
+static uint8_t un=0,deux=0;
+static NewSoftSerial xportserial = NewSoftSerial(un , deux); // we dont know the pins yet
 
 AF_XPort::AF_XPort(uint8_t rx, uint8_t tx, uint8_t reset, uint8_t dtr, uint8_t rts, uint8_t cts) {
   rxpin = rx;
