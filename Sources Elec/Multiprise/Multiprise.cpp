@@ -29,21 +29,25 @@
  * 
  */
 //#include "XbeeCnx.h"
-//#include "MpCtrl.h"
 #include "XPortCnx.h"
-/* A MODIFIER!!
+#define NB_PRISES 5
+#define NB_PRISES_PWM 3
+
+// permet d'avoir un code clair mais concis en mémoire (moins d'appels)
+#define sendXPort Serial.print
+#define initXPort Serial.begin
+/* prises définit les pins qui contrôlent les prises. La commande contient le numéro de la prise et non le pin associé.
+ * A MODIFIER!!
  * ATTENTION: les deux premières sont des prises NORMALES les autres PWM
  */
-#define NB_PRISES 5
-/* prises définit les pins qui contrôlent les prises. La commande contient le numéro de la prise et non le pin associé.
- */
-int prises[NB_PRISES] = { 7, 8, 9, 10, 11 };
-int valueI, priseI;
-char valueC[3], ackMsg[recvMsgLength+4], *recvXP, priseC[1];
+const unsigned char prises[NB_PRISES] = { 7, 8, 9, 10, 11 };
+unsigned char pwmObj[NB_PRISES_PWM]= { 255, 0, 0 };
+unsigned char pwmAct[NB_PRISES_PWM]= { 0, 0, 0 };
+unsigned char valueI, priseI;
+char valueC[3], ackMsg[recvMsgLength+4], *recvXP, priseC[1], iterator;
 
 void setup() {
-	Serial.begin(9600);
-	int iterator;
+	initXPort(9600);
 	for (iterator=0; iterator<NB_PRISES-1; iterator++) {
 		pinMode(prises[iterator], OUTPUT);
 	}
@@ -51,13 +55,21 @@ void setup() {
 
 void loop() {
 	/*
-	 * dans le loop on doit d'abord vérifier la connexion au serveur
+	 * dans le loop on doit d'abord vérifier si on a des PWM à augmenter puis la connexion au serveur
 	 * ensuite, le serveur doit nous dire si on est connu ou non.
 	 * Si on est connu alors la multiprise nous envoye la liste des modules de capteurs
 	 * que l'on contrôle 
 	 */
 	// XBeeCnx
-	//sendXPort("Bonjour");
+	for (iterator=NB_PRISES_PWM-1; iterator >= 0; iterator--) {
+		if (pwmObj[iterator] == pwmAct[iterator])
+			continue;
+		if (pwmObj[iterator] - pwmAct[iterator] > 0) {
+			analogWrite(prises[iterator+2], pwmAct[iterator]++);
+		} else {
+			analogWrite(prises[iterator+2], pwmAct[iterator]--);
+		}
+	}
 	recvXPort(); // cette méthode écrit les données reçues dans la variable recvBuffer
 	recvXP = getRecvBuffer();
 	if (recvXP[0]=='/'&& recvXP[6] == '\\') { // le message est complet
@@ -65,31 +77,23 @@ void loop() {
 		priseI = atoi(priseC);
 		strncpy(valueC, &recvXP[3], 3);
 		valueI = atoi(valueC);
-		if (!(priseI >= 0&& priseI < NB_PRISES)) {
+		if ((priseI < 0 )&& (priseI - NB_PRISES) != 0) {
 			resetRecvBuffer();
 			return;
 		}
-		/*sprintf(ackMsg, "%i pin %i", valueI, prises[priseI]);
-		ackMsg[recvMsgLength+4]=0;
-		Serial.print(ackMsg);
-		ackMsg[0]=0; // reset variable*/
-		if (priseI < 2) { // c'est une prise ON/OFF
-#ifdef DEBUG
-			if (valueI != 0&& valueI != 1) {
-				sprintf(ackMsg, "Valeur:[%i] fausse", valueI);
-				Serial.print(ackMsg);
-			}
-#endif
+		if (priseI - 2== 0) { // c'est une prise ON/OFF
 			digitalWrite(prises[priseI], (valueI==1) ? HIGH : LOW);
 		} else { // c'est une prise PWM
-			analogWrite(prises[priseI], valueI);
+			pwmObj[priseI-2]=valueI;
+			//analogWrite(prises[priseI], valueI);
 		}
 		sprintf(ackMsg, "/ACK:%s", &recvXP[1]);
-		Serial.print(ackMsg);
+		sendXPort(ackMsg);
 		resetRecvBuffer();
 	}
 	// test XBee
-	delay(500); // A CHANGER!
+	// on ne met pas de delay parce qu'il y en a un avec la lecture XPort (voir XPortCnx.h).
+	delay(50);
 }
 int main(void) {
 	init();
