@@ -61,6 +61,7 @@ unsigned char pwmAct[NB_PRISES_PWM]= { 0, 0, 0 };
 unsigned char valueI, priseI;
 char valueC[3], ackMsg[12], *recvXP, priseC[1], iterator,
 		sensorToXpMsg[xbRecvMsgLength+10], count=0;
+bool duplicate = false;
 
 void setup() {
 	initXPort(9600);
@@ -85,7 +86,8 @@ void loop() {
 		count=0;
 		for (iterator=MAX_SENSOR_MODULES; iterator >= 0; iterator --) {
 			if (xbSensorModulesAddr[iterator][0] != 0) {
-				sprintf(sensorToXpMsg, "/%s:320:253:850:715\\",xbSensorModulesAddr[iterator]);
+				sprintf(sensorToXpMsg, "/%s:320:253:850:715\\",
+						xbSensorModulesAddr[iterator]);
 				sendXPort(sensorToXpMsg);
 			}
 		}
@@ -117,9 +119,23 @@ void loop() {
 				pwmObj[priseI-2]=valueI;
 			}
 		} else { // c'est un message demandant de gérer un module de capteurs
-			strncpy(xbSensorModulesAddr[xbSensorModulesAddrPos++], &recvXP[1],
-					9);
-			xbSensorModulesAddr[xbSensorModulesAddrPos++][9]=0;
+			if (xbSensorModulesAddrPos < MAX_SENSOR_MODULES) {
+				strncpy(xbSensorModulesAddrTmp, &recvXP[1], 9);
+				for (iterator=xbSensorModulesAddrPos; iterator>0; iterator--) {
+					if (strcmp(xbSensorModulesAddr[iterator],
+							xbSensorModulesAddrTmp)==0) {
+						duplicate = true;
+						break;
+					}
+				}
+				if (!duplicate) {
+					strcpy(xbSensorModulesAddr[xbSensorModulesAddrPos++],
+							xbSensorModulesAddrTmp);
+					xbSensorModulesAddr[xbSensorModulesAddrPos++][9]=0;
+				}else{
+					duplicate = false;
+				}
+			}
 		}
 		sprintf(ackMsg, beginAckMsg, &recvXP[5]);
 		sendXPort(ackMsg);
