@@ -39,11 +39,11 @@ public class Communication{
 		Communication communication = new Communication("192.168.0.11");
 
 		//		communication.start();
-//		communication.addMessageToQueue("/REQ:0:001\\");
-//		communication.addMessageToQueue("/REQ:2:255\\");
-//		communication.addMessageToQueue("/REQ:2:000\\");
-				communication.addMessageToQueue("/001122222\\");
-				communication.addMessageToQueue("/001111111\\");
+		communication.addMessageToQueue("/REQ:0:001\\");
+		communication.addMessageToQueue("/REQ:2:255\\");
+		communication.addMessageToQueue("/REQ:2:000\\");
+//				communication.addMessageToQueue("/001144444\\");
+//				communication.addMessageToQueue("/001111111\\");
 
 //		communication.addMessageToQueue("/REQ:0:000\\");
 		
@@ -60,14 +60,13 @@ public class Communication{
 			while((ecoute=communication.listen()).equals("") && System.currentTimeMillis()-time<1000){
 				//on attend de recevoir quelquechose ou que le temps d'accusé soit dépassé
 				if((System.currentTimeMillis()-time)%500==0){
-					System.out.println((System.currentTimeMillis()-time)/1000);
+//					System.out.println((System.currentTimeMillis()-time)/1000);
 				}
 			}
 			if(communication.messageAenvoyer.size()>0) {
 			if(!(ecoute.length()<28) && ecoute.substring(19, 28).equals("ACK:" + communication.messageAenvoyer.peek().substring(5, 10))){
-				System.out.println("accusé reconnu");
+//				System.out.println("accusé reconnu");
 				//si c'est l'accusé, l'envoi a réussi donc on peut supprimer le message
-				System.out.println(ecoute);
 				communication.messageAenvoyer.remove();
 			} else if(System.currentTimeMillis()-time>1000) {
 				//si le temps est dépassé on renvoie le message
@@ -75,6 +74,7 @@ public class Communication{
 				time = System.currentTimeMillis();
 			}
 			}
+			System.out.println(ecoute);
 			
 		}
 	}
@@ -150,6 +150,7 @@ public class Communication{
 									Integer.parseInt(message_split[i + 1]));
 						}
 					}
+					System.out.println("Le message provient d'une salle non enregistrée");
 				}
 			}
 		} else if (message_split.length == 3) { // accusé de commande car message de la
@@ -238,7 +239,7 @@ public class Communication{
 													// check]
 				inData = myInputStream.readByte(); // read a byte from the input
 													// stream
-				System.out.println("data received: " + inData + " = " + (char)inData);
+//				System.out.println("data received: " + inData + " = " + (char)inData);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
