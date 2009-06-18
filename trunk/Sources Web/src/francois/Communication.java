@@ -12,6 +12,7 @@ package francois;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.ArrayList;
 
 import gestion_profils.Maison;
@@ -32,37 +33,56 @@ public class Communication {
 	byte myDataIn, myDataOut; // declare some variables to store the data we're
 								// sending and receiving
 	String[] message_split;
-	ArrayList<String> messageAenvoyer;
-
-
+	ConcurrentLinkedQueue<String> messageAenvoyer;
+	
 	public static void main(String[] args) {
 		Communication communication = new Communication("192.168.0.11");
 
 		//		communication.start();
-
-		String message = "/0:1\\";
-		for (int i = 0; i < 60; i++) {
-			communication.addMessageToQueue(message);
-
-		}communication.sendQueue();
+		communication.addMessageToQueue("/REQ:0:001\\");
+		communication.addMessageToQueue("/REQ:2:255\\");
+		communication.addMessageToQueue("/REQ:2:000\\");
+//		communication.addMessageToQueue("/001111111\\");
 		while(true){
-			
-			String ecoute = "rien";
-//			while((ecoute=communication.listen()).substring(0, 1).equals("Acc")) {
-//				System.out.println(ecoute);
-//			}
-			System.out.println(communication.listen());
+			if(communication.messageAenvoyer.size()>0) {
+				System.out.println("\n"+communication.sendQueue());
+			}
+			//on attend de recevoir l'accusé de réception avant de supprimer le message
+			String ecoute;
+			long time = System.currentTimeMillis();
+
+			while((ecoute=communication.listen()).equals("") && System.currentTimeMillis()-time<1000){
+				//on attend de recevoir quelquechose ou que le temps d'accusé soit dépassé
+				if((System.currentTimeMillis()-time)%100==0){
+					System.out.println(System.currentTimeMillis()-time);
+				}
+			}
+//			System.out.println(ecoute.substring(19, 28));
+//			System.out.println("ACK:"+ communication.messageAenvoyer.peek().substring(5, 10));
+			try{
+			if(ecoute.substring(19, 28).equals("ACK:" + communication.messageAenvoyer.peek().substring(5, 10))){
+				System.out.println("accusé reconnu");
+				//si c'est l'accusé, l'envoi a réussi donc on peut supprimer le message
+				System.out.println(ecoute);
+				communication.messageAenvoyer.remove();
+			} else if(System.currentTimeMillis()-time>1000) {
+				//si le temps est dépassé on renvoie le message
+				System.out.println("\n"+communication.sendQueue());
+				time = System.currentTimeMillis();
+			}
+			} catch (Exception e) {
+				System.err.println(e);
+			}
 		}
 	}
 
 	public Communication(String ip) {
 		host = ip;
 		port = 31337;
-		messageAenvoyer = new ArrayList<String>();
-		checkConnection(host, port); // subroutine to create a connection, via a
-										// socket, to the XPort
+		messageAenvoyer = new ConcurrentLinkedQueue<String>();
+		checkConnection(host, port); 		
 	}
-	
+
 //	public void run(){
 //        while (isAlive()) {
 //            try {
@@ -81,7 +101,7 @@ public class Communication {
 			if (myDataIn == '/') { // signal de début d'un message de type
 									// /adresse du module de
 									// capteur:val_cap1:val_cap2:val_cap3:val_cap4\
-				System.out.println("début d'un message");
+//				System.out.println("début d'un message");
 				String message = "";
 				while (myDataIn != '\\') { // on attend de recevoir le signal de
 											// fin d'un message
@@ -227,7 +247,7 @@ public class Communication {
 		try {
 			myOutputStream.writeByte(outData); // write a byte to the output
 												// stream
-			 System.out.println("data sent: " + outData);
+//			 System.out.println("data sent: " + outData);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("event send failed");
@@ -255,13 +275,13 @@ public class Communication {
 	/*
 	 * envoie le dernier message de la queue
 	 */
-	public void sendQueue() {
-		if(messageAenvoyer.size()>0) {
-			for (int i = 0; i < messageAenvoyer.get(messageAenvoyer.size()-1).length(); i++) {
-				sendSomeData((byte) messageAenvoyer.get(messageAenvoyer.size()-1).charAt(i));
+	public String sendQueue() {
+		String retour="Problème durant l'envoi";
+			for (int i = 0; i < messageAenvoyer.peek().length(); i++) {
+				sendSomeData((byte) messageAenvoyer.peek().charAt(i));
 			}
-			messageAenvoyer.remove(messageAenvoyer.size()-1);
-		}
+			retour = "Message envoyé: "+messageAenvoyer.peek();
+		return retour;
 	}
 
 }
