@@ -61,16 +61,16 @@ unsigned char pwmObj[NB_PRISES_PWM]= { 0, 0, 0 };
 unsigned char pwmAct[NB_PRISES_PWM]= { 0, 0, 0 };
 unsigned char valueI, priseI;
 char valueC[3], ackMsg[12], *recvXP, priseC[1], iterator,
-		sensorToXpMsg[xbRecvMsgLength+10], count=0;
+		sensorToXpMsg[xbRecvMsgLength+ADDR_LENGTH+1+1], count=0;
 bool duplicate = false;
 
 void setup() {
 	initXPort(9600);
 	for (iterator=NB_PRISES-1; iterator>=0; iterator--) {
-		pinMode(prises[iterator], OUTPUT);
+		pinMode(prises[(int)iterator], OUTPUT);
 	}
 	for (iterator=MAX_SENSOR_MODULES-1; iterator >= 0; iterator --) {
-		xbSensorModulesAddr[iterator][0]=0; // on initialise toutes les adresses à NULL
+		xbSensorModulesAddr[(int)iterator][0]=0; // on initialise toutes les adresses à NULL
 	}
 }
 
@@ -85,22 +85,20 @@ void loop() {
 	// implémentation bouchon: envoi de données fausses de capteurs
 	if (++count == 40) {
 		count=0;
-		for (iterator=MAX_SENSOR_MODULES-1; iterator >= 0; iterator --) {
-			if (strlen(xbSensorModulesAddr[iterator]) > 0) {
-				sprintf(sensorToXpMsg, "/%s:320:253:850:715\\",
-						xbSensorModulesAddr[iterator]);
-				sendXPort(sensorToXpMsg);
-				*sensorToXpMsg={0}; // réinit sensorToXpMsg
-			}
+		for (iterator=xbSensorModulesAddrPos-1; iterator >= 0; iterator --) {
+			sprintf(sensorToXpMsg, "/%s:320:253:850:715\\",
+					xbSensorModulesAddr[(int)iterator]);
+			sendXPort(sensorToXpMsg);
+			sensorToXpMsg[0]= 0; // réinit sensorToXpMsg
 		}
 	}
 	for (iterator=NB_PRISES_PWM-1; iterator >= 0; iterator--) {
-		if (pwmObj[iterator] == pwmAct[iterator])
+		if (pwmObj[(int)iterator] == pwmAct[(int)iterator])
 			continue;
-		if (pwmObj[iterator] > pwmAct[iterator]) {
-			analogWrite(prises[iterator+2], pwmAct[iterator]++);
+		if (pwmObj[(int)iterator] > pwmAct[(int)iterator]) {
+			analogWrite(prises[(int)iterator+2], pwmAct[(int)iterator]++);
 		} else {
-			analogWrite(prises[iterator+2], pwmAct[iterator]--);
+			analogWrite(prises[(int)iterator+2], pwmAct[(int)iterator]--);
 		}
 	}
 	recvXPort(); // cette méthode écrit les données reçues dans la variable recvBuffer
@@ -121,25 +119,27 @@ void loop() {
 				pwmObj[priseI-2]=valueI;
 			}
 		} else { // c'est un message demandant de gérer un module de capteurs
-			if (xbSensorModulesAddrPos < MAX_SENSOR_MODULES-1) {
+			if (xbSensorModulesAddrPos < MAX_SENSOR_MODULES) {
 				strncpy(xbSensorModulesAddrTmp, &recvXP[1], 9);
 				xbSensorModulesAddrTmp[9]=0;
 				for (iterator=xbSensorModulesAddrPos; iterator>0; iterator--) {
-					if (strcmp(xbSensorModulesAddr[iterator],
+					if (strcmp(xbSensorModulesAddr[(int)iterator],
 							xbSensorModulesAddrTmp)==0) {
 						duplicate = true;
 						break;
 					}
 				}
 				if (!duplicate) {
-					strncpy(xbSensorModulesAddr[xbSensorModulesAddrPos++],
-							xbSensorModulesAddrTmp,9);
-					xbSensorModulesAddr[xbSensorModulesAddrPos++][9]=0;
-				}else{
+					strncpy(xbSensorModulesAddr[xbSensorModulesAddrPos],
+							xbSensorModulesAddrTmp, 9);
+					sensorToXpMsg[0]=0;
+					xbSensorModulesAddrTmp[0]= 0;
+					xbSensorModulesAddr[xbSensorModulesAddrPos][9]=0;
+					xbSensorModulesAddrPos++;
+				} else {
 					duplicate = false;
 				}
 			}
-			*xbSensorModulesAddrTmp={0};
 		}
 		sprintf(ackMsg, beginAckMsg, &recvXP[5]);
 		sendXPort(ackMsg);
