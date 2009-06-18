@@ -13,14 +13,13 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.ArrayList;
 
 import gestion_profils.Maison;
 import gestion_profils.ModuleCapteurs;
 import gestion_profils.Salle;
 
 
-public class Communication {
+public class Communication{
 
 	String host;
 	int port;
@@ -35,6 +34,7 @@ public class Communication {
 	String[] message_split;
 	ConcurrentLinkedQueue<String> messageAenvoyer;
 	
+	
 	public static void main(String[] args) {
 		Communication communication = new Communication("192.168.0.11");
 
@@ -42,9 +42,14 @@ public class Communication {
 //		communication.addMessageToQueue("/REQ:0:001\\");
 //		communication.addMessageToQueue("/REQ:2:255\\");
 //		communication.addMessageToQueue("/REQ:2:000\\");
-		communication.addMessageToQueue("/001111111\\");
+				communication.addMessageToQueue("/001122222\\");
+				communication.addMessageToQueue("/001111111\\");
+
 //		communication.addMessageToQueue("/REQ:0:000\\");
+		
+		
 		while(true){
+
 			if(communication.messageAenvoyer.size()>0) {
 				System.out.println("\n"+communication.sendQueue());
 			}
@@ -54,8 +59,8 @@ public class Communication {
 
 			while((ecoute=communication.listen()).equals("") && System.currentTimeMillis()-time<1000){
 				//on attend de recevoir quelquechose ou que le temps d'accusé soit dépassé
-				if((System.currentTimeMillis()-time)%100==0){
-					System.out.println(System.currentTimeMillis()-time);
+				if((System.currentTimeMillis()-time)%500==0){
+					System.out.println((System.currentTimeMillis()-time)/1000);
 				}
 			}
 			if(communication.messageAenvoyer.size()>0) {
@@ -135,8 +140,7 @@ public class Communication {
 					// est-ce que le module dont on vient de recevoir les
 					// données est celui que l'on parcourt?
 					ModuleCapteurs moduleCourant = itMC;
-					if (moduleCourant.getID() == Long
-							.parseLong(message_split[0])) {
+					if (moduleCourant.getID() == message_split[0]) {
 						System.out.println("Le message provient de la salle: "
 								+ salleCourante);
 						for (int i = 0; i < 4; i++) { // on modifie la valeur du
@@ -154,7 +158,17 @@ public class Communication {
 		} else if (message_split.length == 2) { // accusé d'adresse de module car message de la
 												// forme /ACK:adresse\
 			retour="Accusé du message: " + message;
-		} else {
+		}  else if (message_split.length == 6) { // message provenant d'un module qui vient d'etre branché
+												 // forme /0011xxxxx:::::NOUVEAU::::\
+			// On ajoute le nouveau module à la salle vide
+			//TODO: vérifier que la salle où l'on ajoute le nouveau module s'appelle vide
+			for (Salle s : Maison.getMaison().getSalles()) {
+				if(s.toString().equals("vide")){
+					s.addModule(new ModuleCapteurs((message.substring(0,9)),4));
+				}
+			}
+			retour="Nouveau module détecté: " + message;
+		}	else {
 			retour="Message de type inconnu: " + message;
 		}
 		return retour;
@@ -284,5 +298,6 @@ public class Communication {
 			retour = "Message envoyé: "+messageAenvoyer.peek();
 		return retour;
 	}
+	
 
 }
