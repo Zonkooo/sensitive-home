@@ -2,7 +2,7 @@
 #include "WProgram.h"
 /* recvBuffer contient les données recues par le XPort
  */
-char recvBuffer[recvMsgLength+1];
+char recvBuffer[12];
 extern "C"void __cxa_pure_virtual(void){
 	// call to a pure virtual function happened ... wow, should never happen ... stop
 	while(1);

@@ -3,13 +3,13 @@
  * Created on Jun 17, 2009
  */
 
-/* Ce fichier est le header pour la connexion série basique pour le XPort
+/* Ce fichier est le header pour la connexion série basique pour le XPort.
  */
 #ifndef XPORTCNX_H_
 #define XPORTCNX_H_
 /* recvMsgLength contient le nombre maximum d'octets que l'on lit du XPort
  */
-const int recvMsgLength = 7;
+const int recvMsgLength = 11;
 /* time est utilisé pour savoir le nombre de millisecondes depuis lequel on lit les données série
  */
 static long time = 0;
@@ -18,10 +18,14 @@ static long time = 0;
 //static bool hasBeenInit = false;
 /* recvDelay est le delais pendant lequel le microcontrolleur va essayer de lire des données séries (en ms)
  */
-static int recvDelay = 1000;
+const int recvDelay = 1000;
 /* recvIt sert à se positionner dans la chaine reçue depuis le XPort
  */
 static int recvIt = 0;
+/* les variables suivantes sont des constantes pour la communication. Il serait intéressant de les stocker
+ * définitivement en EEPROM une fois le protocole complètement fini.
+ */
+const char beginMsg = '/', endMsg='\\', reqMsg ='R', beginAckMsg[8]="/ACK:%s";
 /* Cette méthode est appelée depuis la fonction loop() principale.
  */
 void recvXPort();
