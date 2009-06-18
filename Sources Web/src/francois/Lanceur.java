@@ -16,7 +16,7 @@ public class Lanceur {
 
 	
 	public static void main(String[] args){
-		Xml_manipulation.serialize(Xml_manipulation.creation_Hashmap("src/francois/config.xml"),"src/francois/config.xml");
+		Xml_manipulation.etat_actuel(Xml_manipulation.creation_Hashmap("src/francois/config.xml"),"src/francois/etat.xml");
 	//	Dhcp.rechercheAdresseXport();
 		
 	}

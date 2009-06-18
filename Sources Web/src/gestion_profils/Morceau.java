@@ -2,7 +2,7 @@ package gestion_profils;
 
 public abstract class Morceau
 {
-	private TypeMorceau type;
+	protected TypeMorceau type;
 	private Socle owner;
 	private int position;
 

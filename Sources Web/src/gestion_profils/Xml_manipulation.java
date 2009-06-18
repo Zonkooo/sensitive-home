@@ -208,14 +208,42 @@ public class Xml_manipulation {
 		
 	}
 
+	static public void etat_actuel(HashMap<String, Salle> hashSalle,String fichier) {
+		Iterator it = hashSalle.values().iterator();
+		Element racine = new Element("maison");
+		Salle salle_courante;
+		Element salle;
+		Attribute at;
+		//serialize les salles
+		while (it.hasNext()) {
+			salle_courante = (Salle) it.next();
+			salle = new Element("salle");
+			at = new Attribute("name",salle_courante.toString());
+			salle.setAttribute(at);
+			if(salle_courante.temperature_actuelle()==-1){
+				at = new Attribute("temp_actuelle","nc");
+			}else{
+				at = new Attribute("temp_actuelle",Integer.toString(salle_courante.temperature_actuelle()/10));
+			}
+			salle.setAttribute(at);
+			if(salle_courante.temperature_actuelle()==-1){
+				at = new Attribute("lum_actuelle","nc");
+			}else{
+				at = new Attribute("lum_actuelle",Integer.toString(salle_courante.luminosite_actuelle()));
+			}
+			salle.setAttribute(at);		
+			racine.addContent(salle);		
+		}
+		Document document = new Document(racine);
+		affiche(document);
+		enregistre(fichier, document);
+	}
+
+	
 	static public void serialize_profils(HashMap<String, ProfilGlobal> hashSalle,String fichier) {
 		Iterator it = hashSalle.values().iterator();
 		Element racine = new Element("profils");
 		ProfilGlobal profil_courant;
-		ModuleCapteurs module_courant;
-		Capteur capteur_courant;
-		Multiprise multiprise_courante;
-		Prise prise_courante;
 		Element profil;
 		Attribute at;
 		//serialize les salles

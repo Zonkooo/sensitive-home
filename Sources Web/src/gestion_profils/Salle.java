@@ -1,85 +1,114 @@
 package gestion_profils;
 
-import Jama.Matrix;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
-public class Salle
-{
+import Jama.Matrix;
+
+public class Salle {
 	private String nom;
 
-	private HashMap<Integer,Multiprise> multiprises;
-	private HashMap<Integer,ModuleCapteurs> modules;
-	
+	private HashMap<Integer, Multiprise> multiprises;
+	private HashMap<Integer, ModuleCapteurs> modules;
+
 	private ArrayList<SousProfil> availablesProfils;
 	private SousProfil currentProfil;
 
-	public Salle(String nom)
-	{
+	public Salle(String nom) {
 		this.nom = nom;
-		this.multiprises = new HashMap<Integer,Multiprise>();
-		this.modules = new  HashMap<Integer,ModuleCapteurs>();
+		this.multiprises = new HashMap<Integer, Multiprise>();
+		this.modules = new HashMap<Integer, ModuleCapteurs>();
+	}
+
+	public int temperature_actuelle() {
+		int temp = 0;
+		int nb = 0;
+		ModuleCapteurs mc;
+		Iterator it = modules.values().iterator();
+		while (it.hasNext()) {
+			mc = (ModuleCapteurs) it.next();
+			if( mc.getTempMoy() != -1){
+				temp += mc.getTempMoy();
+				nb++;
+			}
+		}
+		if(nb == 0){
+			return -1;
+		}
+		temp /= nb;
+		return nb;
+	}
+
+	public int luminosite_actuelle() {
+		int temp = 0;
+		int nb = 0;
+		ModuleCapteurs mc;
+		Iterator it = modules.values().iterator();
+		while (it.hasNext()) {
+			mc = (ModuleCapteurs) it.next();
+			if( mc.getLumMoy() != -1){
+				temp += mc.getLumMoy();
+				nb++;
+			}
+		}
+		if(nb == 0){
+			return -1;
+		}
+		temp /= nb;
+		return nb;
 	}
 
 	@Override
 	public String toString() {
 		return nom;
 	}
-	
-	@Override public boolean equals(Object o)
-	{
+
+	@Override
+	public boolean equals(Object o) {
 		return this.toString().equals(o.toString());
 	}
 
-	public  HashMap<Integer,ModuleCapteurs> getModules()
-	{
+	public HashMap<Integer, ModuleCapteurs> getModules() {
 		return modules;
 	}
 
-	public  HashMap<Integer,Multiprise> getMultiprises()
-	{
+	public HashMap<Integer, Multiprise> getMultiprises() {
 		return multiprises;
 	}
-	
-	public void addMultiprise(Multiprise mp)
-	{
-		//System.out.println("ajout de la MP " + mp + " à la salle " + this);
-		multiprises.put(mp.getID(),mp);
+
+	public void addMultiprise(Multiprise mp) {
+		// System.out.println("ajout de la MP " + mp + " à la salle " + this);
+		multiprises.put(mp.getID(), mp);
 	}
 
-	public void addModule(ModuleCapteurs mc)
-	{
-		//System.out.println("ajout du module " + mc + " à la salle " + this);
-		modules.put(mc.getID(),mc);
+	public void addModule(ModuleCapteurs mc) {
+		// System.out.println("ajout du module " + mc + " à la salle " + this);
+		modules.put(mc.getID(), mc);
 	}
 
-	public void removeMultiprise(Multiprise m)
-	{
+	public void removeMultiprise(Multiprise m) {
 		multiprises.remove(m);
 	}
 
-	public void removeModule(ModuleCapteurs m)
-	{
+	public void removeModule(ModuleCapteurs m) {
 		modules.remove(m);
 	}
-	
-	public void addAppareil(Multiprise mp, int i, TypeMorceau a)
-	{
+
+	public void addAppareil(Multiprise mp, int i, TypeMorceau a) {
 		Prise p = new Prise(a, mp, i);
 		mp.setPrise(p);
 	}
 
 	/****************************
-	 ***   gestion profils   ***
+	 *** gestion profils ***
 	 ***************************/
-	
-	public ArrayList<SousProfil> getAvailablesProfils()
-	{
+
+	public ArrayList<SousProfil> getAvailablesProfils() {
 		return availablesProfils;
 	}
 
-	public SousProfil getCurrentProfil()
-	{
+	public SousProfil getCurrentProfil() {
 		return currentProfil;
 	}
 
@@ -89,8 +118,8 @@ public class Salle
 					+ " à la salle " + this);
 			return;
 		}
-			
-		for(Prise p : newProfil.getPrises())
+
+		for (Prise p : newProfil.getPrises())
 			p.getOwner().setEtatPrise(newProfil.getEtat(p), p.getPosition());
 
 		this.currentProfil = newProfil;
@@ -102,140 +131,127 @@ public class Salle
 					+ " à la salle " + this);
 			return;
 		}
-		
+
 		this.availablesProfils.add(sp);
 	}
-	
+
 	/****************************
-	 ***   Calibrage lampes   ***
+	 *** Calibrage lampes ***
 	 ****************************/
-	
+
 	private Matrix A;
 	private ArrayList<Prise> lampes;
 	private ArrayList<Capteur> photocapteurs;
-	
+
 	/**
-	 * calibre les lampes en les allumant à 100% une à une
-	 * et en observant leur effet sur les capteurs.
+	 * calibre les lampes en les allumant à 100% une à une et en observant
+	 * leur effet sur les capteurs.
 	 * 
 	 * @return
 	 */
-	public Matrix calibrationLampes()
-	{
+	public Matrix calibrationLampes() {
 		lampes = new ArrayList<Prise>();
 		photocapteurs = new ArrayList<Capteur>();
-		
-		for (Multiprise multiprise : multiprises.values())
-		{
-			for(int i = 0; i < multiprise.getCapacity(); i++)
-			{
+
+		for (Multiprise multiprise : multiprises.values()) {
+			for (int i = 0; i < multiprise.getCapacity(); i++) {
 				Prise p = multiprise.getPrise(i);
-				if(p != null && p.getType() == TypeMorceau.LUMINOSITE)
-				{
+				if (p != null && p.getType() == TypeMorceau.LUMINOSITE) {
 					p.setEtat(Etat.OFF);
 					lampes.add(p);
 				}
 			}
 		}
-		
-		for (ModuleCapteurs moduleCapteurs :modules.values())
-		{
-			for(int i = 0; i < moduleCapteurs.getCapacity(); i++)
-			{
+
+		for (ModuleCapteurs moduleCapteurs : modules.values()) {
+			for (int i = 0; i < moduleCapteurs.getCapacity(); i++) {
 				Capteur c = moduleCapteurs.getCapteur(i);
-				if(c != null && c.getType() == TypeMorceau.LUMINOSITE)
+				if (c != null && c.getType() == TypeMorceau.LUMINOSITE)
 					photocapteurs.add(c);
 			}
 		}
 
 		A = new Matrix(lampes.size(), photocapteurs.size());
 
-		for (int i = 0; i < lampes.size(); i++)
-		{
+		for (int i = 0; i < lampes.size(); i++) {
 			lampes.get(i).setEtat(Etat.ON);
-			
-			try { Thread.sleep(1000); }
-			catch(InterruptedException ie)
-			{ System.out.println(ie); }
-			
-			for (int j = 0; j < photocapteurs.size(); j++)
-			{
+
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException ie) {
+				System.out.println(ie);
+			}
+
+			for (int j = 0; j < photocapteurs.size(); j++) {
 				A.set(i, j, photocapteurs.get(j).getLastValeur());
 			}
 			lampes.get(i).setEtat(Etat.OFF);
 		}
-		
+
 		return A;
 	}
-	
-	public HashMap<Prise, Integer> getCommandesLampes()
-	{
+
+	public HashMap<Prise, Integer> getCommandesLampes() {
 		double[] vals = new double[A.getColumnDimension()];
-		for (int i = 0; i < vals.length; i++)
-		{
-			vals[i] = currentProfil.getLuminosite() - photocapteurs.get(i).getLastValeur();
+		for (int i = 0; i < vals.length; i++) {
+			vals[i] = currentProfil.getLuminosite()
+					- photocapteurs.get(i).getLastValeur();
 		}
 
 		Matrix b = new Matrix(vals, 1);
-		
+
 		Matrix x = A.solve(b);
-		
+
 		HashMap<Prise, Integer> ret = new HashMap<Prise, Integer>();
-		
-		for (int i = 0; i < lampes.size(); i++)
-		{
-			ret.put(lampes.get(i), (int)Math.round(x.get(i, 1)));
+
+		for (int i = 0; i < lampes.size(); i++) {
+			ret.put(lampes.get(i), (int) Math.round(x.get(i, 1)));
 		}
-		
+
 		return ret;
 	}
-	
+
 	/*
-	 * Analyse la valeur des capteurs et envoie la commande en conséquence à la multiprise
+	 * Analyse la valeur des capteurs et envoie la commande en conséquence à
+	 * la multiprise
 	 */
-	public void analyse()
-	{
+	public void analyse() {
 		int temperature_moyenne_courante = 0;
 		int nb_capteurs_de_temperature = 0;
-		//on parcourt l'ensemble des modules de capteurs présents dans la pièce
-		for (ModuleCapteurs mc : modules.values())
-		{
-			//on fait la moyenne des valeurs des capteurs de meme type
-			for (int i = 0; i < mc.getCapacity(); i++)
-			{ //on parcourt les capteurs de chaque module
+		// on parcourt l'ensemble des modules de capteurs présents dans la
+		// pièce
+		for (ModuleCapteurs mc : modules.values()) {
+			// on fait la moyenne des valeurs des capteurs de meme type
+			for (int i = 0; i < mc.getCapacity(); i++) { // on parcourt les
+															// capteurs de
+															// chaque module
 				Capteur capteurCourant = mc.getCapteur(i);
-				
-				if(capteurCourant != null)
-				{
-					if (capteurCourant.getType() == TypeMorceau.TEMPERATURE)
-					{
-						temperature_moyenne_courante += capteurCourant.getLastValeur();
+
+				if (capteurCourant != null) {
+					if (capteurCourant.getType() == TypeMorceau.TEMPERATURE) {
+						temperature_moyenne_courante += capteurCourant
+								.getLastValeur();
 						nb_capteurs_de_temperature++;
-					}
-					else if (capteurCourant.getType() == TypeMorceau.LUMINOSITE)
-					{
+					} else if (capteurCourant.getType() == TypeMorceau.LUMINOSITE) {
 						System.out.println("Raphael s'occupe de toi");
-					}
-					else
-					{
+					} else {
 						System.out.println("type de capteur non géré");
 					}
 				}
 			}
 		}
-		
-		if(nb_capteurs_de_temperature != 0)
+
+		if (nb_capteurs_de_temperature != 0)
 			temperature_moyenne_courante /= nb_capteurs_de_temperature;
-		
-		//tous les capteurs ont été relevés, on s'occupe d'analyser et d'envoyer les commandes
-		int commande = (temperature_moyenne_courante < currentProfil.getTemperature()) ? 1 : 0;
-		
-		for (Multiprise mp : getMultiprises().values())
-		{
-			for (int i = 0; i < 5; i++)
-			{
-				if (mp.getPrise(i).getType() == TypeMorceau.LUMINOSITE)
-				{
+
+		// tous les capteurs ont été relevés, on s'occupe d'analyser et
+		// d'envoyer les commandes
+		int commande = (temperature_moyenne_courante < currentProfil
+				.getTemperature()) ? 1 : 0;
+
+		for (Multiprise mp : getMultiprises().values()) {
+			for (int i = 0; i < 5; i++) {
+				if (mp.getPrise(i).getType() == TypeMorceau.LUMINOSITE) {
 					mp.sendMessage("/" + i + ":" + commande);
 				}
 			}
