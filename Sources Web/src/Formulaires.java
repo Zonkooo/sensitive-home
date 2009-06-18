@@ -90,6 +90,7 @@ public class Formulaires {
 		out.println("	</SELECT>");
 		out.println("	</TD>");
 		
+		if (module_courant != null) {
 		//changer salle capteur
 		out.println("	<TD>Changer salle</TD>");
 		out.println("	<TD>");
@@ -110,7 +111,6 @@ public class Formulaires {
 		out.println("</TR>");
 		out.println("");
 
-		if (module_courant != null) {
 			// choix du type de capteur
 			for (int i = 0; i < 4; i++) {
 				TypeMorceau type;
@@ -185,6 +185,7 @@ public class Formulaires {
 		out.println("	</SELECT>");
 		out.println("	</TD>");
 		
+		if (multiprise_selection != null) {
 		//changer salle multiprise
 		out.println("	<TD>Changer salle Multiprise</TD>");
 		out.println("	<TD>");
@@ -205,7 +206,6 @@ public class Formulaires {
 		out.println("</TR>");
 		out.println("");
 
-		if (multiprise_selection != null) {
 			// choix du type d'appareil
 			for (int i = 0; i < multiprise_selection.getCapacity(); i++) {
 				TypeMorceau type;
@@ -246,6 +246,7 @@ public class Formulaires {
 	public static void profils(PrintWriter out, HttpServletRequest request){
 		HashMap<String, ProfilGlobal> hashProfil = Interface.getHashProfil();	
 		out.println("<FORM name= \"formulaire_profil\" method=post>");
+		out.println("<TABLE BORDER=0>");
 		out.println("Configuration des profils");
 		// selection d'un profil
 		out.println("<TR>");
@@ -289,6 +290,7 @@ public class Formulaires {
 		out.println("<TR>");
 		out.println(" <TD><INPUT TYPE=\"submit\"  VALUE=\"Valider\"></TD>");
 		out.println("</TR>");
+		out.println("</TABLE>");
 		out.println("</FORM>");
 		
 	}

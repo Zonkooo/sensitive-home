@@ -115,6 +115,13 @@ public class CommunHtml {
 
 			break;
 		case 3:
+			break;
+		case 4:
+			Xml_manipulation.serialize(Interface.getHashSalle(),"../webapps/web_interface/WEB-INF/classes/francois/config.xml");
+			Xml_manipulation.serialize_profils(Interface.getHashProfil(),"../webapps/web_interface/WEB-INF/classes/gestion_profils/profils2.xml");
+			out.print("<p>Sauvegarde</p>");
+			break;
+		case 5:
 			if (last_profil == null) {
 				last_profil = Interface.getHashProfil().values().iterator().next().getNom();
 			}
@@ -124,10 +131,6 @@ public class CommunHtml {
 				last_profil=request.getParameter("profil");
 			}
 			Formulaires.profils(out, request);
-			break;
-		case 4:
-			Xml_manipulation.serialize(Interface.getHashSalle(),"../webapps/web_interface/WEB-INF/classes/francois/config.xml");
-			out.print("<p>Sauvegarde</p>");
 			break;
 		}
 		out.print("</div>");

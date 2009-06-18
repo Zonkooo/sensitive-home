@@ -1,5 +1,5 @@
 
-import francois.Salle;
+import gestion_profils.Salle;
 
 
 /**
@@ -10,7 +10,7 @@ import francois.Salle;
  */
 public class SousProfil extends ProfilGlobal
 {
-	francois.Salle salle;
+	Salle salle;
 	//TODO :
 	//de cette salle, on récupère l'ensemble de prises
 	//que l'on configure suivant le profil :
