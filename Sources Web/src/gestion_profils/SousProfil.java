@@ -9,19 +9,14 @@ import java.util.Set;
  * 
  * @author raphael
  */
-public class SousProfil
+public class SousProfil extends AbstractProfil
 {
-	private String nom;
-	private int temperature;
-	private int luminosite;
-	
 	private gestion_profils.Salle salle;
 	private HashMap<Prise, Etat> configPrises;
 
-	public SousProfil(int temperature, int luminosite, Salle salle)
+	public SousProfil(String nom, int temperature, int luminosite, Salle salle)
 	{
-		this.temperature = temperature;
-		this.luminosite = luminosite;
+		super(nom, temperature, luminosite);
 		this.salle = salle;
 		configPrises = new HashMap<Prise, Etat>();
 	}
@@ -32,18 +27,6 @@ public class SousProfil
 	}
 	
 	//GETTERS
-	public int getLuminosite()
-	{
-		return luminosite;
-	}
-	public String getNom()
-	{
-		return nom;
-	}
-	public int getTemperature()
-	{
-		return temperature;
-	}
 	public Set<Prise> getPrises()
 	{
 		return configPrises.keySet();
@@ -55,10 +38,5 @@ public class SousProfil
 	public Salle getSalle()
 	{
 		return salle;
-	}
-
-	@Override public String toString()
-	{
-		return this.nom;
 	}
 }
