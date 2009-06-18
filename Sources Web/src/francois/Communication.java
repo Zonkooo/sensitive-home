@@ -37,25 +37,28 @@ public class Communication {
 
 	public static void main(String[] args) {
 		Communication communication = new Communication("192.168.0.11");
-//		communication.start();
 
-		String message = "/2:255\\";
-		for (int i = 0; i < 5; i++) {
-						communication.addMessageToQueue(message);
+		//		communication.start();
 
-		}
-		for (int i = 0; i < message.length(); i++) {
-			communication.sendSomeData((byte) message.charAt(i));
-		}
+		String message = "/0:1\\";
+		for (int i = 0; i < 60; i++) {
+			communication.addMessageToQueue(message);
+
+		}communication.sendQueue();
 		while(true){
-						communication.sendQueue();
-			communication.listen();
+			
+			String ecoute = "rien";
+//			while((ecoute=communication.listen()).substring(0, 1).equals("Acc")) {
+//				System.out.println(ecoute);
+//			}
+			System.out.println(communication.listen());
 		}
 	}
 
 	public Communication(String ip) {
 		host = ip;
 		port = 31337;
+		messageAenvoyer = new ArrayList<String>();
 		checkConnection(host, port); // subroutine to create a connection, via a
 										// socket, to the XPort
 	}
@@ -70,7 +73,8 @@ public class Communication {
 //	}
 
 	// écoute sur le port série
-	void listen() {
+	String  listen() {
+		String retour="";
 		if (dataIsWaiting() == true) { // check to see if there's new data
 										// waiting to come in
 			myDataIn = getSomeData(); // ... and if there's new data, get it
@@ -86,12 +90,14 @@ public class Communication {
 						message = message + (char) myDataIn;
 					}
 				}
-				analyseData(message);
+				retour = analyseData(message);
 			}
 		}
+		return retour;
 	}
 
-	void analyseData(String message) {
+	String analyseData(String message) {
+		String retour="";
 		// on sait de quelle multiprise vient les données puisqu'on est conecté
 		// à celle-ci
 		// on a besoin de savoir de quel capteur viennent les données
@@ -99,7 +105,7 @@ public class Communication {
 		// On regarde si on a affaire à des données ou un accusé de réception
 		if (message_split.length == 5) { // données car message de la forme
 											// /module:d0:d1:d2:d3\
-			System.out.println("Données d'un module de capteur: " + message);
+			retour="Données d'un module de capteur: " + message;
 			// On met à jour la valeur des capteurs dont on vient de recevoir
 			// l'info
 			// On parcourt la liste de salles
@@ -113,7 +119,7 @@ public class Communication {
 					ModuleCapteurs moduleCourant = itMC;
 					if (moduleCourant.getID() == Long
 							.parseLong(message_split[0])) {
-						System.out.println("le message provient de la salle: "
+						System.out.println("Le message provient de la salle: "
 								+ salleCourante);
 						for (int i = 0; i < 4; i++) { // on modifie la valeur du
 														// capteur à partir du
@@ -126,10 +132,11 @@ public class Communication {
 			}
 		} else if (message_split.length == 3) { // accusé car message de la
 												// forme /ACK:prise:val\
-			System.out.println("Accusé du message: " + message);
+			retour="Accusé du message: " + message;
 		} else {
-			System.out.println("message de type inconnu: " + message);
+			retour="Message de type inconnu: " + message;
 		}
+		return retour;
 	}
 
 	// //////CHECK CONNECTION\\\\\\\\
