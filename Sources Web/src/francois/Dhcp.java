@@ -1,5 +1,6 @@
 package francois;
 
+import com.developpez.adiguba.shell.Shell;
 import gestion_profils.Maison;
 import gestion_profils.Multiprise;
 import gestion_profils.Salle;
