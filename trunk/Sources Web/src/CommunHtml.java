@@ -118,7 +118,8 @@ public class CommunHtml {
 			break;
 		case 4:
 			Xml_manipulation.serialize(Interface.getHashSalle(),"../webapps/web_interface/WEB-INF/classes/francois/config.xml");
-			Xml_manipulation.serialize_profils(Interface.getHashProfil(),"../webapps/web_interface/WEB-INF/classes/gestion_profils/profils2.xml");
+			Xml_manipulation.etat_actuel(Interface.getHashSalle(),"../webapps/web_interface/WEB-INF/classes/francois/etat.xml");
+			Xml_manipulation.serialize_profils(Interface.getHashProfil(),"../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
 			out.print("<p>Sauvegarde</p>");
 			break;
 		case 5:

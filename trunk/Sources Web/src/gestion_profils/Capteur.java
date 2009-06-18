@@ -15,6 +15,19 @@ public class Capteur extends Morceau
 		super(type,owner, position);
 	}
 
+	public int data(){
+		switch(type){
+		case TEMPERATURE :
+			return lastValeur*10/49;
+		case LUMINOSITE :
+			return lastValeur/10;
+		case AUTRE :
+			return lastValeur;
+		default :
+			return 0;
+		}
+	}
+	
 	@Override
 	public ModuleCapteurs getOwner()
 	{
