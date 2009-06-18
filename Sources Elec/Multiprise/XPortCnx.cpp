@@ -22,5 +22,5 @@ char *getRecvBuffer(){
 }
 
 void resetRecvBuffer(){
-	recvBuffer[0]=0;
+	*recvBuffer={0};
 }
