@@ -1,3 +1,7 @@
+import gestion_profils.ProfilGlobal;
+import gestion_profils.Salle;
+import gestion_profils.Xml_manipulation;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -7,11 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jdom.*;
-import org.jdom.output.*;
-
-import francois.Salle;
-import francois.Xml_manipulation;
 
 
 /**
@@ -19,15 +18,21 @@ import francois.Xml_manipulation;
  */
 public class Interface extends HttpServlet {
 	private static HashMap<String, Salle> hashSalle;
+	private static HashMap<String, ProfilGlobal> hashProfil;
 	private static final long serialVersionUID = 1L;
 
+
+	public static HashMap<String, ProfilGlobal> getHashProfil() {
+		return hashProfil;
+	}
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public Interface() {
 		super();
-		hashSalle =Xml_manipulation.creation_Hashmap("../webapps/web_interface/WEB-INF/classes/francois/config.xml");
+		hashSalle =	Xml_manipulation.creation_Hashmap("../webapps/web_interface/WEB-INF/classes/francois/config.xml");
+		hashProfil = Xml_manipulation.creation_Hashmap_profils("../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
 	}
 
 	public static HashMap<String, Salle> getHashSalle() {
