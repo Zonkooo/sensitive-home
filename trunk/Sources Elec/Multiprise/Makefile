@@ -35,7 +35,7 @@ AVRDUDE_PROGRAMMER = stk500v1
 MCU = atmega168
 F_CPU = 16000000
 #OTHER_C_INCLUDES = ../AF_XPort/AF_XPort.c ../NewSoftSerial/NewSoftSerial.cpp ../libEEPROM/EEPROM.cpp
-OTHER_CXX_INCLUDES =  XPortCnx.cpp
+OTHER_CXX_INCLUDES =  XPortCnx.cpp XBeeCnx.cpp
 ############################################################################
 # Below here nothing should be changed...
 
