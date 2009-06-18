@@ -19,4 +19,5 @@ const int xbRecvMsgLength = 17;
 
 int xbSensorModulesAddrPos = 0;
 char xbSensorModulesAddr[MAX_SENSOR_MODULES][9+1];
+char xbSensorModulesAddrTmp[9+1];
 #endif /*XBEECNX_H_*/
