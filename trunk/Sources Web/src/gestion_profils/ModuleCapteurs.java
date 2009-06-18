@@ -2,12 +2,12 @@ package gestion_profils;
 
 public class ModuleCapteurs extends Socle
 {
-	public ModuleCapteurs(int ID,int taille)
+	public ModuleCapteurs(String ID,int taille)
 	{
 		super(ID,taille);
 	}
 	
-	public ModuleCapteurs(int ID, Capteur[] capteurs)
+	public ModuleCapteurs(String ID, Capteur[] capteurs)
 	{
 		super(ID, capteurs);
 	}

@@ -9,8 +9,8 @@ import Jama.Matrix;
 public class Salle {
 	private String nom;
 
-	private HashMap<Integer, Multiprise> multiprises;
-	private HashMap<Integer, ModuleCapteurs> modules;
+	private HashMap<String, Multiprise> multiprises;
+	private HashMap<String, ModuleCapteurs> modules;
 
 	private ArrayList<SousProfil> availablesProfils;
 	private AbstractProfil currentProfil;
@@ -18,8 +18,8 @@ public class Salle {
 
 	public Salle(String nom, ProfilGlobal defaut) {
 		this.nom = nom;
-		this.multiprises = new HashMap<Integer, Multiprise>();
-		this.modules = new HashMap<Integer, ModuleCapteurs>();
+		this.multiprises = new HashMap<String, Multiprise>();
+		this.modules = new HashMap<String, ModuleCapteurs>();
 		this.availablesProfils = new ArrayList<SousProfil>();
 		
 		this.defaultProfil = defaut;
@@ -74,11 +74,11 @@ public class Salle {
 		return this.toString().equals(o.toString());
 	}
 
-	public HashMap<Integer, ModuleCapteurs> getModules() {
+	public HashMap<String, ModuleCapteurs> getModules() {
 		return modules;
 	}
 
-	public HashMap<Integer, Multiprise> getMultiprises() {
+	public HashMap<String, Multiprise> getMultiprises() {
 		return multiprises;
 	}
 
