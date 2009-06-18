@@ -6,16 +6,16 @@ package gestion_profils;
  */
 public abstract  class Socle 
 {
-	protected int ID;
+	protected String ID;
 	protected Morceau[] morceaux;
 	
-	public Socle(int ID,int taille)
+	public Socle(String id2,int taille)
 	{
-		this.ID = ID;
+		this.ID = id2;
 		morceaux = new Morceau[taille];
 	}
 
-	public Socle(int ID, Morceau[] morceaux)
+	public Socle(String ID, Morceau[] morceaux)
 	{
 		this.ID = ID;
 		this.morceaux = morceaux;
@@ -31,7 +31,7 @@ public abstract  class Socle
 		return morceaux[index];
 	}
 
-	public int getID()
+	public String getID()
 	{
 		return ID;
 	}

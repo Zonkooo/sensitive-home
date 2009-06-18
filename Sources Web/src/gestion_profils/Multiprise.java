@@ -6,13 +6,13 @@ public class Multiprise extends Socle {
 	private Communication communication;
 	private String ip;
 
-	public Multiprise(int ID, int taille, String adresse) {
+	public Multiprise(String ID, int taille, String adresse) {
 		super(ID,taille);
 		ip = adresse;
 		//communication = new Communication(ip);
 	}
 
-	public Multiprise(int ID, Prise[] morceaux, String adresse) {
+	public Multiprise(String ID, Prise[] morceaux, String adresse) {
 		super(ID, morceaux);
 		ip = adresse;
 		communication = new Communication(ip);
