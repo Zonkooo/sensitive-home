@@ -1,7 +1,6 @@
 
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,12 +25,7 @@ public class Ajax extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/xml");
-		PrintWriter out = response.getWriter();
-		out.print("<?xml version='1.0' encoding='UTF-8'?>");
-		out.print("<greeting language=\"en_US\">");
-		out.print(" Hello, World!!!!!!!");
-		out.print("</greeting>");
+		CommunHtml.updateCapteurs(request);
 	}
 
 	/**

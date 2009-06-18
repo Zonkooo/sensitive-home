@@ -11,10 +11,6 @@ import java.util.regex.Pattern;
 import GestionProfils.Maison;
 import GestionProfils.Multiprise;
 import GestionProfils.Salle;
-import GestionProfils.Xml_manipulation;
-
-import com.developpez.adiguba.shell.Shell;
-
 
 
 public class Dhcp {

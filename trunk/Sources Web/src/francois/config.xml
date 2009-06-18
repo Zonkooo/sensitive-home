@@ -3,44 +3,44 @@
 
 <salle name="salon">
 	<module_capteurs id="101" multiprise="1">
-		<capteur id="101" type="lumiere" />
-		<capteur id="102" type="temperature" />
-		<capteur id="103" type="vide" />
-		<capteur id="104" type="vide" />
+		<capteur type="L" />
+		<capteur type="T" />
+		<capteur type="V" />
+		<capteur type="V" />
 	</module_capteurs>
 	<module_capteurs id="201" multiprise="1">
-		<capteur id="201" type="lumiere" />
-		<capteur id="202" type="temperature" />
-		<capteur id="203" type="vide" />
-		<capteur id="204" type="vide" />
+		<capteur type="L" />
+		<capteur type="T" />
+		<capteur type="V" />
+		<capteur type="V" />
 	</module_capteurs>
-	<multiprise id="1">
-		<prise type="lumiere" />
-		<prise type="lumiere" />
-		<prise type="lumiere" />
-		<prise type="temperature" />
-		<prise type="temperature" />
+	<multiprise id="1" ip="192.168.0.11">
+		<prise type="L"  />
+		<prise type="L" />
+		<prise type="L" />
+		<prise type="T" />
+		<prise type="T" />
 	</multiprise>
 </salle>
 <salle name="cuisine">
-	<module_capteurs id="101" multiprise="1">
-		<capteur id="101" type="lumiere" />
-		<capteur id="102" type="temperature" />
-		<capteur id="103" type="vide" />
-		<capteur id="104" type="vide" />
+	<module_capteurs id="301" multiprise="2">
+		<capteur type="L" />
+		<capteur type="T" />
+		<capteur type="V" />
+		<capteur type="V" />
 	</module_capteurs>
-	<module_capteurs id="201" multiprise="1">
-		<capteur id="201" type="lumiere" />
-		<capteur id="202" type="temperature" />
-		<capteur id="203" type="vide" />
-		<capteur id="204" type="vide" />
+	<module_capteurs id="401" multiprise="2">
+		<capteur id="401" type="L" />
+		<capteur id="402" type="V" />
+		<capteur id="403" type="L" />
+		<capteur id="404" type="T" />
 	</module_capteurs>
-	<multiprise id='2'>
-		<prise type="lumiere"/>
-		<prise type="lumiere"/>
-		<prise type="lumiere"/>
-		<prise type="temperature"/>
-		<prise type="temperature"/>
+	<multiprise id="2" ip="192.168.0.12">
+		<prise type="L"  />
+		<prise type="L" />
+		<prise type="L" />
+		<prise type="T" />
+		<prise type="T" />
 	</multiprise>
 </salle>
 </maison>

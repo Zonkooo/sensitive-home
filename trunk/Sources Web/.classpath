@@ -6,5 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="/Users/ehau78/Documents/ESIEE/I3/Projet fin d&apos;année/sources/web_interface/WebContent/WEB-INF/lib/jdom.jar"/>
+	<classpathentry kind="lib" path="/Users/ehau78/Documents/ESIEE/I3/Projet fin d&apos;année/sources/web_interface/WebContent/WEB-INF/lib/Jama-1.0.2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

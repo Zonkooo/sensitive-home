@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<maison>
+  <salle name="salle">
+    <module_capteurs id="201">
+      <capteur type="L" />
+      <capteur type="T" />
+      <capteur type="V" />
+      <capteur type="V" />
+    </module_capteurs>
+    <module_capteurs id="101">
+      <capteur type="L" />
+      <capteur type="T" />
+      <capteur type="V" />
+      <capteur type="V" />
+    </module_capteurs>
+    <module_prise id="1" ip="192.168.0.11">
+      <prise type="L" />
+      <prise type="L" />
+      <prise type="L" />
+      <prise type="T" />
+      <prise type="T" />
+    </module_prise>
+  </salle>
+  <salle name="salle">
+    <module_capteurs id="401">
+      <capteur type="L" />
+      <capteur type="V" />
+      <capteur type="L" />
+      <capteur type="T" />
+    </module_capteurs>
+    <module_capteurs id="301">
+      <capteur type="L" />
+      <capteur type="T" />
+      <capteur type="V" />
+      <capteur type="V" />
+    </module_capteurs>
+    <module_prise id="2" ip="192.168.0.12">
+      <prise type="L" />
+      <prise type="L" />
+      <prise type="L" />
+      <prise type="T" />
+      <prise type="T" />
+    </module_prise>
+  </salle>
+</maison>
+
