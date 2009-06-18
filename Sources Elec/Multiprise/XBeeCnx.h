@@ -5,7 +5,7 @@
  
 #ifndef XBEECNX_H_
 #define XBEECNX_H_
-
+#define MAX_SENSOR_MODULES 5
 /* xbSentMsgLength contient le nombre d'octets du message envoyé aux modules de capteurs
  * pour leur demander les informations et pour leur envoyer un accusé
  * Le message est: /REQ\ ou /ACK\
@@ -17,4 +17,6 @@ const int xbSentMsgLength = 5;
  */
 const int xbRecvMsgLength = 17;
 
+int xbSensorModulesAddrPos = 0;
+char xbSensorModulesAddr[MAX_SENSOR_MODULES][9+1];
 #endif /*XBEECNX_H_*/

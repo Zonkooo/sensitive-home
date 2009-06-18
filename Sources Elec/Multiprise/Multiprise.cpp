@@ -61,12 +61,15 @@ unsigned char pwmObj[NB_PRISES_PWM]= { 0, 0, 0 };
 unsigned char pwmAct[NB_PRISES_PWM]= { 0, 0, 0 };
 unsigned char valueI, priseI;
 char valueC[3], ackMsg[12], *recvXP, priseC[1], iterator,
-		sensorMsg[xbRecvMsgLength+10];
+		sensorToXpMsg[xbRecvMsgLength+10], count=0;
 
 void setup() {
 	initXPort(9600);
 	for (iterator=NB_PRISES-1; iterator>=0; iterator--) {
 		pinMode(prises[iterator], OUTPUT);
+	}
+	for (iterator=MAX_SENSOR_MODULES; iterator >= 0; iterator --) {
+		xbSensorModulesAddr[iterator][0]=0; // on initialise toutes les adresses à NULL
 	}
 }
 
@@ -78,7 +81,16 @@ void loop() {
 	 * que l'on contrôle 
 	 */
 	// XBeeCnx
-
+	// implémentation bouchon: envoi de données fausses de capteurs
+	if (++count == 40) {
+		count=0;
+		for (iterator=MAX_SENSOR_MODULES; iterator >= 0; iterator --) {
+			if (xbSensorModulesAddr[iterator][0] != 0) {
+				sprintf(sensorToXpMsg, "/%s:320:253:850:715\\",xbSensorModulesAddr[iterator]);
+				sendXPort(sensorToXpMsg);
+			}
+		}
+	}
 	for (iterator=NB_PRISES_PWM-1; iterator >= 0; iterator--) {
 		if (pwmObj[iterator] == pwmAct[iterator])
 			continue;
@@ -96,7 +108,7 @@ void loop() {
 			priseI = atoi(priseC);
 			strncpy(valueC, &recvXP[7], 3);
 			valueI = atoi(valueC);
-			if ((priseI < 0)&& priseI >= NB_PRISES) {
+			if (priseI < 0&& priseI >= NB_PRISES) {
 				resetRecvBuffer();
 				return;
 			}
@@ -106,9 +118,11 @@ void loop() {
 				pwmObj[priseI-2]=valueI;
 			}
 		} else { // c'est un message demandant de gérer un module de capteurs
-			//TODO ajout du module de capteurs
+			strncpy(xbSensorModulesAddr[xbSensorModulesAddrPos++], &recvXP[1],
+					9);
+			xbSensorModulesAddr[xbSensorModulesAddrPos++][9]=0;
 		}
-		sprintf(ackMsg, beginAckMsg, &recvXP[5]); // /REQ:0:001\ /ACK:0:
+		sprintf(ackMsg, beginAckMsg, &recvXP[5]);
 		sendXPort(ackMsg);
 		resetRecvBuffer();
 	}
