@@ -25,5 +25,11 @@ public class Prise extends Morceau
 	public void setEtat(Etat etat)
 	{
 		this.etat = etat;
+		//TODO : repercuter cette modif sur la prise réelle
+	}
+	
+	public Etat getEtat()
+	{
+		return this.etat;
 	}
 }

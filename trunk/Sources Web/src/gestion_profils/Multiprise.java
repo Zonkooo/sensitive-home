@@ -3,8 +3,8 @@ package gestion_profils;
 import francois.Communication;
 
 public class Multiprise extends Socle {
-	Communication communication;
-	String ip;
+	private Communication communication;
+	private String ip;
 
 	public Multiprise(int ID, int taille, String adresse) {
 		super(ID,taille);

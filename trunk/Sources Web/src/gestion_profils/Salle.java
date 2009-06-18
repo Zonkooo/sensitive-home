@@ -13,12 +13,13 @@ public class Salle {
 	private HashMap<Integer, ModuleCapteurs> modules;
 
 	private ArrayList<SousProfil> availablesProfils;
-	private SousProfil currentProfil;
+	private AbstractProfil currentProfil = null;
 
 	public Salle(String nom) {
 		this.nom = nom;
 		this.multiprises = new HashMap<Integer, Multiprise>();
 		this.modules = new HashMap<Integer, ModuleCapteurs>();
+		this.availablesProfils = new ArrayList<SousProfil>();
 	}
 
 	public int temperature_actuelle() {
@@ -108,23 +109,64 @@ public class Salle {
 		return availablesProfils;
 	}
 
-	public SousProfil getCurrentProfil() {
+	public AbstractProfil getCurrentProfil() {
 		return currentProfil;
 	}
 
-	public void switchProfil(SousProfil newProfil) {
+	public void switchProfil(AbstractProfil newProfil) {
 		if (!(availablesProfils.contains(newProfil))) {
 			System.err.println("Impossible d'appliquer le profil " + newProfil
 					+ " à la salle " + this);
 			return;
 		}
+		else if(this.currentProfil.getClass() == SousProfil.class
+			&& newProfil.getClass() == ProfilGlobal.class)
+		{
+			return; //le sous profil est prioritaire sur le profil global
+		}
 
-		for (Prise p : newProfil.getPrises())
-			p.getOwner().setEtatPrise(newProfil.getEtat(p), p.getPosition());
+		//on met toutes les prises à AUTO avant d'appliquer le profil
+		//TODO : faire mieux, parceque là ça crains
+		for (Multiprise multiprise : multiprises.values())
+		{
+			for (int i = 0; i < multiprise.getCapacity(); i++)
+			{
+				multiprise.setEtatPrise(Etat.AUTO, i);
+			}
+		}
+
+		if(newProfil.getClass() == SousProfil.class)
+		{
+			//on set les prises du profil suivant ce qui a été défini
+			SousProfil sp = (SousProfil)newProfil;
+			for (Prise p : sp.getPrises())
+				p.getOwner().setEtatPrise(sp.getEtat(p), p.getPosition());
+			
+			//puis on parcours le reste pour tout mettre à auto
+			//et ce n'est absolument pas optimisé mais who cares ?
+			for (Multiprise multiprise : multiprises.values())
+			{
+				for (int i = 0; i < multiprise.getCapacity(); i++)
+				{
+					if(!sp.getPrises().contains(multiprise.getPrise(i)))
+						multiprise.setEtatPrise(Etat.AUTO, i);
+				}
+			}
+		}
+		else
+		{
+			for (Multiprise multiprise : multiprises.values())
+			{
+				for (int i = 0; i < multiprise.getCapacity(); i++)
+				{
+					multiprise.setEtatPrise(Etat.AUTO, i);
+				}
+			}
+		}
 
 		this.currentProfil = newProfil;
 	}
-
+	
 	public void addProfil(SousProfil sp) {
 		if (!(sp.getSalle().equals(this))) {
 			System.err.println("Impossible d'ajouter le profil " + sp
@@ -133,6 +175,14 @@ public class Salle {
 		}
 
 		this.availablesProfils.add(sp);
+	}
+	
+	public void removeProfil(SousProfil sp)
+	{
+		if(!(sp.equals(currentProfil)))
+			availablesProfils.remove(sp);
+		else
+			System.err.println("le profil " + sp + "est utilisé actuellement");
 	}
 
 	/****************************
@@ -146,43 +196,58 @@ public class Salle {
 	/**
 	 * calibre les lampes en les allumant à 100% une à une et en observant
 	 * leur effet sur les capteurs.
+	 * /!\ cette methode pete tout sur la configuration des prises
 	 * 
 	 * @return
 	 */
-	public Matrix calibrationLampes() {
+	public Matrix calibrationLampes()
+	{
 		lampes = new ArrayList<Prise>();
 		photocapteurs = new ArrayList<Capteur>();
 
-		for (Multiprise multiprise : multiprises.values()) {
-			for (int i = 0; i < multiprise.getCapacity(); i++) {
+		for (Multiprise multiprise : multiprises.values())
+		{
+			for (int i = 0; i < multiprise.getCapacity(); i++)
+			{
 				Prise p = multiprise.getPrise(i);
-				if (p != null && p.getType() == TypeMorceau.LUMINOSITE) {
+				if (p != null && p.getType() == TypeMorceau.LUMINOSITE)
+				{
 					p.setEtat(Etat.OFF);
-					lampes.add(p);
+					if(p.getEtat() == Etat.AUTO)
+						lampes.add(p);
 				}
 			}
 		}
 
-		for (ModuleCapteurs moduleCapteurs : modules.values()) {
-			for (int i = 0; i < moduleCapteurs.getCapacity(); i++) {
+		for (ModuleCapteurs moduleCapteurs : modules.values())
+		{
+			for (int i = 0; i < moduleCapteurs.getCapacity(); i++)
+			{
 				Capteur c = moduleCapteurs.getCapteur(i);
 				if (c != null && c.getType() == TypeMorceau.LUMINOSITE)
+				{
 					photocapteurs.add(c);
+				}
 			}
 		}
 
 		A = new Matrix(lampes.size(), photocapteurs.size());
 
-		for (int i = 0; i < lampes.size(); i++) {
+		for (int i = 0; i < lampes.size(); i++)
+		{
 			lampes.get(i).setEtat(Etat.ON);
 
-			try {
+			try
+			{
 				Thread.sleep(1000);
-			} catch (InterruptedException ie) {
+			}
+			catch (InterruptedException ie)
+			{
 				System.out.println(ie);
 			}
 
-			for (int j = 0; j < photocapteurs.size(); j++) {
+			for (int j = 0; j < photocapteurs.size(); j++)
+			{
 				A.set(i, j, photocapteurs.get(j).getLastValeur());
 			}
 			lampes.get(i).setEtat(Etat.OFF);
@@ -216,7 +281,7 @@ public class Salle {
 	 * la multiprise
 	 */
 	public void analyse() {
-		int temperature_moyenne_courante = 0;
+		int tempMoyCapt = 0;
 		int nb_capteurs_de_temperature = 0;
 		// on parcourt l'ensemble des modules de capteurs présents dans la
 		// pièce
@@ -229,7 +294,7 @@ public class Salle {
 
 				if (capteurCourant != null) {
 					if (capteurCourant.getType() == TypeMorceau.TEMPERATURE) {
-						temperature_moyenne_courante += capteurCourant
+						tempMoyCapt += capteurCourant
 								.getLastValeur();
 						nb_capteurs_de_temperature++;
 					} else if (capteurCourant.getType() == TypeMorceau.LUMINOSITE) {
@@ -242,12 +307,11 @@ public class Salle {
 		}
 
 		if (nb_capteurs_de_temperature != 0)
-			temperature_moyenne_courante /= nb_capteurs_de_temperature;
+			tempMoyCapt /= nb_capteurs_de_temperature;
 
 		// tous les capteurs ont été relevés, on s'occupe d'analyser et
 		// d'envoyer les commandes
-		int commande = (temperature_moyenne_courante < currentProfil
-				.getTemperature()) ? 1 : 0;
+		int commande = (tempMoyCapt < currentProfil.getTemperature()) ? 1 : 0;
 
 		for (Multiprise mp : getMultiprises().values()) {
 			for (int i = 0; i < 5; i++) {

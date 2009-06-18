@@ -65,12 +65,17 @@ public class Maison
 	
 	public void removeProfil(ProfilGlobal p)
 	{
-		//TODO check si on ne remove pas le current
-		this.availablesProfils.remove(p);
+		if(!(p.equals(currentProfil)))
+			this.availablesProfils.remove(p);
+		else
+			System.err.println("le profil " + p + "est utilisé actuellement");
 	}
 	
 	public void switchProfil(ProfilGlobal p)
 	{
-		//TODO
+		for (Salle salle : salles)
+		{
+			salle.switchProfil(currentProfil);
+		}
 	}
 }
