@@ -18,7 +18,7 @@ static long time = 0;
 //static bool hasBeenInit = false;
 /* recvDelay est le delais pendant lequel le microcontrolleur va essayer de lire des données séries (en ms)
  */
-const int recvDelay = 1100;
+const int recvDelay = 250;
 /* recvIt sert à se positionner dans la chaine reçue depuis le XPort
  */
 static int recvIt = 0;
