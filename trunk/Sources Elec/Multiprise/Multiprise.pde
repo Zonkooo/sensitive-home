@@ -89,7 +89,7 @@ void loop() {
 				sprintf(sensorToXpMsg, "/%s:320:253:850:715\\",
 						xbSensorModulesAddr[iterator]);
 				sendXPort(sensorToXpMsg);
-				sensorToXpMsg[0]=0;
+				*sensorToXpMsg={0}; // réinit sensorToXpMsg
 			}
 		}
 	}
@@ -122,6 +122,7 @@ void loop() {
 		} else { // c'est un message demandant de gérer un module de capteurs
 			if (xbSensorModulesAddrPos < MAX_SENSOR_MODULES-1) {
 				strncpy(xbSensorModulesAddrTmp, &recvXP[1], 9);
+				xbSensorModulesAddrTmp[9]=0;
 				for (iterator=xbSensorModulesAddrPos; iterator>0; iterator--) {
 					if (strcmp(xbSensorModulesAddr[iterator],
 							xbSensorModulesAddrTmp)==0) {
@@ -137,6 +138,7 @@ void loop() {
 					duplicate = false;
 				}
 			}
+			*xbSensorModulesAddrTmp={0};
 		}
 		sprintf(ackMsg, beginAckMsg, &recvXP[5]);
 		sendXPort(ackMsg);
