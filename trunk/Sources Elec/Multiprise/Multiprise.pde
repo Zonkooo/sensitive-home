@@ -47,12 +47,9 @@ char valueC[3], ackMsg[recvMsgLength+4], *recvXP, priseC[1], iterator;
 
 void setup() {
 	initXPort(9600);
-	/*for (iterator=NB_PRISES-1; iterator>=0; iterator--) {
+	for (iterator=NB_PRISES-1; iterator>=0; iterator--) {
 	 pinMode(prises[iterator], OUTPUT);
-	 }*/
-	for (iterator=0; iterator<NB_PRISES-1; iterator++) {
-		pinMode(prises[iterator], OUTPUT);
-	}
+	 }
 }
 
 void loop() {
