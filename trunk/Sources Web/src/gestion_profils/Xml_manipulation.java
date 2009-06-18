@@ -46,10 +46,6 @@ public class Xml_manipulation {
 		return "ok";
 	}
 
-	static public void get_list_capteurs() {
-
-	}
-
 	static public HashMap<String, Salle> creation_Hashmap(String fichier) {
 		HashMap<String, Salle> hashSalle = new HashMap<String, Salle>();
 		HashMap<String, ModuleCapteurs> hashModule = new HashMap<String, ModuleCapteurs>();
@@ -166,7 +162,7 @@ public class Xml_manipulation {
 		while (it.hasNext()) {
 			salle_courante = (Salle) it.next();
 			salle = new Element("salle");
-			at = new Attribute("name",salle.getName());
+			at = new Attribute("name",salle_courante.toString());
 			salle.setAttribute(at);
 			
 			//serialize les capteurs
@@ -212,6 +208,35 @@ public class Xml_manipulation {
 		
 	}
 
+	static public void serialize_profils(HashMap<String, ProfilGlobal> hashSalle,String fichier) {
+		Iterator it = hashSalle.values().iterator();
+		Element racine = new Element("profils");
+		ProfilGlobal profil_courant;
+		ModuleCapteurs module_courant;
+		Capteur capteur_courant;
+		Multiprise multiprise_courante;
+		Prise prise_courante;
+		Element profil;
+		Attribute at;
+		//serialize les salles
+		while (it.hasNext()) {
+			profil_courant = (ProfilGlobal) it.next();
+			profil = new Element("profil");
+			at = new Attribute("nom",profil_courant.getNom());
+			profil.setAttribute(at);
+			at = new Attribute("temperature",Integer.toString(profil_courant.getTemperature()));
+			profil.setAttribute(at);
+			at = new Attribute("luminosite",Integer.toString(profil_courant.getLuminosite()));
+			profil.setAttribute(at);
+			racine.addContent(profil);		
+		}
+		Document document = new Document(racine);
+		affiche(document);
+		enregistre(fichier, document);
+		
+	}
+
+	
 	public static TypeMorceau getType(String type) {
 		char type_c = type.charAt(0);
 		TypeMorceau typeMorceau;

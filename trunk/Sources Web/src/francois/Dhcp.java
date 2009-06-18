@@ -1,5 +1,9 @@
 package francois;
 
+import gestion_profils.Maison;
+import gestion_profils.Multiprise;
+import gestion_profils.Salle;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -7,10 +11,6 @@ import java.util.GregorianCalendar;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import GestionProfils.Maison;
-import GestionProfils.Multiprise;
-import GestionProfils.Salle;
 
 
 public class Dhcp {
