@@ -78,7 +78,7 @@ public class Dhcp {
 									//TODO: vérifier que la salle où l'on ajoute les nouveaux éléments s'appelle vide
 									for (Salle s : Maison.getMaison().getSalles()) {
 										if(s.toString().equals("vide")){
-											s.addMultiprise(new Multiprise(numeroXPORTaAjouter,5,"192.168.0.1"+numeroXPORTaAjouter));
+											s.addMultiprise(new Multiprise(((Integer)numeroXPORTaAjouter).toString(),5,"192.168.0.1"+numeroXPORTaAjouter));
 										}
 									}
 									//On relance le serveur dhcp pour attribuer l'adresse ip au nouveau module xport
