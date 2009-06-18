@@ -69,7 +69,7 @@ void setup() {
 	for (iterator=NB_PRISES-1; iterator>=0; iterator--) {
 		pinMode(prises[iterator], OUTPUT);
 	}
-	for (iterator=MAX_SENSOR_MODULES; iterator >= 0; iterator --) {
+	for (iterator=MAX_SENSOR_MODULES-1; iterator >= 0; iterator --) {
 		xbSensorModulesAddr[iterator][0]=0; // on initialise toutes les adresses à NULL
 	}
 }
@@ -85,11 +85,12 @@ void loop() {
 	// implémentation bouchon: envoi de données fausses de capteurs
 	if (++count == 40) {
 		count=0;
-		for (iterator=MAX_SENSOR_MODULES; iterator >= 0; iterator --) {
-			if (xbSensorModulesAddr[iterator][0] != 0) {
+		for (iterator=MAX_SENSOR_MODULES-1; iterator >= 0; iterator --) {
+			if (xbSensorModulesAddr[iterator][0]== 0) {
 				sprintf(sensorToXpMsg, "/%s:320:253:850:715\\",
 						xbSensorModulesAddr[iterator]);
 				sendXPort(sensorToXpMsg);
+				sensorToXpMsg[0]=0;
 			}
 		}
 	}
@@ -120,7 +121,7 @@ void loop() {
 				pwmObj[priseI-2]=valueI;
 			}
 		} else { // c'est un message demandant de gérer un module de capteurs
-			if (xbSensorModulesAddrPos < MAX_SENSOR_MODULES) {
+			if (xbSensorModulesAddrPos < MAX_SENSOR_MODULES-1) {
 				strncpy(xbSensorModulesAddrTmp, &recvXP[1], 9);
 				for (iterator=xbSensorModulesAddrPos; iterator>0; iterator--) {
 					if (strcmp(xbSensorModulesAddr[iterator],
@@ -130,8 +131,8 @@ void loop() {
 					}
 				}
 				if (!duplicate) {
-					strcpy(xbSensorModulesAddr[xbSensorModulesAddrPos++],
-							xbSensorModulesAddrTmp);
+					strncpy(xbSensorModulesAddr[xbSensorModulesAddrPos++],
+							xbSensorModulesAddrTmp,9);
 					xbSensorModulesAddr[xbSensorModulesAddrPos++][9]=0;
 				}else{
 					duplicate = false;
