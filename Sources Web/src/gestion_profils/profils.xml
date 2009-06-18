@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profils>
+	<profil nom="normal" type="global" temperature="20" luminosite="50"/>
+	<profil nom="absent" type="global" temperature="18" luminosite="0"/>
+	<profil nom="ete" type="global" temperature="0" luminosite="80"/>
+</profils>

@@ -9,6 +9,11 @@ package francois;
 // At the end of the program, we close the streams of data and close the Socket.
 // (Once you are done debugging your code, you should remove all the println statements for better speed.)
 
+import gestion_profils.Maison;
+import gestion_profils.ModuleCapteurs;
+import gestion_profils.Salle;
+import gestion_profils.SousProfil;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
@@ -18,6 +23,7 @@ import java.util.Collection;
 import GestionProfils.Maison;
 import GestionProfils.ModuleCapteurs;
 import GestionProfils.Salle;
+
 
 public class Communication {
 
