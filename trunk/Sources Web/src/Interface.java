@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
 /**
  * Servlet implementation class Menu
  */
@@ -33,6 +31,20 @@ public class Interface extends HttpServlet {
 		super();
 		hashSalle =	Xml_manipulation.creation_Hashmap("../webapps/web_interface/WEB-INF/classes/francois/config.xml");
 		hashProfil = Xml_manipulation.creation_Hashmap_profils("../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
+		
+		/*
+		 * ceci est un timer
+		 * 
+		Timer timer = new Timer(millisec, new ActionListener()
+        {
+            public void actionPerformed(ActionEvent ae)
+            {
+                //appels à faire
+            }
+        });
+        timer.setRepeats(true);
+        timer.start();
+		 */
 	}
 
 	public static HashMap<String, Salle> getHashSalle() {
