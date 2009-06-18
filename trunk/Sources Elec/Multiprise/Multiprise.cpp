@@ -41,13 +41,16 @@
  * ATTENTION: les deux premières sont des prises NORMALES les autres PWM
  */
 const unsigned char prises[NB_PRISES] = { 7, 8, 9, 10, 11 };
-unsigned char pwmObj[NB_PRISES_PWM]= { 255, 0, 0 };
+unsigned char pwmObj[NB_PRISES_PWM]= { 0, 0, 0 };
 unsigned char pwmAct[NB_PRISES_PWM]= { 0, 0, 0 };
 unsigned char valueI, priseI;
 char valueC[3], ackMsg[recvMsgLength+4], *recvXP, priseC[1], iterator;
 
 void setup() {
 	initXPort(9600);
+	/*for (iterator=NB_PRISES-1; iterator>=0; iterator--) {
+	 pinMode(prises[iterator], OUTPUT);
+	 }*/
 	for (iterator=0; iterator<NB_PRISES-1; iterator++) {
 		pinMode(prises[iterator], OUTPUT);
 	}
@@ -62,9 +65,9 @@ void loop() {
 	 */
 	// XBeeCnx
 	for (iterator=NB_PRISES_PWM-1; iterator >= 0; iterator--) {
-		if (pwmObj[iterator] == pwmAct[iterator])
+		if (pwmObj[iterator] - pwmAct[iterator]== 0)
 			continue;
-		if (pwmObj[iterator] - pwmAct[iterator] > 0) {
+		if (pwmObj[iterator] - pwmAct[iterator]> 0) {
 			analogWrite(prises[iterator+2], pwmAct[iterator]++);
 		} else {
 			analogWrite(prises[iterator+2], pwmAct[iterator]--);
@@ -77,15 +80,14 @@ void loop() {
 		priseI = atoi(priseC);
 		strncpy(valueC, &recvXP[3], 3);
 		valueI = atoi(valueC);
-		if ((priseI < 0 )&& (priseI - NB_PRISES) != 0) {
+		if ((priseI < 0)&& (priseI - NB_PRISES) >= 0) {
 			resetRecvBuffer();
 			return;
 		}
-		if (priseI - 2== 0) { // c'est une prise ON/OFF
+		if (priseI - 2< 0) { // c'est une prise ON/OFF
 			digitalWrite(prises[priseI], (valueI==1) ? HIGH : LOW);
 		} else { // c'est une prise PWM
 			pwmObj[priseI-2]=valueI;
-			//analogWrite(prises[priseI], valueI);
 		}
 		sprintf(ackMsg, "/ACK:%s", &recvXP[1]);
 		sendXPort(ackMsg);
