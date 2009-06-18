@@ -39,10 +39,11 @@ public class Communication {
 		Communication communication = new Communication("192.168.0.11");
 
 		//		communication.start();
-		communication.addMessageToQueue("/REQ:0:001\\");
-		communication.addMessageToQueue("/REQ:2:255\\");
-		communication.addMessageToQueue("/REQ:2:000\\");
-//		communication.addMessageToQueue("/001111111\\");
+//		communication.addMessageToQueue("/REQ:0:001\\");
+//		communication.addMessageToQueue("/REQ:2:255\\");
+//		communication.addMessageToQueue("/REQ:2:000\\");
+		communication.addMessageToQueue("/001111111\\");
+//		communication.addMessageToQueue("/REQ:0:000\\");
 		while(true){
 			if(communication.messageAenvoyer.size()>0) {
 				System.out.println("\n"+communication.sendQueue());
@@ -57,10 +58,8 @@ public class Communication {
 					System.out.println(System.currentTimeMillis()-time);
 				}
 			}
-//			System.out.println(ecoute.substring(19, 28));
-//			System.out.println("ACK:"+ communication.messageAenvoyer.peek().substring(5, 10));
-			try{
-			if(ecoute.substring(19, 28).equals("ACK:" + communication.messageAenvoyer.peek().substring(5, 10))){
+			if(communication.messageAenvoyer.size()>0) {
+			if(!(ecoute.length()<28) && ecoute.substring(19, 28).equals("ACK:" + communication.messageAenvoyer.peek().substring(5, 10))){
 				System.out.println("accusé reconnu");
 				//si c'est l'accusé, l'envoi a réussi donc on peut supprimer le message
 				System.out.println(ecoute);
@@ -70,9 +69,8 @@ public class Communication {
 				System.out.println("\n"+communication.sendQueue());
 				time = System.currentTimeMillis();
 			}
-			} catch (Exception e) {
-				System.err.println(e);
 			}
+			
 		}
 	}
 
@@ -150,8 +148,11 @@ public class Communication {
 					}
 				}
 			}
-		} else if (message_split.length == 3) { // accusé car message de la
+		} else if (message_split.length == 3) { // accusé de commande car message de la
 												// forme /ACK:prise:val\
+			retour="Accusé du message: " + message;
+		} else if (message_split.length == 2) { // accusé d'adresse de module car message de la
+												// forme /ACK:adresse\
 			retour="Accusé du message: " + message;
 		} else {
 			retour="Message de type inconnu: " + message;
