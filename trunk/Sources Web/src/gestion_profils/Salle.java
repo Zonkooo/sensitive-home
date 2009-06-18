@@ -13,13 +13,17 @@ public class Salle {
 	private HashMap<Integer, ModuleCapteurs> modules;
 
 	private ArrayList<SousProfil> availablesProfils;
-	private AbstractProfil currentProfil = null;
+	private AbstractProfil currentProfil;
+	private ProfilGlobal defaultProfil;
 
-	public Salle(String nom) {
+	public Salle(String nom, ProfilGlobal defaut) {
 		this.nom = nom;
 		this.multiprises = new HashMap<Integer, Multiprise>();
 		this.modules = new HashMap<Integer, ModuleCapteurs>();
 		this.availablesProfils = new ArrayList<SousProfil>();
+		
+		this.defaultProfil = defaut;
+		this.currentProfil = defaut;
 	}
 
 	public int temperature_actuelle() {
@@ -113,20 +117,48 @@ public class Salle {
 		return currentProfil;
 	}
 
-	public void switchProfil(AbstractProfil newProfil) {
+	/**
+	 * remplace le profil courant par le profil passé en param
+	 * 
+	 * @param newProfil
+	 */
+	public void switchProfil(SousProfil newProfil) {
 		if (!(availablesProfils.contains(newProfil))) {
 			System.err.println("Impossible d'appliquer le profil " + newProfil
 					+ " à la salle " + this);
 			return;
 		}
-		else if(this.currentProfil.getClass() == SousProfil.class
-			&& newProfil.getClass() == ProfilGlobal.class)
+
+		//on set les prises du profil suivant ce qui a été défini
+		SousProfil sp = (SousProfil)newProfil;
+		for (Prise p : sp.getPrises())
+			p.getOwner().setEtatPrise(sp.getEtat(p), p.getPosition());
+
+		//puis on parcours le reste pour tout mettre à auto
+		//et ce n'est absolument pas optimisé mais who cares ?
+		for (Multiprise multiprise : multiprises.values())
 		{
-			return; //le sous profil est prioritaire sur le profil global
+			for (int i = 0; i < multiprise.getCapacity(); i++)
+			{
+				if(!sp.getPrises().contains(multiprise.getPrise(i)))
+					multiprise.setEtatPrise(Etat.AUTO, i);
+			}
 		}
 
-		//on met toutes les prises à AUTO avant d'appliquer le profil
-		//TODO : faire mieux, parceque là ça crains
+		this.currentProfil = newProfil;
+	}
+	
+	public void setProfilGlobal(ProfilGlobal profil)
+	{
+		//si on est en global, on se met à jour
+		if(currentProfil.equals(defaultProfil))
+			this.currentProfil = profil;
+		
+		this.defaultProfil = profil;
+	}
+	
+	public void switchToGlobal()
+	{		
 		for (Multiprise multiprise : multiprises.values())
 		{
 			for (int i = 0; i < multiprise.getCapacity(); i++)
@@ -134,37 +166,8 @@ public class Salle {
 				multiprise.setEtatPrise(Etat.AUTO, i);
 			}
 		}
-
-		if(newProfil.getClass() == SousProfil.class)
-		{
-			//on set les prises du profil suivant ce qui a été défini
-			SousProfil sp = (SousProfil)newProfil;
-			for (Prise p : sp.getPrises())
-				p.getOwner().setEtatPrise(sp.getEtat(p), p.getPosition());
-			
-			//puis on parcours le reste pour tout mettre à auto
-			//et ce n'est absolument pas optimisé mais who cares ?
-			for (Multiprise multiprise : multiprises.values())
-			{
-				for (int i = 0; i < multiprise.getCapacity(); i++)
-				{
-					if(!sp.getPrises().contains(multiprise.getPrise(i)))
-						multiprise.setEtatPrise(Etat.AUTO, i);
-				}
-			}
-		}
-		else
-		{
-			for (Multiprise multiprise : multiprises.values())
-			{
-				for (int i = 0; i < multiprise.getCapacity(); i++)
-				{
-					multiprise.setEtatPrise(Etat.AUTO, i);
-				}
-			}
-		}
-
-		this.currentProfil = newProfil;
+		
+		this.currentProfil = defaultProfil;
 	}
 	
 	public void addProfil(SousProfil sp) {

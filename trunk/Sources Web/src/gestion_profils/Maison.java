@@ -75,7 +75,7 @@ public class Maison
 	{
 		for (Salle salle : salles)
 		{
-			salle.switchProfil(currentProfil);
+			salle.setProfilGlobal(currentProfil);
 		}
 	}
 }
