@@ -73,8 +73,7 @@ public class Interface extends HttpServlet {
 		CommunHtml.style(out, userAgent);
 		CommunHtml.logo(out, userAgent);
 		CommunHtml.plot_menu(out);
-		CommunHtml.plot_main(out, request);
-		
+		CommunHtml.plot_main(out, request);	
 		CommunHtml.enumeration(out, request);
 		out.println("</div>");
 		out.println("</BODY></HTML>");

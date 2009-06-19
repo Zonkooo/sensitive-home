@@ -39,6 +39,11 @@ font-size:50px;
 legend {
 	font-size:2em;
  }
+ #bouton {
+	 width : 60px;
+	 height: 60px;
+	
+ }
 
 #formu{
 	font-size:50px;
