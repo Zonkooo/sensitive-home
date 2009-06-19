@@ -298,6 +298,9 @@ public class CommunHtml {
 		ProfilGlobal p = new ProfilGlobal(request.getParameter("nom"),Integer.parseInt(request.getParameter("temperature")),Integer.parseInt(request.getParameter("luminosite")));
 		HashMap<String, ProfilGlobal> hashProfil = Interface.getHashProfil();
 		hashProfil.put(p.getNom(), p);
+		if(request.getParameter("bouton")!=null){
+			Interfacage.
+		}
 	}
 	
 }
