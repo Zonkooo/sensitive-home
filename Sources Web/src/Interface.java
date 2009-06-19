@@ -2,9 +2,12 @@ import gestion_profils.ProfilGlobal;
 import gestion_profils.Salle;
 import gestion_profils.Xml_manipulation;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Timer;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -35,7 +38,8 @@ public class Interface extends HttpServlet {
 		/*
 		 * ceci est un timer
 		 * 
-		Timer timer = new Timer(millisec, new ActionListener()
+		 
+		Timer timer = new Timer(1000, new ActionListener()
         {
             public void actionPerformed(ActionEvent ae)
             {
@@ -63,12 +67,16 @@ public class Interface extends HttpServlet {
 		out.println("<HTML>");
 		out.println("<HEAD><TITLE>" + page+  "</TITLE></HEAD>");
 		out.println("<BODY>");
+		out.println("<div id=\"content\">");
 		out.println("<script src=\"ajax.js\" type=\"text/javascript\"></script>");
 		String userAgent = request.getHeader("user-agent");
 		CommunHtml.style(out, userAgent);
+		CommunHtml.logo(out, userAgent);
 		CommunHtml.plot_menu(out);
 		CommunHtml.plot_main(out, request);
+		
 		//CommunHtml.enumeration(out, request);
+		out.println("</div>");
 		out.println("</BODY></HTML>");
 	}
 

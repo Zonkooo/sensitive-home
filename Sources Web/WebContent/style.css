@@ -1,21 +1,19 @@
-
 /* CSS Document */
 .style1 {font-family: Verdana, Arial, Helvetica, sans-serif}
 .style2 {color: #E70F26}
 .style6 {font-family: Verdana, Arial, Helvetica, sans-serif; color: #013B60; }
-h1
-{
-    color:#941515;
+h1{
+    color:#4D9C6C;
     text-decoration:underline;
 }
-em
-{
+em{
      color:#941515;
      font-style:normal;
      text-decoration:underline;
 }
 body {
-	width: 800px;
+	
+	
 	background-color: #F3FFE2;
 	color: #225378;
 	font-family:Verdana, Helvetica, sans-serif;
@@ -24,37 +22,31 @@ body {
 	text-align:left;
 	
 }
-#all
-{
+#flash{
+
+	float:left;
+}
+#logo{
+	clear:right;
+}
+#all{
 	margin-left: auto;
 	margin-right:auto;
 }
-#main{
-	width: 524px;
-	float: right;
+#content{
+	position:static;
+	float: left;
 }
-#menu
-{
-    
-    float: left;
-	width: 200px;
+#formu{
+	margin-left:130;
+	width:500;
+}
+#menu{
+    float:left;
+	width: 150px;
 }
 
-#photo
-{
-    float: left;
-}
-#ban
-{
-    float: right;
-}
-.colonne
-{
-    float:left;
-    width: 320px;
-}
-.lien_menu
-{
+.lien_menu{
     text-align:center;
     padding:5px 10px 10px 5px;
     font-weight:bold;
@@ -65,15 +57,13 @@ body {
     -moz-border-radius : 10px;
     margin: 10px;
 }
-#select
-{
+#select{
     font-style:italic;
 }
-#menu em
-{
+#menu em{
     text-decoration:none;
     color: #C7CECF;
-}
+} 
 #menu a:link {
 	font-weight: bold;
 	color: #F3FFE2;

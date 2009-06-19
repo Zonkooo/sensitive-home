@@ -76,8 +76,7 @@ public class Xml_manipulation {
 				Iterator imp = mpList.iterator();
 				while (imp.hasNext()) {
 					Element mpCourante = (Element) imp.next();
-					multiprise_courante = new Multiprise(Integer
-							.parseInt(mpCourante.getAttributeValue("id")), 5,
+					multiprise_courante = new Multiprise(mpCourante.getAttributeValue("id"), 5,
 							mpCourante.getAttributeValue("ip"));
 					Element[] prises_xml = (Element[]) mpCourante
 							.getChildren().toArray(
@@ -98,8 +97,7 @@ public class Xml_manipulation {
 				Iterator imc = mcList.iterator();
 				while (imc.hasNext()) {
 					Element mcCourant = (Element) imc.next();
-					module_courant = new ModuleCapteurs(Integer
-							.parseInt(mcCourant.getAttributeValue("id")), 4);
+					module_courant = new ModuleCapteurs(mcCourant.getAttributeValue("id"), 4);
 					Element[] capteurs_xml = (Element[]) mcCourant
 							.getChildren()
 							.toArray(
@@ -170,7 +168,7 @@ public class Xml_manipulation {
 			while(itm.hasNext()){
 				module_courant = (ModuleCapteurs) itm.next();
 				module = new Element("module_capteurs");
-				at = new Attribute("id",Integer.toString(module_courant.getID()));
+				at = new Attribute("id",module_courant.getID());
 				module.setAttribute(at);
 				for(int i=0;i<module_courant.getCapacity();i++){
 					capteur_courant = module_courant.getCapteur(i);
@@ -187,7 +185,7 @@ public class Xml_manipulation {
 			while(itm.hasNext()){
 				multiprise_courante = (Multiprise) itm.next();
 				multiprise = new Element("module_prise");
-				at = new Attribute("id",Integer.toString(multiprise_courante.getID()));
+				at = new Attribute("id",multiprise_courante.getID());
 				multiprise.setAttribute(at);
 				at = new Attribute("ip",multiprise_courante.getIp());
 				multiprise.setAttribute(at);

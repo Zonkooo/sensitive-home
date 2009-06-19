@@ -3,110 +3,104 @@
 .style1 {font-family: Verdana, Arial, Helvetica, sans-serif}
 .style2 {color: #E70F26}
 .style6 {font-family: Verdana, Arial, Helvetica, sans-serif; color: #013B60; }
-h1
-{
-    color:#000000;
+h1{
+    color:#4d9c6c;
+	font-size:72px;
     text-decoration:underline;
 }
-em
-{
-     color:#E70F26;
+em{
+     color:#941515;
      font-style:normal;
      text-decoration:underline;
 }
 body {
+
+	background-color: #F3FFE2;
+	color: #225378;
 	font-family:Verdana, Helvetica, sans-serif;
-	font-size: 0.8em;
+	font-size: 2em;
 	font-weight:bold;
-	margin:10px 0;
-	padding: 0;
-	color: #013B60;
 	text-align:left;
-	/*background: white url(image_de_fond.png) no-repeat right bottom;*/
-	/*background: #D6D7D9 url(montagne.jpg) repeat-y center top;*/
+	
 }
-#all
-{
-    width: 320px;
+form {
+	font-size:1em;
+ padding:10px;
+ width:900px;
+ }
+ input {
+
+font-size:50px;
+ }
+
+  TD {
+font-size:50px;
+ }
+legend {
+	font-size:2em;
+ }
+
+#formu{
+	font-size:50px;
+}
+ select, option {
+	 font-size:50px;
+ }
+
+#logo{
+	visibility:collapse;
+	width:0;
+	height:0;
+}
+#flash{
+	visibility:collapse;
+	width:0;
+	height:0;
+	
+}
+#all{
 	margin-left: auto;
 	margin-right:auto;
-	/*background: #D6D7D9 url(montagne.jpg) repeat-y center top;*/
 }
-#haut
-{
-    width:320px;
-    margin:inherit;
+#content{
+	float: left;
 }
-#centre
-{
-    width:320px;
-    margin:inherit;
-}
-#bas
-{
-    clear:both;
-    width:320px;
-    height:0px;
-    margin:inherit;
-    text-align:center;
-    /*background: url(bas.png) center top;*/
-}
-#main{
-	width: 220px;
-	float: right;
-}
-#menu
-{
-    
-    float: left;
-	width: 100px;
+#menu{
+    float:left;
+	width: 900px;
 }
 
-#photo
-{
-    float: left;
-}
-#ban
-{
-    float: right;
-}
-.colonne
-{
-    float:left;
-    width: 220px;
-}
-.lien_menu
-{
+.lien_menu{
     text-align:center;
     padding:5px 10px 10px 5px;
     font-weight:bold;
-    font-size: 1em;
-    height: 60px;
-    color: #FFFFFF;
-    background: url(bouton.png) no-repeat center top;
+    font-size: 50px;
+    height: 100px;
+    color: #F3FFE2;
+    background-color: #225378;
+    -moz-border-radius : 10px;
+    margin: 10px;
 }
-#select
-{
+#select{
     font-style:italic;
 }
-#menu em
-{
+#menu em{
     text-decoration:none;
-    color:White;
+    color: #C7CECF;
 }
 #menu a:link {
 	font-weight: bold;
-	color: #b8e3bb;
+	color: #F3FFE2;
 	text-decoration: none;
 }
 
 #menu a:visited {
 	font-weight: bold;
-	color: #d2ffe0;
+	color: #F3FFE2;
 	text-decoration: none;
 }
 #menu a:hover, a:active {
 	font-weight: bold;
-	color: #d2ffe0;
+	color: #FC9200;
 	text-decoration: underline;
 }
