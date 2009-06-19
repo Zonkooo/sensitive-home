@@ -235,7 +235,7 @@ $(OUTPUT_DIR)/$(CORE_A): $(OBJ)
 clean:
 	$(REMOVE) $(OUTPUT_DIR)/$(TARGET).hex $(OUTPUT_DIR)/$(TARGET).eep $(OUTPUT_DIR)/$(TARGET).cof $(OUTPUT_DIR)/$(TARGET).elf \
 	$(OUTPUT_DIR)/$(TARGET).map $(OUTPUT_DIR)/$(TARGET).sym $(OUTPUT_DIR)/$(TARGET).lss $(OUTPUT_DIR)/$(CORE_A) \
-	$(OBJ) $(LST) $(SRC:.c=.s) $(SRC:.c=.d) $(CXXSRC:.cpp=.s) $(CXXSRC:.cpp=.d)
+	$(OBJ) $(LST) $(SRC:.c=.s) $(SRC:.c=.d) $(CXXSRC:.cpp=.s) $(CXXSRC:.cpp=.d) $(TARGET).cpp
 
 .PHONY:	all build elf hex eep lss sym program coff extcoff clean applet_files sizebefore sizeafter
 
