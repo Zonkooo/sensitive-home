@@ -121,13 +121,17 @@ public class Bouton
 				indice = i;
 			}
 		}
+
 		
 		if(max > SEUIL_BOUTON_VALIDE)
+		{
 			System.out.println("bouton " + (indice + 1));
+			btns.get(indice).pressButton();
+		}
 		else
+		{
 			System.out.println("essaye pas de m'avoir gringo");
-		
-		btns.get(indice).pressButton();
+		}
 	}
 	
 	/**
