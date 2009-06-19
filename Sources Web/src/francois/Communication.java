@@ -19,7 +19,7 @@ import gestion_profils.ModuleCapteurs;
 import gestion_profils.Salle;
 
 
-public class Communication{
+public class Communication extends Thread {
 
 	String host;
 	int port;
@@ -41,8 +41,8 @@ public class Communication{
 		//		communication.start();
 		communication.addMessageToQueue("/REQ:0:001\\");
 		communication.addMessageToQueue("/REQ:2:255\\");
-		communication.addMessageToQueue("/REQ:2:000\\");
-//				communication.addMessageToQueue("/001144444\\");
+//		communication.addMessageToQueue("/REQ:2:000\\");
+				communication.addMessageToQueue("/001144444\\");
 //				communication.addMessageToQueue("/001111111\\");
 
 //		communication.addMessageToQueue("/REQ:0:000\\");
@@ -86,14 +86,35 @@ public class Communication{
 		checkConnection(host, port); 		
 	}
 
-//	public void run(){
-//        while (isAlive()) {
-//            try {
-//            	listen();
-//                Thread.sleep(1); // ms
-//            } catch(InterruptedException e) {}
-//        }
-//	}
+	public void run(){
+		while(true){
+		if(messageAenvoyer.size()>0) {
+			System.out.println("\n"+sendQueue());
+		}
+		//on attend de recevoir l'accusé de réception avant de supprimer le message
+		String ecoute;
+		long time = System.currentTimeMillis();
+
+		while((ecoute=listen()).equals("") && System.currentTimeMillis()-time<1000){
+			//on attend de recevoir quelquechose ou que le temps d'accusé soit dépassé
+			if((System.currentTimeMillis()-time)%500==0){
+//				System.out.println((System.currentTimeMillis()-time)/1000);
+			}
+		}
+		if(messageAenvoyer.size()>0) {
+		if(!(ecoute.length()<28) && ecoute.substring(19, 28).equals("ACK:" + messageAenvoyer.peek().substring(5, 10))){
+//			System.out.println("accusé reconnu");
+			//si c'est l'accusé, l'envoi a réussi donc on peut supprimer le message
+			messageAenvoyer.remove();
+		} else if(System.currentTimeMillis()-time>1000) {
+			//si le temps est dépassé on renvoie le message
+			System.out.println("\n"+sendQueue());
+			time = System.currentTimeMillis();
+		}
+		}
+		System.out.println(ecoute);
+		}
+	}
 
 	// écoute sur le port série
 	String  listen() {
