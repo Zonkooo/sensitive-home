@@ -52,6 +52,10 @@ legend {
 	width:0;
 	height:0;
 }
+#pas_flash{
+	 font-size:50px;
+	
+}
 #flash{
 	visibility:collapse;
 	width:0;
@@ -67,7 +71,8 @@ legend {
 }
 #menu{
     float:left;
-	width: 900px;
+	
+	width: 960px;
 }
 
 .lien_menu{

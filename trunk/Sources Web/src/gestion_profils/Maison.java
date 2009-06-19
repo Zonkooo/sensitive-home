@@ -48,6 +48,11 @@ public class Maison
 		return availablesProfils;
 	}
 
+	public void setCurrentProfil(ProfilGlobal currentProfil) {
+		this.currentProfil = currentProfil;
+		switchProfil(currentProfil);
+	}
+
 	public ProfilGlobal getCurrentProfil()
 	{
 		return currentProfil;
@@ -71,7 +76,8 @@ public class Maison
 			System.err.println("le profil " + p + "est utilisé actuellement");
 	}
 	
-	public void switchProfil(ProfilGlobal p)
+	
+	private void switchProfil(ProfilGlobal p)
 	{
 		for (Salle salle : salles)
 		{

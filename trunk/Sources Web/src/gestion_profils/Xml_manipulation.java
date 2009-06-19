@@ -129,7 +129,6 @@ public class Xml_manipulation {
 		// On crée un Iterator sur notre liste
 		Iterator i = listSalles.iterator();
 		while (i.hasNext()) {
-
 			Element courant = (Element) i.next();
 			ProfilGlobal profil_courant;
 			System.out.println(courant.getAttributeValue("nom"));
@@ -138,6 +137,7 @@ public class Xml_manipulation {
 				hashProfil.put(courant.getAttributeValue("nom"), profil_courant);
 			}
 		}
+		Maison.getMaison().setCurrentProfil(hashProfil.values().iterator().next());
 		return hashProfil;
 	}
 

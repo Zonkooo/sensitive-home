@@ -1,3 +1,4 @@
+import gestion_profils.Maison;
 import gestion_profils.ModuleCapteurs;
 import gestion_profils.Multiprise;
 import gestion_profils.ProfilGlobal;
@@ -13,6 +14,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.jdom.Attribute;
+import org.jdom.Element;
 
 
 public class CommunHtml {
@@ -53,7 +57,9 @@ public class CommunHtml {
 				.println("<div class=\"lien_menu\"><a href=\"?page=4\">Sauvegarder la configuration</a></div>");
 		out
 				.println("<div class=\"lien_menu\"><a href=\"?page=5\">Configuration profils</a></div>");
-		out.print("</div>");
+		out
+		.println("<div class=\"lien_menu\"><a href=\"?page=6\">Creer un profil</a></div>");
+		out.println("</div>");
 	}
 
 	public static void plot_main(PrintWriter out, HttpServletRequest request)
@@ -121,10 +127,14 @@ public class CommunHtml {
 
 			break;
 		case 3:
+			if (request.getParameter("profil")!= null) {
+				Maison.getMaison().setCurrentProfil(Interface.getHashProfil().get(request.getParameter("profil")));
+			}
+			Formulaires.choix_profils(out, request);
 			break;
 		case 4:
 			Xml_manipulation.serialize(Interface.getHashSalle(),"../webapps/web_interface/WEB-INF/classes/francois/config.xml");
-			Xml_manipulation.etat_actuel(Interface.getHashSalle(),"../webapps/web_interface/WEB-INF/classes/francois/etat.xml");
+			Xml_manipulation.etat_actuel(Interface.getHashSalle(),"../webapps/web_interface/etat.xml");
 			Xml_manipulation.serialize_profils(Interface.getHashProfil(),"../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
 			out.print("<h1>Sauvegarde</h1>");
 			break;
@@ -138,6 +148,12 @@ public class CommunHtml {
 				last_profil=request.getParameter("profil");
 			}
 			Formulaires.profils(out, request);
+			break;
+		case 6:
+			if (request.getParameter("nom")!= null) {
+				creation_profil(out, request);
+			}
+			Formulaires.creer_profil(out, request);
 			break;
 		}
 	}
@@ -253,14 +269,35 @@ public class CommunHtml {
 		
 		HashMap<String, Salle> hashSalle = Interface.getHashSalle();
 		Iterator it = hashSalle.values().iterator();
+		Salle salle_courante;
 		out.println("<div id=\"pas_flash\">");
 		
-		while(it.hasNext()){
-			
+		while (it.hasNext()) {
+			salle_courante = (Salle) it.next();
+			out.println("<h1>"+salle_courante+"</h1>");
+			out.println("<p>temparature ");
+			if(salle_courante.temperature_actuelle()==-1){
+				out.println("non connue");
+			}else{
+				out.println(salle_courante.temperature_actuelle()/10);
+			}
+			out.println("luminosite ");
+			if(salle_courante.luminosite_actuelle()==-1){
+				out.println("non connue");
+			}
+			else{
+				out.println(salle_courante.luminosite_actuelle());
+			}
+			out.println("</p>");	
 		}
-		out.println("");
 		out.println("</div>");
 	}
 	
+
+	public static void creation_profil(PrintWriter out,HttpServletRequest request) {
+		ProfilGlobal p = new ProfilGlobal(request.getParameter("nom"),Integer.parseInt(request.getParameter("temperature")),Integer.parseInt(request.getParameter("luminosite")));
+		HashMap<String, ProfilGlobal> hashProfil = Interface.getHashProfil();
+		hashProfil.put(p.getNom(), p);
+	}
 	
 }
