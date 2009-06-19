@@ -1,7 +1,7 @@
 import gestion_profils.ModuleCapteurs;
 import gestion_profils.Multiprise;
-import gestion_profils.Salle;
 import gestion_profils.ProfilGlobal;
+import gestion_profils.Salle;
 import gestion_profils.Xml_manipulation;
 
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,35 +25,39 @@ public class CommunHtml {
 	public static void style(PrintWriter out, String userAgent)
 			throws IOException {
 		if (userAgent.contains("iPhone")) {
-			out.write("<style type=\"text/css\">");
-			out.write(" @import url(style_iphone.css);");
-			out.write("</style>");
+			out.println("<style type=\"text/css\">");
+			out.println(" @import url(style_iphone.css);");
+			out.println("</style>");
 		} else {
-			out.write("<style type=\"text/css\">");
-			out.write(" @import url(style.css);");
-			out.write("</style>");
+			out.println("<style type=\"text/css\">");
+			out.println(" @import url(style.css);");
+			out.println("</style>");
 		}
+	}
+	
+	public static void logo(PrintWriter out, String userAgent)
+	throws IOException {
+		out
+		.println("<div id=\"logo\"><img src=\"logo_info.png\" width=\"500\" height=\"115\" /></div>");
 	}
 
 	public static void plot_menu(PrintWriter out) throws IOException {
 		out.print("<div id=\"menu\">");
 		out
-				.print("<div class=\"lien_menu\"><a href=\"?page=1\">Accueil</a></div>");
+				.println("<div class=\"lien_menu\"><a href=\"?page=1\">Accueil</a></div>");
 		out
-				.print("<div class=\"lien_menu\"><a href=\"?page=2\">Configuration Maison</a></div>");
+				.println("<div class=\"lien_menu\"><a href=\"?page=2\">Configuration Maison</a></div>");
 		out
-				.print("<div class=\"lien_menu\"><a href=\"?page=3\">Changement profil</a></div>");
+				.println("<div class=\"lien_menu\"><a href=\"?page=3\">Changement profil</a></div>");
 		out
-				.print("<div class=\"lien_menu\"><a href=\"?page=4\">Sauvegarder la configuration</a></div>");
+				.println("<div class=\"lien_menu\"><a href=\"?page=4\">Sauvegarder la configuration</a></div>");
 		out
-				.print("<div class=\"lien_menu\"><a href=\"?page=5\">Configuration profils</a></div>");
+				.println("<div class=\"lien_menu\"><a href=\"?page=5\">Configuration profils</a></div>");
 		out.print("</div>");
 	}
 
 	public static void plot_main(PrintWriter out, HttpServletRequest request)
 			throws IOException {
-		out.print("<div id=\"retour_ajax\"></div>");
-		out.print("<div id=\"main\">");
 		String s_page = request.getParameter("page");
 		if (s_page == null) {
 			s_page = "1";
@@ -60,7 +65,8 @@ public class CommunHtml {
 		int page = Integer.parseInt(s_page);
 		switch (page) {
 		case 1:
-			out.print("<p>Accueil</p>");
+			info_maison(out,request);
+			
 			break;
 		case 2:
 			// ajout d'une salle
@@ -120,7 +126,7 @@ public class CommunHtml {
 			Xml_manipulation.serialize(Interface.getHashSalle(),"../webapps/web_interface/WEB-INF/classes/francois/config.xml");
 			Xml_manipulation.etat_actuel(Interface.getHashSalle(),"../webapps/web_interface/WEB-INF/classes/francois/etat.xml");
 			Xml_manipulation.serialize_profils(Interface.getHashProfil(),"../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
-			out.print("<p>Sauvegarde</p>");
+			out.print("<h1>Sauvegarde</h1>");
 			break;
 		case 5:
 			if (last_profil == null) {
@@ -134,7 +140,6 @@ public class CommunHtml {
 			Formulaires.profils(out, request);
 			break;
 		}
-		out.print("</div>");
 	}
 
 	public static void enumeration(PrintWriter out, HttpServletRequest request) {
@@ -236,4 +241,26 @@ public class CommunHtml {
 		hashProfil.get(request.getParameter("profil")).setTemperature(Integer.parseInt(request.getParameter("temperature")));
 		hashProfil.get(request.getParameter("profil")).setLuminosite(Integer.parseInt(request.getParameter("luminosite")));
 	}
+	
+	public static void info_maison(PrintWriter out,HttpServletRequest request) {
+		out.println("<div id=\"flash\">");
+		out.println("	<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0\" width=\"902\" height=\"518\" id=\"etat\" align=\"middle\">");
+		out.println("	<param name=\"allowScriptAccess\" value=\"sameDomain\" />");
+		out.println("	<param name=\"allowFullScreen\" value=\"false\" />");
+		out.println("	<param name=\"movie\" value=\"etat.swf\" /><param name=\"quality\" value=\"high\" /><param name=\"bgcolor\" value=\"#ffffff\" />	<embed src=\"etat.swf\" quality=\"high\" bgcolor=\"#ffffff\" width=\"902\" height=\"518\" name=\"etat\" align=\"middle\" wmode=\"window\" allowScriptAccess=\"sameDomain\" allowFullScreen=\"false\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer_fr\" />");
+		out.println("	</object>");
+		out.println("</div>");
+		
+		HashMap<String, Salle> hashSalle = Interface.getHashSalle();
+		Iterator it = hashSalle.values().iterator();
+		out.println("<div id=\"pas_flash\">");
+		
+		while(it.hasNext()){
+			
+		}
+		out.println("");
+		out.println("</div>");
+	}
+	
+	
 }

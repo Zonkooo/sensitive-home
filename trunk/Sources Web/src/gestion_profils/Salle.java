@@ -16,6 +16,14 @@ public class Salle {
 	private AbstractProfil currentProfil;
 	private ProfilGlobal defaultProfil;
 
+	public Salle(String nom) {
+		this.nom = nom;
+		this.multiprises = new HashMap<String, Multiprise>();
+		this.modules = new HashMap<String, ModuleCapteurs>();
+		this.availablesProfils = new ArrayList<SousProfil>();
+
+	}
+	
 	public Salle(String nom, ProfilGlobal defaut) {
 		this.nom = nom;
 		this.multiprises = new HashMap<String, Multiprise>();
