@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class Bouton
 {
 	private static final int NB_TAP_CALIBRATION = 9;
+	private static final double SEUIL_BOUTON_VALIDE = 0.83;
 //	private static final double EPS = 1E-8;
 
 	private ArrayList<ActionListener> listeners;
@@ -48,6 +49,8 @@ public class Bouton
 	 */
 	public Bouton(Capture capture)
 	{
+		this.listeners = new ArrayList<ActionListener>();
+		
 		int[][] audio;
 		double[][] audioDouble1 = new double[2][];
 		double[][] audioDouble2 = new double[2][];
@@ -77,7 +80,7 @@ public class Bouton
 			{
 				for (int k = 0; k < audioDouble1[0].length; k++)
 				{
-					audioDouble1[j][k] = (audioDouble1[j][k] + audioDouble2[j][k]) / NB_TAP_CALIBRATION;
+					audioDouble1[j][k] = (audioDouble1[j][k] + audioDouble2[j][k]) / 2;
 				}
 			}
 		}
@@ -96,8 +99,8 @@ public class Bouton
 	{
 		double[][] audioDouble = new double[2][];
 
-//Outils.reverse(audio);
-Outils.antiContinu(audio);
+		//Outils.reverse(audio);
+		Outils.antiContinu(audio);
 		audioDouble[0] = Outils.normalize(FFT.fftMag(FFT.zeroPadding(audio[0])));
 		if (audio.length == 2)//stereo
 		{
@@ -119,26 +122,12 @@ Outils.antiContinu(audio);
 			}
 		}
 		
-		if(max > 0.7)
+		if(max > SEUIL_BOUTON_VALIDE)
 			System.out.println("bouton " + (indice + 1));
 		else
 			System.out.println("essaye pas de m'avoir gringo");
 		
-//		boolean tropProche = false;
-//		for (int i = 0; i < cor.length; i++)
-//		{
-//			cor[i] /= max;
-//			if(cor[i] > 0.95 && Math.abs(cor[i] - 1) > EPS)
-//				tropProche = true;
-//			
-//			System.out.println(cor[i]);
-//		}
-
-//		if(tropProche)
-//			System.out.println("Celui ci me semble douteux");
-//		else
-//			System.out.println("bouton " + (indice + 1));
-		//pressButton();
+		btns.get(indice).pressButton();
 	}
 	
 	/**
