@@ -172,9 +172,9 @@ public class Bouton
 		this.listeners.remove(al);
 	}
 
-	public void pressButton()
+	public void pressButton(int indice)
 	{
-		ActionEvent e = new ActionEvent(this, 0, "");
+		ActionEvent e = new ActionEvent(this, 0, ((Integer)indice).toString());
 
 		for (ActionListener actionListener : listeners)
 		{
