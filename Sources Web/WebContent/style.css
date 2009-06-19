@@ -22,6 +22,12 @@ body {
 	text-align:left;
 	
 }
+#pas_flash{
+	visibility:collapse;
+	width:0;
+	height:0;
+	
+}
 #flash{
 
 	float:left;
@@ -38,19 +44,19 @@ body {
 	float: left;
 }
 #formu{
-	margin-left:130;
+	margin-left:260;
 	width:500;
 }
 #menu{
     float:left;
-	width: 150px;
+	width: 250px;
 }
 
 .lien_menu{
     text-align:center;
     padding:5px 10px 10px 5px;
     font-weight:bold;
-    font-size: 1em;
+    font-size: 1.2em;
     height: 30px;
     color: #F3FFE2;
     background-color: #225378;

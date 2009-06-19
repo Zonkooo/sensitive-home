@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <maison>
-  <salle nom="salon" temp_actuelle="12" lum_actuelle="23" />
-  <salle nom="cuisine" temp_actuelle="2" lum_actuelle="12" />
+  <salle name="salon" temp_actuelle="0" lum_actuelle="2" />
+  <salle name="cuisine" temp_actuelle="0" lum_actuelle="2" />
 </maison>
 

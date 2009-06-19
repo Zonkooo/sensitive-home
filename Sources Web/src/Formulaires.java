@@ -1,3 +1,4 @@
+import gestion_profils.Maison;
 import gestion_profils.ModuleCapteurs;
 import gestion_profils.Multiprise;
 import gestion_profils.ProfilGlobal;
@@ -248,7 +249,43 @@ public class Formulaires {
 		out.println("</FORM>");
 		out.println("</DIV>");
 	}
+	public static void choix_profils(PrintWriter out, HttpServletRequest request){
+		HashMap<String, ProfilGlobal> hashProfil = Interface.getHashProfil();
+		out.println("<DIV ID=\"formu\">");
+		out.println("<h1>Choix d'un profil</h1>");
+		out.println("<FORM name= \"formulaire_profil\" method=post>");
+		// selection d'un profil
+		out.println("<UL>");
+		out.println("	<TD>Selectionnez un profil</TD>");
+		out.println("	<TD>");
+		out.println("	<SELECT name=\"profil\" onchange=\"document.formulaire_profil.submit()\">");
+		String selected_profil = 	Maison.getMaison().getCurrentProfil().getNom();
+		Iterator it = hashProfil.values().iterator();
+		ProfilGlobal profil_courant = null;
+		ProfilGlobal profil_selection = null;
+		while (it.hasNext()) {
+			profil_courant = (ProfilGlobal) it.next();
+			if (selected_profil == null) {
+				selected_profil = profil_courant.getNom();
+			}
+			String temp = "";
+			if (selected_profil.equals(profil_courant.getNom())) {
+				temp = "selected ";
+			} else {
+				temp = "";
+			}
+			out.println("<OPTION " + temp + "VALUE=\""
+					+ profil_courant.getNom() + "\">" + profil_courant.getNom()
+					+ "</OPTION>");
+		}
+		profil_selection = hashProfil.get(selected_profil);
+		out.println("	</SELECT>");
 
+		out.println("</UL>");
+
+		out.println("</FORM>");
+		out.println("</DIV>");
+	}
 	public static void profils(PrintWriter out, HttpServletRequest request) {
 		HashMap<String, ProfilGlobal> hashProfil = Interface.getHashProfil();
 		out.println("<DIV ID=\"formu\">");
@@ -298,6 +335,43 @@ public class Formulaires {
 						+ profil_selection.getLuminosite() + "\" /></TD>");
 		out.println("</UL>");
 
+		out.println("<UL>");
+		out.println(" <TD><INPUT TYPE=\"submit\"  VALUE=\"Valider\"></TD>");
+		out.println("</UL>");
+		out.println("</FORM>");
+		out.println("</DIV>");
+	}
+	public static void creer_profil(PrintWriter out, HttpServletRequest request){
+		HashMap<String, ProfilGlobal> hashProfil = Interface.getHashProfil();
+		out.println("<DIV ID=\"formu\">");
+		out.println("<h1>Creer un nouveau profil</h1>");
+		out.println("<FORM name= \"formulaire_creer_profil\" method=post>");
+
+		//nom
+		out.println("<UL>");
+		out.println("	<TD>Nom du profil</TD>");
+		out.println(" <TD><input id=\"nom\" name=\"nom\" type=\"text\" value=\"\" /></TD>");
+		out.println("</UL>");
+		
+		//bouton tactile
+		out.println("<UL>");
+		out.println("	<TD>Configurer un bouton?</TD>");
+		out.println(" <TD><input id=\"bouton\" name=\"bouton\" type=\"checkbox\" value=\"\" /></TD>");
+		out.println("</UL>");
+
+		//temperature
+		out.println("<UL>");
+		out.println("	<TD>Temperature</TD>");
+		out.println(" <TD><input id=\"temperature\" name=\"temperature\" type=\"text\" value=\"\" /></TD>");
+		out.println("</UL>");
+
+		//luminosite
+		out.println("<UL>");
+		out.println("	<TD>Luminosite</TD>");
+		out.println(" <TD><input id=\"luminosite\" name=\"luminosite\" type=\"text\" value=\"\" /></TD>");
+		out.println("</UL>");
+
+		//valider
 		out.println("<UL>");
 		out.println(" <TD><INPUT TYPE=\"submit\"  VALUE=\"Valider\"></TD>");
 		out.println("</UL>");
