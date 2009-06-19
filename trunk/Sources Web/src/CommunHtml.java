@@ -138,7 +138,7 @@ public class CommunHtml {
 	}
 
 	public static void enumeration(PrintWriter out, HttpServletRequest request) {
-		// On rcupre la liste des noms de paramtres
+		// On rï¿½cupï¿½re la liste des noms de paramï¿½tres
 		Enumeration<String> e = request.getParameterNames();
 		List<String> prog = new ArrayList<String>();
 
@@ -146,8 +146,8 @@ public class CommunHtml {
 		while (e.hasMoreElements()) {
 			String key = e.nextElement();
 
-			// On vrifie les valeurs des checkbox : 'on' signifie que la
-			// checkbox est coche
+			// On vï¿½rifie les valeurs des checkbox : 'on' signifie que la
+			// checkbox est cochï¿½e
 			if (request.getParameter(key).equals("on")) {
 				prog.add(key);
 			} else {
