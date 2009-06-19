@@ -24,14 +24,15 @@
  * 		... TODO fin de conception MàJ 
  * 
  */
+#define SERIES_1
 #include "GenericFcts.h"
 #include "Hibernate.h"
 #include "Modules.h"
 #include "XbeeCnx.h"
 
 void setup() {
-	xb.begin(9600);
-	Serial.begin(9600); // permet de communiquer en série via Arduino (à virer pour le produit final)
+	initXB(9600);
+	//Serial.begin(9600); // permet de communiquer en série via Arduino (à virer pour le produit final)
 	attachInterrupt(1, wakeUp, LOW); // voir commentaire dans sleepMode
 	// on précise que les pin sont des pins de lecture:
 	pinMode(sensor1Pin, INPUT);
@@ -44,18 +45,10 @@ void setup() {
 
 void loop() {
 	if (isAsleep()) {
-#ifdef DEBUG
-		Serial.print("Dodo: "); Serial.println((isAsleep())?"true":"false");
-		delay(100); // pour le Serial
-#endif
 		digitalWrite(ledInternal, LOW);
 		delay(50); // le temps d'éteindre la LED (on sait jamais...)
 		sleepMode();
 	}
-#ifdef DEBUG
-	Serial.print("Reading ... ");
-	Serial.println(count);
-#endif
 	sensor1Val += analogRead(sensor1Pin);
 	sensor1Val /= 2;
 	sensor2Val += analogRead(sensor2Pin);
@@ -68,35 +61,8 @@ void loop() {
 	if (count > SLEEPTIMER) {
 		uint8_t tmpData[64];
 		//sprintf_P((char*)tmpData, "%i:%i:%i:%i",sensor1Val,sensor2Val,sensor3Val,sensor4Val);
-#ifdef DEBUG
-		Serial.print("Sending");
-		//Serial.println((char*)tmpData);
-#endif
 		setTxData(tmpData);
 		int rtn = sendXB();
-#ifdef DEBUG
-		if (rtn == 0) {
-			Serial.println("Erreur 0");
-		} else if (rtn == 1) {
-			Serial.println("Succes 1");
-		} else {
-			Serial.print("Erreur ");
-			Serial.println(rtn);
-		}
-		/* pour le moment, on affiche les données en série.
-		 Plus tard, on enverra sur le Xbee via la variable payLoad (uint8_t[]) 
-		 */
-
-		Serial.print("sensor1Val = ");
-		Serial.println(sensor1Val);
-		Serial.print("sensor2Val = ");
-		Serial.println(sensor2Val);
-		Serial.print("sensor3Val = ");
-		Serial.println(sensor3Val);
-		Serial.print("sensor4Val = ");
-		Serial.println(sensor4Val);
-		Serial.println("Going to sleep...");
-#endif
 		delay(100); /* this delay is needed, the sleep function will provoke a Serial error otherwise!! */
 		count = 0;
 		sensor1Val = 0;
