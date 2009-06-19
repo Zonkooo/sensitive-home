@@ -1,7 +1,5 @@
 package francois;
 
-import gestion_profils.Maison;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -9,32 +7,43 @@ import java.util.ArrayList;
 import sensitive.Bouton;
 import sensitive.Capture;
 
-public class Interfacage implements ActionListener{
+public class Interfacage implements ActionListener
+{
 
-	
-	public static void main(String[] args) {
-		ArrayList<Bouton> btns = new ArrayList<Bouton>();
+	public static void main(String[] args)
+	{
 		Capture capture = new Capture();
-		Bouton bouton =new Bouton(capture);
-		btns.add(bouton);
+		Interfacage flipflop = new Interfacage();
 		
-		new Interfacage(bouton);
-		while(true){
-			Bouton.traiterSignal(capture.getTap(), btns);			
+		Bouton bouton = new Bouton(capture);
+		flipflop.addBouton(bouton);
+		
+		flipflop.runSensitive(capture);
+	}
+
+	private ArrayList<Bouton> btns;
+	
+	public Interfacage()
+	{
+		btns = new ArrayList<Bouton>();
+	}
+	
+	public void addBouton(Bouton b)
+	{
+		this.btns.add(b);
+	}
+	
+	public void runSensitive(Capture capture)
+	{
+		while (true)
+		{
+			Bouton.traiterSignal(capture.getTap(), btns);
 		}
-	}
-	
-	public Interfacage(Bouton bouton) {
-		
-		bouton.addListener(this);
-	}
-	
-	public void actionPerformed(ActionEvent e) {
-		e.get ?
-		Maison.getMaison().switchProfil();
-		
 		
 	}
 
-	
+	public void actionPerformed(ActionEvent e)
+	{
+		System.out.println("bouton " + e.getID());
+	}
 }

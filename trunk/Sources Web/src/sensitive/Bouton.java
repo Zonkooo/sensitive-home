@@ -126,7 +126,7 @@ public class Bouton
 		if(max > SEUIL_BOUTON_VALIDE)
 		{
 			System.out.println("bouton " + (indice + 1));
-			btns.get(indice).pressButton();
+			btns.get(indice).pressButton(indice);
 		}
 		else
 		{
@@ -174,7 +174,7 @@ public class Bouton
 
 	public void pressButton(int indice)
 	{
-		ActionEvent e = new ActionEvent(this, 0, ((Integer)indice).toString());
+		ActionEvent e = new ActionEvent(this, indice, "");
 
 		for (ActionListener actionListener : listeners)
 		{
