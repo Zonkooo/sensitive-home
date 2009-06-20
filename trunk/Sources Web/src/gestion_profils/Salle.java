@@ -326,8 +326,8 @@ public class Salle {
 
 		for (Multiprise mp : getMultiprises().values()) {
 			for (int i = 0; i < 5; i++) {
-				if (mp.getPrise(i).getType() == TypeMorceau.LUMINOSITE) {
-					mp.sendMessage("/" + i + ":" + commande);
+				if (mp.getPrise(i).getType() == TypeMorceau.TEMPERATURE) {
+					mp.sendMessage(i,commande);
 				}
 			}
 		}
