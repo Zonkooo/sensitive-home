@@ -42,9 +42,10 @@ public class Multiprise extends Socle {
 		((Prise) (morceaux[index])).setEtat(e);
 	}
 
-	public void sendMessage(String message) {
-		for (int i = 0; i < message.length(); i++) {
-			communication.sendSomeData((byte) message.charAt(i));
-		}
+	public void sendMessage(int prisePosition, int valeur) {
+		String decalage="000";
+		if(valeur<10) decalage="00";
+		else if(valeur<100) decalage="0";
+		communication.addMessageToQueue("/REQ:"+prisePosition+":"+decalage+valeur);
 	}
 }
