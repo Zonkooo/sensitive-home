@@ -1,5 +1,7 @@
 package francois;
 
+import gestion_profils.ProfilGlobal;
+
 
 
 
@@ -18,12 +20,12 @@ public class Lanceur {
 		Communication communication = new Communication("192.168.0.11");
 		Interfacage interfacage = new Interfacage();
 //		//		
-//		communication.addMessageToQueue("/REQ:0:001\\");
-//		communication.addMessageToQueue("/REQ:2:255\\");
-//		communication.addMessageToQueue("/001144444\\");
-//		interfacage.addBoutonToProfil((new ProfilGlobal("salon",20,20)), true);
+		communication.addMessageToQueue("/REQ:0:001\\");
+		communication.addMessageToQueue("/REQ:2:255\\");
+		communication.addMessageToQueue("/001144444\\");
+		interfacage.addBoutonToProfil((new ProfilGlobal("salon",20,20)), true);
 //		
-		communication.start();
+//		communication.start();
 		interfacage.start();
 	}
 	

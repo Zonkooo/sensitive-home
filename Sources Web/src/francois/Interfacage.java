@@ -11,16 +11,16 @@ import gestion_profils.ProfilGlobal;
 
 public class Interfacage extends Thread implements ActionListener
 {
-	public static void main(String[] args)
-	{
-
-		Interfacage flipflop = new Interfacage();
-		flipflop.addBoutonToProfil((new ProfilGlobal("salon",20,20)), true);
-		flipflop.addBoutonToProfil((new ProfilGlobal("cuisine",20,20)), true);
-		//		flipflop.addBouton(bouton);
-
-		flipflop.runSensitive(flipflop.capture);
-	}
+//	public static void main(String[] args)
+//	{
+//
+//		Interfacage flipflop = new Interfacage();
+//		flipflop.addBoutonToProfil((new ProfilGlobal("salon",20,20)), true);
+//		flipflop.addBoutonToProfil((new ProfilGlobal("cuisine",20,20)), true);
+//		//		flipflop.addBouton(bouton);
+//
+//		flipflop.runSensitive(flipflop.capture);
+//	}
 
 	private ArrayList<Bouton> btns;
 	private ArrayList<AbstractProfil> profils;
