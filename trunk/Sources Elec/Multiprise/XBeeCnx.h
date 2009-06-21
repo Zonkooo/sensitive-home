@@ -8,6 +8,9 @@
 #include <../libXBee/XBee.h>
 #define MAX_SENSOR_MODULES 5
 #define ADDR_LENGTH 9
+#define SEND_NEW 0
+#define SEND_ACK 1
+#define SEND_REQ 2
 /* xbSentMsgLength contient le nombre d'octets du message envoyé aux modules de capteurs
  * pour leur demander les informations et pour leur envoyer un accusé
  * Le message est: /REQ\ ou /ACK\
@@ -19,11 +22,9 @@ const int xbSentMsgLength = 5;
  */
 const int xbRecvMsgLength = 17;
 
-//char xbSensorModulesAddr[MAX_SENSOR_MODULES][ADDR_LENGTH+1];
-char xbSensorModulesAddrTmp[ADDR_LENGTH+1]={0};
-
 void addObj(char* xbAddrStr);
-XBee *getXbTab();
-XBeeAddress64 *getXbAddrTab();
-char getTabPos();
+char getRegisteredNumber();
+char *getRegisteredAddr(char who);
+char sendXB(char what, char who);
+uint8_t *readXB();
 #endif /*XBEECNX_H_*/
