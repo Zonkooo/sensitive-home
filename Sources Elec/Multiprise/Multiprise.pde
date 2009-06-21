@@ -62,16 +62,12 @@ unsigned char pwmAct[NB_PRISES_PWM]= { 0, 0, 0 };
 unsigned char valueI, priseI;
 char valueC[3], ackMsg[12], *recvXP, priseC[1], iterator,
 		sensorToXpMsg[xbRecvMsgLength+ADDR_LENGTH+1+1], count=0;
-bool duplicate = false;
-
+/* en static pour ne pas avoir de problème de compilation mais je ne sais pas où elle est redéfinie*/
+static char xbSensorModulesAddrTmp[ADDR_LENGTH+1];
 void setup() {
 	initXPort(9600);
 	for (iterator=NB_PRISES-1; iterator>=0; iterator--) {
 		pinMode(prises[(int)iterator], OUTPUT);
-	}
-	for (iterator=MAX_SENSOR_MODULES-1; iterator >= 0; iterator --) {
-		//xbSensorModulesAddr[(int)iterator][0]=0; // on initialise toutes les adresses à NULL
-		resetChar(xbSensorModulesAddr[(int)iterator]);
 	}
 }
 
@@ -87,13 +83,14 @@ void loop() {
 		// toutes les deux secondes on envoie des requêtes de données aux modules de capteurs
 		count=0;
 		// implémentation bouchon: envoi de données fausses de capteurs
-		for (iterator=getTabPos()-1; iterator >= 0; iterator --) {
-			
-			sprintf(sensorToXpMsg, "/%s:320:253:850:715\\",
-					xbSensorModulesAddr[(int)iterator]);
+		for (iterator=getRegisteredNumber()-1; iterator >= 0; iterator --) {
+			sendXB(SEND_REQ, iterator);
+			sprintf(sensorToXpMsg, "/%s:%s\\", getRegisteredAddr(iterator),
+					readXB());
+			//sprintf(sensorToXpMsg, "/%s\\",readXB());
 			sendXPort(sensorToXpMsg);
-			//sensorToXpMsg[0]= 0; // réinit sensorToXpMsg
 			resetChar(sensorToXpMsg);
+			sendXB(SEND_ACK, iterator);
 		}
 	}
 	for (iterator=NB_PRISES_PWM-1; iterator >= 0; iterator--) {
@@ -123,28 +120,17 @@ void loop() {
 				pwmObj[priseI-2]=valueI;
 			}
 		} else { // c'est un message demandant de gérer un module de capteurs
-			if (xbSensorModulesAddrPos < MAX_SENSOR_MODULES) {
+			if (getRegisteredNumber()< MAX_SENSOR_MODULES) {
 				strncpy(xbSensorModulesAddrTmp, &recvXP[1], 9);
 				xbSensorModulesAddrTmp[9]=0;
-				for (iterator=xbSensorModulesAddrPos; iterator>0; iterator--) {
-					if (strcmp(xbSensorModulesAddr[(int)iterator], xbSensorModulesAddrTmp)==0) {
-						duplicate = true;
-						break;
-					}
-				}
-				if (!duplicate) {
-					addObj(xbSensorModulesAddrTmp);
-					resetChar(xbSensorModulesAddrTmp);
-				} else {
-					duplicate = false;
-				}
+				addObj(xbSensorModulesAddrTmp);
+				resetChar(xbSensorModulesAddrTmp);
 			}
 		}
 		sprintf(ackMsg, beginAckMsg, &recvXP[5]);
 		sendXPort(ackMsg);
 		resetRecvBuffer();
 	}
-	// test XBee
-	// on ne met pas de delay parce qu'il y en a un avec la lecture XPort (voir XPortCnx.h).
+	// on ne met pas de delai parce qu'il y en a un avec la lecture XPort (voir XPortCnx.h).
 	delay(50);
 }

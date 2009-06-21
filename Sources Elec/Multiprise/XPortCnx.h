@@ -12,7 +12,7 @@
 const int recvMsgLength = 11;
 /* time est utilisé pour savoir le nombre de millisecondes depuis lequel on lit les données série
  */
-static long time = 0;
+//long time = 0;
 /* hasBeenInit permet de ne pas initialiser deux fois le module XPort
  */ 
 //static bool hasBeenInit = false;
@@ -21,7 +21,7 @@ static long time = 0;
 const int recvDelay = 250;
 /* recvIt sert à se positionner dans la chaine reçue depuis le XPort
  */
-static int recvIt = 0;
+//int recvIt = 0;
 /* les variables suivantes sont des constantes pour la communication. Il serait intéressant de les stocker
  * définitivement en EEPROM une fois le protocole complètement fini.
  */

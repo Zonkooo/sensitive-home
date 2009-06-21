@@ -1,12 +1,16 @@
 #include "XPortCnx.h"
 #include "WProgram.h"
+/* recvIt sert à se positionner dans la chaine reçue depuis le XPort
+ */
+int recvIt = 0;
+long time = 0;
 /* recvBuffer contient les données recues par le XPort
  */
 char recvBuffer[12];
-extern "C"void __cxa_pure_virtual(void){
+/*extern "C"void __cxa_pure_virtual(void){
 	// call to a pure virtual function happened ... wow, should never happen ... stop
 	while(1);
-}
+}*/
 void recvXPort() {
 	time = millis();
 	if(Serial.available() <= 0) return;
