@@ -43,11 +43,12 @@
  * 		Exemple: /BIENVENUE\
  * Si le module de capteurs est déjà identifié sur une multiprise, alors il change de multiprise.
  */
-#include "XBeeCnx.h"
-#include "XPortCnx.h"
+#define SERIES_1
+#define resetChar(x) x[0]=0;
 #define NB_PRISES 5
 #define NB_PRISES_PWM 3
-
+#include "XBeeCnx.h"
+#include "XPortCnx.h"
 // permet d'avoir un code clair mais concis en mémoire (moins d'appels)
 #define sendXPort Serial.print
 #define initXPort Serial.begin
@@ -69,7 +70,8 @@ void setup() {
 		pinMode(prises[(int)iterator], OUTPUT);
 	}
 	for (iterator=MAX_SENSOR_MODULES-1; iterator >= 0; iterator --) {
-		xbSensorModulesAddr[(int)iterator][0]=0; // on initialise toutes les adresses à NULL
+		//xbSensorModulesAddr[(int)iterator][0]=0; // on initialise toutes les adresses à NULL
+		resetChar(xbSensorModulesAddr[(int)iterator]);
 	}
 }
 
@@ -81,14 +83,17 @@ void loop() {
 	 * que l'on contrôle 
 	 */
 	// XBeeCnx
-	// implémentation bouchon: envoi de données fausses de capteurs
 	if (++count == 40) {
+		// toutes les deux secondes on envoie des requêtes de données aux modules de capteurs
 		count=0;
-		for (iterator=xbSensorModulesAddrPos-1; iterator >= 0; iterator --) {
+		// implémentation bouchon: envoi de données fausses de capteurs
+		for (iterator=getTabPos()-1; iterator >= 0; iterator --) {
+			
 			sprintf(sensorToXpMsg, "/%s:320:253:850:715\\",
 					xbSensorModulesAddr[(int)iterator]);
 			sendXPort(sensorToXpMsg);
-			sensorToXpMsg[0]= 0; // réinit sensorToXpMsg
+			//sensorToXpMsg[0]= 0; // réinit sensorToXpMsg
+			resetChar(sensorToXpMsg);
 		}
 	}
 	for (iterator=NB_PRISES_PWM-1; iterator >= 0; iterator--) {
@@ -122,19 +127,14 @@ void loop() {
 				strncpy(xbSensorModulesAddrTmp, &recvXP[1], 9);
 				xbSensorModulesAddrTmp[9]=0;
 				for (iterator=xbSensorModulesAddrPos; iterator>0; iterator--) {
-					if (strcmp(xbSensorModulesAddr[(int)iterator],
-							xbSensorModulesAddrTmp)==0) {
+					if (strcmp(xbSensorModulesAddr[(int)iterator], xbSensorModulesAddrTmp)==0) {
 						duplicate = true;
 						break;
 					}
 				}
 				if (!duplicate) {
-					strncpy(xbSensorModulesAddr[xbSensorModulesAddrPos],
-							xbSensorModulesAddrTmp, 9);
-					sensorToXpMsg[0]=0;
-					xbSensorModulesAddrTmp[0]= 0;
-					xbSensorModulesAddr[xbSensorModulesAddrPos][9]=0;
-					xbSensorModulesAddrPos++;
+					addObj(xbSensorModulesAddrTmp);
+					resetChar(xbSensorModulesAddrTmp);
 				} else {
 					duplicate = false;
 				}
