@@ -5,6 +5,7 @@
  
 #ifndef XBEECNX_H_
 #define XBEECNX_H_
+#include <../libXBee/XBee.h>
 #define MAX_SENSOR_MODULES 5
 #define ADDR_LENGTH 9
 /* xbSentMsgLength contient le nombre d'octets du message envoyé aux modules de capteurs
@@ -18,7 +19,11 @@ const int xbSentMsgLength = 5;
  */
 const int xbRecvMsgLength = 17;
 
-int xbSensorModulesAddrPos = 0;
-char xbSensorModulesAddr[MAX_SENSOR_MODULES][ADDR_LENGTH+1];
+//char xbSensorModulesAddr[MAX_SENSOR_MODULES][ADDR_LENGTH+1];
 char xbSensorModulesAddrTmp[ADDR_LENGTH+1]={0};
+
+void addObj(char* xbAddrStr);
+XBee *getXbTab();
+XBeeAddress64 *getXbAddrTab();
+char getTabPos();
 #endif /*XBEECNX_H_*/

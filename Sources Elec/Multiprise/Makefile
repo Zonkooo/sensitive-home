@@ -32,9 +32,9 @@ INSTALL_DIR = /home/noxon/softs/arduino-0016
 
 UPLOAD_RATE = 19200
 AVRDUDE_PROGRAMMER = stk500v1
-MCU = atmega168
+MCU = atmega128
 F_CPU = 16000000
-#OTHER_C_INCLUDES = ../AF_XPort/AF_XPort.c ../NewSoftSerial/NewSoftSerial.cpp ../libEEPROM/EEPROM.cpp
+OTHER_C_INCLUDES = ../libXBee/XBee.c
 OTHER_CXX_INCLUDES =  XPortCnx.cpp XBeeCnx.cpp
 ############################################################################
 # Below here nothing should be changed...
