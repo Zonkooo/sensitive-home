@@ -21,18 +21,19 @@ void initXB(int speed) {
 	xb.begin(speed);
 }
 
-void readXBee() {
+void readXB() {
 	xb.readPacket();
-	if (xb.getResponse().isAvailable()) {
-		if (xb.getResponse().getApiId() == RX_16_RESPONSE || xb.getResponse().getApiId() == RX_64_RESPONSE) {
+	response = xb.getResponse();
+	if (response.isAvailable()) {
+		if (response.getApiId() == RX_16_RESPONSE || response.getApiId() == RX_64_RESPONSE) {
 			// got a rx packet
-			if (xb.getResponse().getApiId() == RX_16_RESPONSE) {
-				xb.getResponse().getRx16Response(rx16);
+			if (response.getApiId() == RX_16_RESPONSE) {
+				response.getRx16Response(rx16);
 				rxOption = rx16.getOption();
 				rxData[0] = rx16.getData(0);
 				rxData[1] = rx16.getData(1);
 			} else {
-				xb.getResponse().getRx64Response(rx64);
+				response.getRx64Response(rx64);
 				rxOption = rx64.getOption();
 				rxData[0]= rx64.getData(0);
 				rxData[1]= rx64.getData(1);
@@ -69,6 +70,7 @@ int sendXB() {
 int sendBroadcast() {
 	XBeeAddress64 bcAddr = XBeeAddress64(0x0, 0xfff);
 	tx = Tx64Request(bcAddr, txData, sizeof(txData)); // on recrée l'objet
+	tx.setOption(0x8);
 	int rtn = sendXB();
 	tx = Tx64Request(xbAddr, txData, sizeof(txData)); // on recrée l'objet d'origine
 	return rtn;
@@ -89,8 +91,16 @@ uint8_t* getRxdata() {
 }
 
 void initMPXBCnx() {
-	uint8_t hello[] = { '3', 'C', '8', '7' };
+	uint8_t hello[] ="/::::NOUVEAU::::\\";
 	setTxData(hello);
-
+	sendBroadcast();
+	readXB();
+	if(strcmp((char*)rxData,"/BIENVENUE\\")==0){
+		xbAddr=rx64.getRemoteAddress64(); // on considère l'adresse de la réponse comme la multiprise
+	}else{
+		digitalWrite(errorLed,HIGH);
+		delay(500);
+		digitalWrite(errorLed,LOW);
+	}
+	
 }
-
