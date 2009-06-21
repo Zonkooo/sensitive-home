@@ -41,6 +41,8 @@ void setup() {
 	pinMode(sensor4Pin, INPUT);
 	// on allume la led interne
 	digitalWrite(ledInternal, HIGH);
+	initMPXBCnx();
+	flash(ledInternal,5,50);
 }
 
 void loop() {
