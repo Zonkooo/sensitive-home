@@ -24,6 +24,7 @@
  * 		... TODO fin de conception MàJ 
  * 
  */
+#define DEBUG
 #define SERIES_1
 #include "GenericFcts.h"
 #include "Hibernate.h"
@@ -58,7 +59,12 @@ void loop() {
 	if (isAsleep()) {
 		digitalWrite(ledInternal, LOW);
 		delay(50); // le temps d'éteindre la LED (on sait jamais...)
+#ifdef DEBUG
+		setAsleep(false);
+		return;
+#else
 		sleepMode();
+#endif
 	}
 	sensor1Val += analogRead(sensor1Pin);
 	sensor1Val /= 2;

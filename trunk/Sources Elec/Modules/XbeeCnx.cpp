@@ -25,7 +25,8 @@ void readXB() {
 	xb.readPacket();
 	response = xb.getResponse();
 	if (response.isAvailable()) {
-		if (response.getApiId() == RX_16_RESPONSE || response.getApiId() == RX_64_RESPONSE) {
+		if (response.getApiId() == RX_16_RESPONSE || response.getApiId()
+				== RX_64_RESPONSE) {
 			// got a rx packet
 			if (response.getApiId() == RX_16_RESPONSE) {
 				response.getRx16Response(rx16);
@@ -38,9 +39,13 @@ void readXB() {
 				rxData[0]= rx64.getData(0);
 				rxData[1]= rx64.getData(1);
 			}
+#ifdef DEBUG
 			flash(statusLed, 1, 10);
+#endif
 		} else {
+#ifdef DEBUG
 			flash(errorLed, 1, 25);
+#endif
 		}
 	}
 }
@@ -54,15 +59,21 @@ int sendXB() {
 			xb.getResponse().getZBTxStatusResponse(txStatus);
 			// get the delivery status, the fifth byte
 			if (txStatus.getStatus() == SUCCESS) { // c'est un succès, le paquet a bien été transmis
+#ifdef DEBUG
 				flash(statusLed, 5, 50);
+#endif
 				return 1;
 			} else { // erreur ... est-ce que le destinataire est bien allumé?
+#ifdef DEBUG
 				flash(errorLed, 3, 500);
+#endif
 				return 0;
 			}
 		}
 	} else { // le xbee local n'a pas généré de TX à temps (ne devrait pas arriver...)
+#ifdef DEBUG
 		flash(errorLed, 2, 50);
+#endif
 		return -1;
 	}
 }
@@ -83,7 +94,11 @@ void setXBAddr(uint32_t msb, uint32_t lsb) {
 
 void setTxData(uint8_t newdata[]) {
 	//strcpy_P(txData, newdata);
-	txData = newdata;
+	int ite=16;
+	for (ite=16; ite > 0; ite--) {
+		txData[ite] = newdata[ite];
+	}
+	txData[17] = 0;
 }
 
 uint8_t* getRxdata() {
@@ -93,14 +108,18 @@ uint8_t* getRxdata() {
 void initMPXBCnx() {
 	uint8_t hello[] ="/::::NOUVEAU::::\\";
 	setTxData(hello);
+	delay(50);
 	sendBroadcast();
 	readXB();
-	if(strcmp((char*)rxData,"/BIENVENUE\\")==0){
-		xbAddr=rx64.getRemoteAddress64(); // on considère l'adresse de la réponse comme la multiprise
-	}else{
-		digitalWrite(errorLed,HIGH);
-		delay(500);
-		digitalWrite(errorLed,LOW);
+	if (strcmp((char*)rxData,"/NEW\\")==0) {
+		xbAddr=rx64.getRemoteAddress64(); /* on considère l'adresse de la réponse comme la multiprise */
 	}
-	
-}
+#ifdef DEBUG
+			else {
+				digitalWrite(errorLed,HIGH);
+				delay(500);
+				digitalWrite(errorLed,LOW);
+			}
+#endif
+
+		}
