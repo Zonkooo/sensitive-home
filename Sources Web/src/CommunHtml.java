@@ -15,10 +15,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.jdom.Attribute;
-import org.jdom.Element;
-
-
 public class CommunHtml {
 	private static String last_salle;
 	private static String last_module;
@@ -38,11 +34,11 @@ public class CommunHtml {
 			out.println("</style>");
 		}
 	}
-	
+
 	public static void logo(PrintWriter out, String userAgent)
-	throws IOException {
+			throws IOException {
 		out
-		.println("<div id=\"logo\"><img src=\"logo_info.png\" width=\"500\" height=\"115\" /></div>");
+				.println("<div id=\"logo\"><img src=\"logo_info.png\" width=\"500\" height=\"115\" /></div>");
 	}
 
 	public static void plot_menu(PrintWriter out) throws IOException {
@@ -58,7 +54,7 @@ public class CommunHtml {
 		out
 				.println("<div class=\"lien_menu\"><a href=\"?page=5\">Configuration profils</a></div>");
 		out
-		.println("<div class=\"lien_menu\"><a href=\"?page=6\">Creer un profil</a></div>");
+				.println("<div class=\"lien_menu\"><a href=\"?page=6\">Creer un profil</a></div>");
 		out.println("</div>");
 	}
 
@@ -71,8 +67,8 @@ public class CommunHtml {
 		int page = Integer.parseInt(s_page);
 		switch (page) {
 		case 1:
-			info_maison(out,request);
-			
+			info_maison(out, request);
+
 			break;
 		case 2:
 			// ajout d'une salle
@@ -101,16 +97,16 @@ public class CommunHtml {
 			if (last_multiprise == null) {
 				last_multiprise = "";
 			}
+
 			if (force) {
 				force = false;
 				updateCapteurs(request);
 				updateMultiprises(request);
 			}
 			/*
-			if (!last_salle.equals(request.getParameter("salle"))) {
-				force = true;
-				last_salle = request.getParameter("salle");
-			}*/
+			 * if (!last_salle.equals(request.getParameter("salle"))) { force =
+			 * true; last_salle = request.getParameter("salle"); }
+			 */
 			if (last_module.equals(request.getParameter("module"))) {
 				updateCapteurs(request);
 			} else {
@@ -127,30 +123,38 @@ public class CommunHtml {
 
 			break;
 		case 3:
-			if (request.getParameter("profil")!= null) {
-				Maison.getMaison().setCurrentProfil(Interface.getHashProfil().get(request.getParameter("profil")));
+			if (request.getParameter("profil") != null) {
+				Maison.getMaison().setCurrentProfil(
+						Interface.getHashProfil().get(
+								request.getParameter("profil")));
 			}
 			Formulaires.choix_profils(out, request);
 			break;
 		case 4:
-			Xml_manipulation.serialize(Interface.getHashSalle(),"../webapps/web_interface/WEB-INF/classes/francois/config.xml");
-			Xml_manipulation.etat_actuel(Interface.getHashSalle(),"../webapps/web_interface/etat.xml");
-			Xml_manipulation.serialize_profils(Interface.getHashProfil(),"../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
+			Xml_manipulation
+					.serialize(Interface.getHashSalle(),
+							"../webapps/web_interface/WEB-INF/classes/francois/config.xml");
+			Xml_manipulation.etat_actuel(Interface.getHashSalle(),
+					"../webapps/web_interface/etat.xml");
+			Xml_manipulation
+					.serialize_profils(Interface.getHashProfil(),
+							"../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
 			out.print("<h1>Sauvegarde</h1>");
 			break;
 		case 5:
 			if (last_profil == null) {
-				last_profil = Interface.getHashProfil().values().iterator().next().getNom();
+				last_profil = Interface.getHashProfil().values().iterator()
+						.next().getNom();
 			}
-			if(last_profil.equals(request.getParameter("profil"))){
+			if (last_profil.equals(request.getParameter("profil"))) {
 				update_profil(request);
-			}else{
-				last_profil=request.getParameter("profil");
+			} else {
+				last_profil = request.getParameter("profil");
 			}
 			Formulaires.profils(out, request);
 			break;
 		case 6:
-			if (request.getParameter("nom")!= null) {
+			if (request.getParameter("nom") != null) {
 				creation_profil(out, request);
 			}
 			Formulaires.creer_profil(out, request);
@@ -195,13 +199,10 @@ public class CommunHtml {
 			String type = request.getParameter("type" + i);
 			if (type != null) {
 				if (hashSalle.get(request.getParameter("salle")).getModules()
-						.get(Integer.parseInt(request.getParameter("module"))) != null) {
+						.get(request.getParameter("module")) != null) {
 					hashSalle.get(request.getParameter("salle")).getModules()
-							.get(
-									Integer.parseInt(request
-											.getParameter("module")))
-							.getCapteur(i).setType(
-									Xml_manipulation.getType(type));
+							.get(request.getParameter("module")).getCapteur(i)
+							.setType(Xml_manipulation.getType(type));
 				}
 			}
 		}
@@ -214,12 +215,11 @@ public class CommunHtml {
 			if (type != null) {
 				if (hashSalle.get(request.getParameter("salle"))
 						.getMultiprises().get(
-								Integer.parseInt(request
-										.getParameter("multiprise"))) != null) {
+								request.getParameter("multiprise")) != null) {
 					hashSalle.get(request.getParameter("salle"))
 							.getMultiprises().get(
-									Integer.parseInt(request
-											.getParameter("multiprise")))
+									request
+											.getParameter("multiprise"))
 							.getPrise(i)
 							.setType(Xml_manipulation.getType(type));
 				}
@@ -235,72 +235,78 @@ public class CommunHtml {
 	public static void bouger_capteur(HttpServletRequest request) {
 		HashMap<String, Salle> hashSalle = Interface.getHashSalle();
 		ModuleCapteurs mc = hashSalle.get(request.getParameter("salle"))
-				.getModules().get(
-						Integer.parseInt(request.getParameter("module")));
+				.getModules().get(request.getParameter("module"));
 		hashSalle.get(request.getParameter("salle_capteur")).addModule(mc);
 
 		hashSalle.get(request.getParameter("salle")).getModules().remove(
-				Integer.parseInt(request.getParameter("module")));
+				request.getParameter("module"));
 	}
-	
+
 	public static void bouger_prise(HttpServletRequest request) {
 		HashMap<String, Salle> hashSalle = Interface.getHashSalle();
-		Multiprise mp = hashSalle.get(request.getParameter("salle")).getMultiprises().get(Integer.parseInt(request.getParameter("multiprise")));
+		Multiprise mp = hashSalle.get(request.getParameter("salle"))
+				.getMultiprises().get(request.getParameter("multiprise"));
 		hashSalle.get(request.getParameter("salle_prise")).addMultiprise((mp));
 
 		hashSalle.get(request.getParameter("salle")).getMultiprises().remove(
-				Integer.parseInt(request.getParameter("multiprise")));
+				request.getParameter("multiprise"));
 	}
-	
+
 	public static void update_profil(HttpServletRequest request) {
 		HashMap<String, ProfilGlobal> hashProfil = Interface.getHashProfil();
-		hashProfil.get(request.getParameter("profil")).setTemperature(Integer.parseInt(request.getParameter("temperature")));
-		hashProfil.get(request.getParameter("profil")).setLuminosite(Integer.parseInt(request.getParameter("luminosite")));
+		hashProfil.get(request.getParameter("profil")).setTemperature(
+				Integer.parseInt(request.getParameter("temperature")));
+		hashProfil.get(request.getParameter("profil")).setLuminosite(
+				Integer.parseInt(request.getParameter("luminosite")));
 	}
-	
-	public static void info_maison(PrintWriter out,HttpServletRequest request) {
+
+	public static void info_maison(PrintWriter out, HttpServletRequest request) {
 		out.println("<div id=\"flash\">");
-		out.println("	<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0\" width=\"902\" height=\"518\" id=\"etat\" align=\"middle\">");
-		out.println("	<param name=\"allowScriptAccess\" value=\"sameDomain\" />");
+		out
+				.println("	<object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0\" width=\"902\" height=\"518\" id=\"etat\" align=\"middle\">");
+		out
+				.println("	<param name=\"allowScriptAccess\" value=\"sameDomain\" />");
 		out.println("	<param name=\"allowFullScreen\" value=\"false\" />");
-		out.println("	<param name=\"movie\" value=\"etat.swf\" /><param name=\"quality\" value=\"high\" /><param name=\"bgcolor\" value=\"#ffffff\" />	<embed src=\"etat.swf\" quality=\"high\" bgcolor=\"#ffffff\" width=\"902\" height=\"518\" name=\"etat\" align=\"middle\" wmode=\"window\" allowScriptAccess=\"sameDomain\" allowFullScreen=\"false\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer_fr\" />");
+		out
+				.println("	<param name=\"movie\" value=\"etat.swf\" /><param name=\"quality\" value=\"high\" /><param name=\"bgcolor\" value=\"#ffffff\" />	<embed src=\"etat.swf\" quality=\"high\" bgcolor=\"#ffffff\" width=\"902\" height=\"518\" name=\"etat\" align=\"middle\" wmode=\"window\" allowScriptAccess=\"sameDomain\" allowFullScreen=\"false\" type=\"application/x-shockwave-flash\" pluginspage=\"http://www.adobe.com/go/getflashplayer_fr\" />");
 		out.println("	</object>");
 		out.println("</div>");
-		
+
 		HashMap<String, Salle> hashSalle = Interface.getHashSalle();
 		Iterator it = hashSalle.values().iterator();
 		Salle salle_courante;
 		out.println("<div id=\"pas_flash\">");
-		
+
 		while (it.hasNext()) {
 			salle_courante = (Salle) it.next();
-			out.println("<h1>"+salle_courante+"</h1>");
+			out.println("<h1>" + salle_courante + "</h1>");
 			out.println("<p>temparature ");
-			if(salle_courante.temperature_actuelle()==-1){
+			if (salle_courante.temperature_actuelle() == -1) {
 				out.println("non connue");
-			}else{
-				out.println(salle_courante.temperature_actuelle()/10);
+			} else {
+				out.println(salle_courante.temperature_actuelle() / 10);
 			}
 			out.println("luminosite ");
-			if(salle_courante.luminosite_actuelle()==-1){
+			if (salle_courante.luminosite_actuelle() == -1) {
 				out.println("non connue");
-			}
-			else{
+			} else {
 				out.println(salle_courante.luminosite_actuelle());
 			}
-			out.println("</p>");	
+			out.println("</p>");
 		}
 		out.println("</div>");
 	}
-	
 
-	public static void creation_profil(PrintWriter out,HttpServletRequest request) {
-		ProfilGlobal p = new ProfilGlobal(request.getParameter("nom"),Integer.parseInt(request.getParameter("temperature")),Integer.parseInt(request.getParameter("luminosite")));
+	public static void creation_profil(PrintWriter out,
+			HttpServletRequest request) {
+		ProfilGlobal p = new ProfilGlobal(request.getParameter("nom"), Integer
+				.parseInt(request.getParameter("temperature")), Integer
+				.parseInt(request.getParameter("luminosite")));
 		HashMap<String, ProfilGlobal> hashProfil = Interface.getHashProfil();
 		hashProfil.put(p.getNom(), p);
-		if(request.getParameter("bouton")!=null){
-			Interfacage.
+		if (request.getParameter("bouton") != null) {
+
 		}
 	}
-	
+
 }

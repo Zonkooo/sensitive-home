@@ -20,15 +20,13 @@ public class Formulaires {
 		// creation d'une salle
 		out.println("<UL>");
 		out.println("<TD><label for=\"nom_salle\">Nouvelle salle</label>");
-		out
-				.println(" <input id=\"nom_salle\" name=\"nom_salle\" type=\"text\" /></TD>");
+		out.println(" <input id=\"nom_salle\" name=\"nom_salle\" type=\"text\" /></TD>");
 		out.println("</UL>");
 		// selection d'une salle
 		out.println("<UL>");
 		out.println("	<TD>Choix de la salle</TD>");
 		out.println("	<TD>");
-		out
-				.println("	<SELECT name=\"salle\" onchange=\"document.formulaire_capteur.submit()\">");
+		out.println("	<SELECT name=\"salle\" onchange=\"document.formulaire_capteur.submit()\">");
 		String selected_salle = request.getParameter("salle");
 		Iterator it = hashSalle.values().iterator();
 		Salle salle_courante = new Salle("");
@@ -56,14 +54,12 @@ public class Formulaires {
 		out.println("<UL>");
 		out.println("	<TD>Choix du module</TD>");
 		out.println("	<TD>");
-		out
-				.println("	<SELECT name=\"module\" onchange=\"document.formulaire_capteur.submit()\">");
+		out.println("	<SELECT name=\"module\" onchange=\"document.formulaire_capteur.submit()\">");
 
 		ModuleCapteurs module_courant = null;
 		ModuleCapteurs module_selection = null;
 		it = hashSalle.get(selected_salle).getModules().values().iterator();
-		String selected_module;
-			selected_module = request.getParameter("module");
+		String selected_module = request.getParameter("module");
 
 
 		while (it.hasNext()) {
@@ -76,7 +72,7 @@ public class Formulaires {
 					|| hashSalle.get(selected_salle).getModules() == null) {
 				selected_module = module_courant.getID();
 			}
-			if (selected_module == module_courant.getID()) {
+			if (selected_module.equals(module_courant.getID())) {
 				module_selection = module_courant;
 				select = "selected";
 			} else {
@@ -95,8 +91,7 @@ public class Formulaires {
 			// changer salle capteur
 			out.println("	<TD>Changer salle</TD>");
 			out.println("	<TD>");
-			out
-					.println("	<SELECT name=\"salle_capteur\" onchange=\"document.formulaire_capteur.submit()\">");
+			out.println("	<SELECT name=\"salle_capteur\" onchange=\"document.formulaire_capteur.submit()\">");
 			it = hashSalle.values().iterator();
 			while (it.hasNext()) {
 				salle_courante = (Salle) it.next();
@@ -128,8 +123,7 @@ public class Formulaires {
 				out.println("<UL>");
 				out.println("	<TD>Capteur " + i + "</TD>");
 				out.println("	<TD>");
-				out
-						.println("	<SELECT name=\"type"
+				out.println("	<SELECT name=\"type"
 								+ i
 								+ "\" onchange=\"document.formulaire_capteur.submit()\">");
 				String select;
@@ -174,7 +168,7 @@ public class Formulaires {
 					|| hashSalle.get(selected_salle).getMultiprises() == null) {
 				selected_multiprise = multiprise_courante.getID();
 			}
-			if (selected_multiprise == multiprise_courante.getID()) {
+			if (selected_multiprise.equals(multiprise_courante.getID())) {
 				multiprise_selection = multiprise_courante;
 				select = "selected";
 			} else {
@@ -323,15 +317,13 @@ public class Formulaires {
 
 		out.println("<UL>");
 		out.println("	<TD>Temperature</TD>");
-		out
-				.println(" <TD><input id=\"temperature\" name=\"temperature\" type=\"text\" value=\""
+		out.println(" <TD><input id=\"temperature\" name=\"temperature\" type=\"text\" value=\""
 						+ profil_selection.getTemperature() + "\" /></TD>");
 		out.println("</UL>");
 
 		out.println("<UL>");
 		out.println("	<TD>Luminosite</TD>");
-		out
-				.println(" <TD><input id=\"luminosite\" name=\"luminosite\" type=\"text\" value=\""
+		out.println(" <TD><input id=\"luminosite\" name=\"luminosite\" type=\"text\" value=\""
 						+ profil_selection.getLuminosite() + "\" /></TD>");
 		out.println("</UL>");
 
