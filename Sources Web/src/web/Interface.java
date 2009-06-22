@@ -39,17 +39,18 @@ public class Interface extends HttpServlet {
 		hashSalle =	Xml_manipulation.creation_Hashmap("../webapps/web_interface/WEB-INF/classes/francois/config.xml");
 		hashProfil = Xml_manipulation.creation_Hashmap_profils("../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
 		
+
+		interfacage = new Interfacage();
+
+		interfacage.start();
+
 		//on redéfinit la sortie sur un fichier pour logguer ce qui se passe
 		try {
-			System.setOut(new PrintStream(new FileOutputStream("out.log")));
-			System.setErr(new PrintStream(new FileOutputStream("err.log")));
+			System.setOut(new PrintStream(new FileOutputStream("/home/cnous3/Desktop/out.log")));
+			System.setErr(new PrintStream(new FileOutputStream("/home/cnous3/Desktop/err.log")));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-			interfacage = new Interfacage();
-			
-			interfacage.start();
-		
 		
 		/*
 		 * ceci est un timer
