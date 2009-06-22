@@ -14,6 +14,8 @@ import gestion_profils.ModuleCapteurs;
 import gestion_profils.Salle;
 import gestion_profils.Xml_manipulation;
 
+import web.Interface;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
