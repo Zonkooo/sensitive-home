@@ -24,5 +24,6 @@ void wakeUp();
  */
 void sleepMode();
 
+void setAsleep(bool d);
 bool isAsleep();
 #endif /*HIBERNATE_H_*/

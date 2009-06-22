@@ -41,6 +41,7 @@ int sendBroadcast();
  */
 void setXBAddr(uint32_t msb, uint32_t lsb);
 /* setTxData permet de changer le payload, c'est-à-dire le message à être envoyé via XBee.
+ * On sait que la taille est de 17 octets.
  */
 void setTxData(uint8_t newdata[]);
 /* getRxdata permet de lire les données reçues via XBee.

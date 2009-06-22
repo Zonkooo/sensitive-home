@@ -6,8 +6,14 @@ bool isAsleep(){
 	return asleep;
 }
 
+void setAsleep(bool d){
+	asleep = d;
+}
+
 void prepareSleepMode() {
+#ifdef DEBUG
 	Serial.println("In pSM");
+#endif
 	asleep = true;
 }
 
@@ -25,8 +31,8 @@ void sleepMode() {
 	sleep_mode(); // met réellement le système en veille
 	// le programme continu à partir d'ici après le réveil	
 	sleep_disable();
+	detachInterrupt(0); // disables interrupt 0 on pin 2 so the wakeUpNow code will not be executed during normal running time.
 	asleep=false;
-	detachInterrupt(0); // disables interrupt 0 on pin 2 so the wakeUpNow code will not be executed during normal running time. 
 #ifdef DEBUG
 	Serial.println("Woke up!");
 #endif
