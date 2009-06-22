@@ -9,14 +9,15 @@ package francois;
 // At the end of the program, we close the streams of data and close the Socket.
 // (Once you are done debugging your code, you should remove all the println statements for better speed.)
 
+import gestion_profils.Maison;
+import gestion_profils.ModuleCapteurs;
+import gestion_profils.Salle;
+import gestion_profils.Xml_manipulation;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import gestion_profils.Maison;
-import gestion_profils.ModuleCapteurs;
-import gestion_profils.Salle;
 
 
 public class Communication extends Thread {
@@ -169,6 +170,8 @@ public class Communication extends Thread {
 														// message reçu
 							moduleCourant.getCapteur(i).setLastValeur(
 									Integer.parseInt(message_split[i + 1]));
+							//on modifie le XML pour que l'interface web soit mise à jour
+							Xml_manipulation.etat_actuel(Interface.getHashSalle(),"../webapps/web_interface/etat.xml");
 						}
 					}
 					System.out.println("Le message provient d'une salle non enregistrée");
