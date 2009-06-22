@@ -310,7 +310,7 @@ public class CommunHtml {
 		HashMap<String, ProfilGlobal> hashProfil = Interface.getHashProfil();
 		hashProfil.put(p.getNom(), p);
 		if (request.getParameter("bouton") != null) {
-			Lanceur.getInterfacage().addBoutonToProfil(p);
+			Interface.getInterfacage().addBoutonToProfil(p);
 		}
 	}
 }

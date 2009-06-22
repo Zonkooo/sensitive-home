@@ -1,16 +1,16 @@
 package web;
 
-import web.*;
+import francois.Interfacage;
 import gestion_profils.ProfilGlobal;
 import gestion_profils.Salle;
 import gestion_profils.Xml_manipulation;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.Timer;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,7 +25,8 @@ public class Interface extends HttpServlet {
 	private static HashMap<String, ProfilGlobal> hashProfil;
 	private static final long serialVersionUID = 1L;
 
-
+	static Interfacage interfacage;
+	
 	public static HashMap<String, ProfilGlobal> getHashProfil() {
 		return hashProfil;
 	}
@@ -37,6 +38,33 @@ public class Interface extends HttpServlet {
 		super();
 		hashSalle =	Xml_manipulation.creation_Hashmap("../webapps/web_interface/WEB-INF/classes/francois/config.xml");
 		hashProfil = Xml_manipulation.creation_Hashmap_profils("../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
+		
+		//on redéfinit la sortie sur un fichier pour logguer ce qui se passe
+		try {
+			System.setOut(new PrintStream(new FileOutputStream("out.log")));
+			System.setErr(new PrintStream(new FileOutputStream("err.log")));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+
+//		Xml_manipulation.etat_actuel(Xml_manipulation.creation_Hashmap("src/francois/config.xml"),"src/francois/etat.xml");
+		//	Dhcp.rechercheAdresseXport();
+			
+//			Interface a;
+//			new Interface();  //TODO: créer Interface pour lancer tout le programme
+			
+//			Communication communication = new Communication("192.168.0.11");
+			interfacage = new Interfacage();
+			
+//			communication.addMessageToQueue("/REQ:0:001\\");
+//			communication.addMessageToQueue("/REQ:2:255\\");
+//			communication.addMessageToQueue("/001144444\\");
+			
+//			communication.start();
+			
+			interfacage.start();
+		
 		
 		/*
 		 * ceci est un timer
@@ -53,6 +81,11 @@ public class Interface extends HttpServlet {
         timer.start();
 		 */
 	}
+	
+	public static Interfacage getInterfacage() {
+		return interfacage;
+	}
+	
 
 	public static HashMap<String, Salle> getHashSalle() {
 		return hashSalle;
