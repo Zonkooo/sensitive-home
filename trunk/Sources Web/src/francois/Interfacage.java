@@ -64,11 +64,9 @@ public class Interfacage extends Thread implements ActionListener
 		System.out.println("changement de profil vers: " +  profils.get(e.getID()));
 	}
 
-	public void addBoutonToProfil(AbstractProfil profil, boolean veuxUnBouton) {
+	public void addBoutonToProfil(AbstractProfil profil) {
 		//normalement l'index de l'arraylist de profils est le meme que pour les boutons
 		addProfil(profil);
-		if(veuxUnBouton) {
 			addBouton(new Bouton(capture));
-		}
 	}
 }

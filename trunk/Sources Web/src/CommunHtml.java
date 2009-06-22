@@ -1,3 +1,5 @@
+import francois.Interfacage;
+import francois.Lanceur;
 import gestion_profils.Maison;
 import gestion_profils.ModuleCapteurs;
 import gestion_profils.Multiprise;
@@ -305,8 +307,7 @@ public class CommunHtml {
 		HashMap<String, ProfilGlobal> hashProfil = Interface.getHashProfil();
 		hashProfil.put(p.getNom(), p);
 		if (request.getParameter("bouton") != null) {
-
+			Lanceur.getInterfacage().addBoutonToProfil(p);
 		}
 	}
-
 }
