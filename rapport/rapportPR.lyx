@@ -1,0 +1,234 @@
+#LyX 1.6.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\use_default_options false
+\language french
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\float_placement h
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 2.5cm
+\topmargin 2.5cm
+\rightmargin 2.5cm
+\bottommargin 2.5cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle headings
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Sensitive Home Informatique
+\end_layout
+
+\begin_layout Author
+Colombel François, Hauchecorne Eric, Vandon Raphaël
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Présentation générale du projet
+\end_layout
+
+\begin_layout Standard
+Le projet Sensitive Home est divisé en deux parties : informatique et électroniq
+ue.
+ Ces deux parties ont été développées conjointement par deux groupes distincts.
+ 
+\end_layout
+
+\begin_layout Standard
+L'objectif du projet est de développer une solution de domotique qui soit
+ simple à mettre en place pour l'utilisateur, et sans nécéssiter de travaux
+ de maconnerie.
+ Cette facilité d'installation est permise par l'utilisation de multiprises
+ communiquantes sur lesquelles viennent se brancher les appareils de la
+ maison, et qui relaie les informations venant de capteurs sans fil situés
+ dans la maison (capteur de luminosité, capteur de température, ...).
+ La conception de cette multiprise constitue la partie électronique du projet.
+\end_layout
+
+\begin_layout Standard
+Le comportement de la maison est ensuite régit par des profils d'utilisation
+ : on distingue des profils globaux, qui s'appliquent sur la maison dans
+ son ensemble, et définissent des constantes telles que la temperature moyenne
+ à maintenir, ou la luminosité globale dans la maison ; et des profils locaux,
+ qui ne s'appliquent qu'à une seule pièce, sont prioritaires sur le profil
+ global, et correspondent à une activité spécifique.
+ Des profils globaux type seront 
+\begin_inset Quotes eld
+\end_inset
+
+jour
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+nuit
+\begin_inset Quotes erd
+\end_inset
+
+, ou 
+\begin_inset Quotes eld
+\end_inset
+
+absence prolongée
+\begin_inset Quotes erd
+\end_inset
+
+, tandis qu'un profil local pourra être 
+\begin_inset Quotes eld
+\end_inset
+
+lecture dans le salon
+\begin_inset Quotes erd
+\end_inset
+
+, ou 
+\begin_inset Quotes eld
+\end_inset
+
+travail dans le bureau
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Le rôle de la partie informatique du projet est de permettre la création
+ et la gestion de ces profils, ce qui est réalisé à travers une interface
+ Web, adaptée à nimporte quel ordinateur, mais aussi à un iPhone ou un iPod
+ Touch.
+ Les changements de profil sont possibles également à travers une interface
+ tactile qui est mise en place facilement sur nimporte quelle surface :
+ murs, portes ou tables.
+\end_layout
+
+\begin_layout Section
+Interface Web
+\end_layout
+
+\begin_layout Section
+Interface tactile
+\end_layout
+
+\begin_layout Subsection
+Principe physique
+\end_layout
+
+\begin_layout Subsection
+Mise en application
+\end_layout
+
+\begin_layout Subsection
+Intégration au projet
+\end_layout
+
+\begin_layout Standard
+Le dispositif présenté ci dessus permet de rendre nimporte quelle surface
+ tactile avec quelques micros et après avoir calibré les boutons sur cette
+ surface.
+ Il s'agit d'une installation peu couteuse, rapide à mettre en place, et
+ facilement adaptable à de nombreuses configurations ; elle est donc particulièr
+ement bien adaptée à une solution de domotique.
+ Nous avons choisi dans notre projet de l'utiliser pour permettre un changement
+ de profil dans une pièce.
+\end_layout
+
+\begin_layout Section
+Communication
+\end_layout
+
+\begin_layout Section
+Ce que nous n'avons pas eu le temps de développer
+\end_layout
+
+\begin_layout Standard
+calendrier (synchro Google)
+\end_layout
+
+\begin_layout Standard
+capteurs de présence
+\end_layout
+
+\begin_layout Standard
+carte electonique pour le tactile
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\end_body
+\end_document
