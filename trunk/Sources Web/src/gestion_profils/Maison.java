@@ -13,6 +13,8 @@ import java.util.ArrayList;
  */
 public class Maison 
 {
+	private static ProfilGlobal basicProfil = new ProfilGlobal("defaut", 18, 0);
+	
 	//Singleton
 	private static Maison maison;	
 	public static Maison getMaison()
@@ -31,6 +33,9 @@ public class Maison
 	{
 		this.salles = new ArrayList<Salle>();
 		this.availablesProfils = new ArrayList<ProfilGlobal>();
+		
+		this.availablesProfils.add(basicProfil);
+		this.currentProfil = basicProfil;
 	}
 	
 	public void addSalle(Salle s)
@@ -50,7 +55,10 @@ public class Maison
 
 	public void setCurrentProfil(ProfilGlobal currentProfil) {
 		this.currentProfil = currentProfil;
-		switchProfil(currentProfil);
+		for (Salle salle : salles)
+		{
+			salle.setProfilGlobal(currentProfil);
+		}
 	}
 
 	public ProfilGlobal getCurrentProfil()
@@ -74,14 +82,5 @@ public class Maison
 			this.availablesProfils.remove(p);
 		else
 			System.err.println("le profil " + p + "est utilisé actuellement");
-	}
-	
-	
-	private void switchProfil(ProfilGlobal p)
-	{
-		for (Salle salle : salles)
-		{
-			salle.setProfilGlobal(currentProfil);
-		}
 	}
 }
