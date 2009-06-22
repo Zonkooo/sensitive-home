@@ -1,7 +1,11 @@
+/* Christopher Rabotin
+ * Sensitive Home (http://sensitive-home.googlecode.com)
+ * Created on Jun 22, 2009
+ */
+ 
 #ifndef MODULES_HPP_
 #define MODULES_HPP_
 #define SLEEPTIMER 4
-#define DEBUG
 
 #include <inttypes.h>
 #include <stdio.h>

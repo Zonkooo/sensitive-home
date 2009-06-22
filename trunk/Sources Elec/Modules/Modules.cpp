@@ -25,7 +25,7 @@
  * 		... TODO fin de conception MàJ 
  * 
  */
-#define DEBUG
+//#define DEBUG
 #define SERIES_1
 #include "GenericFcts.h"
 #include "Hibernate.h"

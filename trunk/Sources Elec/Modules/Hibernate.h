@@ -1,3 +1,8 @@
+/* Christopher Rabotin
+ * Sensitive Home (http://sensitive-home.googlecode.com)
+ * Created on Jun 22, 2009
+ */
+ 
 #ifndef HIBERNATE_H_
 #define HIBERNATE_H_
 #include <avr/sleep.h>
