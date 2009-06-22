@@ -9,7 +9,15 @@ public class Multiprise extends Socle {
 	public Multiprise(String ID, int taille, String adresse) {
 		super(ID,taille);
 		ip = adresse;
-		//communication = new Communication(ip);
+		communication = new Communication(ip);
+		
+		//TODO: seulement des tests
+		communication.addMessageToQueue("/REQ:0:001\\");
+		communication.addMessageToQueue("/REQ:2:255\\");
+		communication.addMessageToQueue("/001111111\\");
+		
+		communication.start();
+
 	}
 
 	public Multiprise(String ID, Prise[] morceaux, String adresse) {
