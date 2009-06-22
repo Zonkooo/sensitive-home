@@ -13,7 +13,7 @@
     <description></description>
     <display-name>Interface</display-name>
     <servlet-name>Interface</servlet-name>
-    <servlet-class>Interface</servlet-class>
+    <servlet-class>web.Interface</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Interface</servlet-name>
