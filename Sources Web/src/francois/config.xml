@@ -2,7 +2,7 @@
 <maison>
 
 <salle name="salon">
-	<module_capteurs id="101" multiprise="1">
+	<module_capteurs id="001144444" multiprise="1">
 		<capteur type="L" />
 		<capteur type="T" />
 		<capteur type="V" />
@@ -35,12 +35,5 @@
 		<capteur id="403" type="L" />
 		<capteur id="404" type="T" />
 	</module_capteurs>
-	<multiprise id="2" ip="192.168.0.12">
-		<prise type="L"  />
-		<prise type="L" />
-		<prise type="L" />
-		<prise type="T" />
-		<prise type="T" />
-	</multiprise>
 </salle>
 </maison>

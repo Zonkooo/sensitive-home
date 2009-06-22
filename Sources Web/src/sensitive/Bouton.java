@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class Bouton
 {
-        private static final int NB_TAP_CALIBRATION = 9;
+        private static final int NB_TAP_CALIBRATION = 2;
         private static final double SEUIL_BOUTON_VALIDE = 0.83;
 
         private ArrayList<ActionListener> listeners;
@@ -55,7 +55,7 @@ public class Bouton
                 double[][] audioDouble2 = new double[2][];
 
                 System.out.println("tapez !");
-                audio = capture.getTap(true);
+                audio = capture.getTap();
                 Outils.antiContinu(audio);
                 audioDouble1[0] = Outils.normalize(FFT.fftMag(FFT.zeroPadding(audio[0])));
                 if (audio.length == 2)//stereo
@@ -66,7 +66,7 @@ public class Bouton
                 for(int i = 0; i < NB_TAP_CALIBRATION; i++)
                 {
                         System.out.println("encore !");
-                        audio = capture.getTap(true);
+                        audio = capture.getTap();
                         Outils.antiContinu(audio);
                         audioDouble2[0] = Outils.normalize(FFT.fftMag(FFT.zeroPadding(audio[0])));
                         if (audio.length == 2)//stereo
