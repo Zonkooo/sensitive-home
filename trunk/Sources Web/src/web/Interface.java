@@ -57,7 +57,7 @@ public class Interface extends HttpServlet {
 	public static HashMap<String, Salle> getHashSalle() {
 		return hashSalle;
 	}
-
+	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
@@ -77,7 +77,7 @@ public class Interface extends HttpServlet {
 		CommunHtml.logo(out, userAgent);
 		CommunHtml.plot_menu(out);
 		CommunHtml.plot_main(out, request);	
-		CommunHtml.enumeration(out, request);
+		//CommunHtml.enumeration(out, request);
 		out.println("</div>");
 		out.println("</BODY></HTML>");
 	}
