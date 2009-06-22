@@ -38,19 +38,19 @@ public class Communication extends Thread {
 	ConcurrentLinkedQueue<String> messageAenvoyer;
 	
 	
-//	public static void main(String[] args) {
-//		Communication communication = new Communication("192.168.0.11");
-//
-//		//		communication.start();
-//		communication.addMessageToQueue("/REQ:0:001\\");
-//		communication.addMessageToQueue("/REQ:2:255\\");
-////		communication.addMessageToQueue("/REQ:2:000\\");
-//				communication.addMessageToQueue("/001144444\\");
-////				communication.addMessageToQueue("/001111111\\");
-//
-////		communication.addMessageToQueue("/REQ:0:000\\");
-//		
-//		
+	public static void main(String[] args) {
+		Communication communication = new Communication("192.168.0.11");
+
+		//		communication.start();
+		communication.addMessageToQueue("/REQ:0:001\\");
+		communication.addMessageToQueue("/REQ:2:255\\");
+//		communication.addMessageToQueue("/REQ:2:000\\");
+				communication.addMessageToQueue("/001144444\\");
+//				communication.addMessageToQueue("/001111111\\");
+
+//		communication.addMessageToQueue("/REQ:0:000\\");
+		
+		communication.run();
 //		while(true){
 //
 //			if(communication.messageAenvoyer.size()>0) {
@@ -80,12 +80,13 @@ public class Communication extends Thread {
 //			System.out.println(ecoute);
 //			
 //		}
-//	}
+	}
 
 	public Communication(String ip) {
 		host = ip;
 		port = 31337;
 		messageAenvoyer = new ConcurrentLinkedQueue<String>();
+//		TODO: checkconnection viré pour les tests
 		checkConnection(host, port); 		
 	}
 
@@ -224,7 +225,7 @@ public class Communication extends Thread {
 	boolean dataIsWaiting() {
 		boolean bytesAvailable = false;
 		if (myInputStream == null) { // if there's no active input stream
-			try {
+			try {//TODO: virer les try catch pour la version finale
 				myInputStream = new DataInputStream(mySocket.getInputStream()); // create
 																				// an
 																				// new
@@ -236,10 +237,10 @@ public class Communication extends Thread {
 																				// socket
 				System.out.println("opening input stream");
 			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("error while opening input stream");
+				//e.printStackTrace();
+				//System.out.println("error while opening input stream");
 			}
-		}
+		}//TODO: virer les try catch pour la version finale
 		try {
 			if (myInputStream.available() > 0) { // check to see if any bytes
 													// are available
@@ -249,8 +250,8 @@ public class Communication extends Thread {
 				// " bytes available...");
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("error while checking for bytes available");
+			//e.printStackTrace();
+			//System.out.println("error while checking for bytes available");
 		}
 		return bytesAvailable;
 	}
