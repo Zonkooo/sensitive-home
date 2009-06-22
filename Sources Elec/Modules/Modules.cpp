@@ -31,6 +31,15 @@
 #include "Modules.h"
 #include "XbeeCnx.h"
 
+// définition des valeurs
+int sensor1Val = 0;
+int sensor2Val = 0;
+int sensor3Val = 0;
+int sensor4Val = 0;
+
+// variable int permettant de compter le nombre de boucles dans loop()
+int count = 0;
+
 void setup() {
 	initXB(9600);
 	//Serial.begin(9600); // permet de communiquer en série via Arduino (à virer pour le produit final)
@@ -43,7 +52,7 @@ void setup() {
 	// on allume la led interne
 	digitalWrite(ledInternal, HIGH);
 	initMPXBCnx();
-	flash(ledInternal,5,50);
+	flash(ledInternal, 5, 50);
 }
 
 void loop() {
@@ -65,7 +74,7 @@ void loop() {
 		uint8_t tmpData[64];
 		//sprintf_P((char*)tmpData, "%i:%i:%i:%i",sensor1Val,sensor2Val,sensor3Val,sensor4Val);
 		setTxData(tmpData);
-		int rtn = sendXB();
+		sendXB();
 		delay(100); /* this delay is needed, the sleep function will provoke a Serial error otherwise!! */
 		count = 0;
 		sensor1Val = 0;

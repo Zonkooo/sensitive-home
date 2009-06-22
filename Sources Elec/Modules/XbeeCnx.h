@@ -16,8 +16,8 @@
  * La LED de statut est interne: elle n'a pas besoin d'être visible
  * La LED d'erreur est externe (et rouge): en cas d'erreur elle clignote pendant 5 secondes 
  */
-const int statusLed = 13; // led interne au microcontrolleur
-const int errorLed = 12; // led externe.
+const int statusLed = 9; // led interne au microcontrolleur
+const int errorLed = 8; // led externe.
 
 /* Permet d'initialiser le XBee.
  */
