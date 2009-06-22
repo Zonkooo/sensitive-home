@@ -1,5 +1,9 @@
 package francois;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 import gestion_profils.ProfilGlobal;
 
 public class Lanceur {
@@ -8,8 +12,17 @@ public class Lanceur {
 	
 	
 	// n'est plus utilisée
-	
-	
+	public static void main(String[] args) {
+			//on redéfinit la sortie sur un fichier pour logguer ce qui se passe
+	try {
+		System.setOut(new PrintStream(new FileOutputStream("/home/cnous3/Desktop/out.log")));
+		System.setErr(new PrintStream(new FileOutputStream("/home/cnous3/Desktop/err.log")));
+	} catch (FileNotFoundException e) {
+		e.printStackTrace();
+	}
+	System.out.println("eric");
+	}
+
 	
 	
 	

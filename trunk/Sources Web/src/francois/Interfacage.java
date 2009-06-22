@@ -7,20 +7,21 @@ import java.util.ArrayList;
 import sensitive.Bouton;
 import sensitive.Capture;
 import gestion_profils.AbstractProfil;
+import gestion_profils.Maison;
 import gestion_profils.ProfilGlobal;
 
 public class Interfacage extends Thread implements ActionListener
 {
-//	public static void main(String[] args)
-//	{
-//
-//		Interfacage flipflop = new Interfacage();
-//		flipflop.addBoutonToProfil((new ProfilGlobal("salon",20,20)), true);
-//		flipflop.addBoutonToProfil((new ProfilGlobal("cuisine",20,20)), true);
-//		//		flipflop.addBouton(bouton);
-//
-//		flipflop.runSensitive(flipflop.capture);
-//	}
+	public static void main(String[] args)
+	{
+
+		Interfacage flipflop = new Interfacage();
+		flipflop.addBoutonToProfil((new ProfilGlobal("salon",20,20)));
+//		flipflop.addBoutonToProfil((new ProfilGlobal("cuisine",20,20)));
+		//		flipflop.addBouton(bouton);
+
+		flipflop.runSensitive(flipflop.capture);
+	}
 
 	private ArrayList<Bouton> btns;
 	private ArrayList<AbstractProfil> profils;
@@ -62,6 +63,7 @@ public class Interfacage extends Thread implements ActionListener
 	{
 //		System.out.println("bouton " + e.getID());
 		System.out.println("changement de profil vers: " +  profils.get(e.getID()));
+		Maison.getMaison().setCurrentProfil(((ProfilGlobal)profils.get(e.getID())));
 	}
 
 	public void addBoutonToProfil(AbstractProfil profil) {
