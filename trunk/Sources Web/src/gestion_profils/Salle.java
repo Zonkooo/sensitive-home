@@ -7,6 +7,8 @@ import java.util.Iterator;
 import Jama.Matrix;
 
 public class Salle {
+	private static int TOLERANCE_LUMINOSITE = 25;
+	
 	private String nom;
 
 	private HashMap<String, Multiprise> multiprises;
@@ -258,10 +260,83 @@ public class Salle {
 		return A;
 	}
 
+	int pas = 32;
+	int commande = 0;
+	boolean tropBas = true;
+	
 	public HashMap<Prise, Integer> getCommandesLampes()
 	{
 		//v2 : sans calibration
-		return null;
+		
+		lampes = new ArrayList<Prise>();
+		photocapteurs = new ArrayList<Capteur>();
+
+		//extraction des prises correspondant à des lampes
+		for (Multiprise multiprise : multiprises.values())
+		{
+			for (int i = 0; i < multiprise.getCapacity(); i++)
+			{
+				Prise p = multiprise.getPrise(i);
+				if (p != null && p.getType() == TypeMorceau.LUMINOSITE)
+				{
+					p.setEtat(Etat.OFF);
+					if(p.getEtat() == Etat.AUTO)
+						lampes.add(p);
+				}
+			}
+		}
+
+		//extraction des capteurs de luminosité
+		for (ModuleCapteurs moduleCapteurs : modules.values())
+		{
+			for (int i = 0; i < moduleCapteurs.getCapacity(); i++)
+			{
+				Capteur c = moduleCapteurs.getCapteur(i);
+				if (c != null && c.getType() == TypeMorceau.LUMINOSITE)
+				{
+					photocapteurs.add(c);
+				}
+			}
+		}
+		
+		int luminositeMoyenne = 0;
+		for (Capteur capteur : photocapteurs)
+		{
+			luminositeMoyenne += capteur.getLastValeur();
+		}
+		luminositeMoyenne /= photocapteurs.size();
+
+		if(tropBas != luminositeMoyenne < currentProfil.getLuminosite())
+		{
+			pas /= 2; //si on est passé au dessus, on réduit le pas.
+			tropBas = !tropBas;
+		}
+		
+		if(Math.abs(luminositeMoyenne - currentProfil.getLuminosite()) > TOLERANCE_LUMINOSITE)
+		{
+			if(luminositeMoyenne < currentProfil.getLuminosite())
+				commande += pas;
+			else
+				commande -= pas;
+		}
+		
+		//ajustement des bornes
+		if (commande > 255)
+		{
+			commande = 255;
+		}
+		else if (commande < 0)
+		{
+			commande = 0;
+		}
+		
+		HashMap<Prise, Integer> ret = new HashMap<Prise, Integer>();
+		for (int i = 0; i < lampes.size(); i++)
+		{
+			ret.put(lampes.get(i), commande);
+		}
+		
+		return ret;
 		
 //		double[] vals = new double[A.getColumnDimension()];
 //		for (int i = 0; i < vals.length; i++)
