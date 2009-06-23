@@ -56,7 +56,7 @@ public class Bouton
 
 				capture.lockEtalon();
                 System.out.println("tapez !");
-                audio = capture.getTap();
+                audio = capture.getTap(true);
                 Outils.antiContinu(audio);
                 audioDouble1[0] = Outils.normalize(FFT.fftMag(FFT.zeroPadding(audio[0])));
                 if (audio.length == 2)//stereo
@@ -67,7 +67,7 @@ public class Bouton
                 for(int i = 0; i < NB_TAP_CALIBRATION; i++)
                 {
                         System.out.println("encore !");
-                        audio = capture.getTap();
+                        audio = capture.getTap(true);
                         Outils.antiContinu(audio);
                         audioDouble2[0] = Outils.normalize(FFT.fftMag(FFT.zeroPadding(audio[0])));
                         if (audio.length == 2)//stereo
