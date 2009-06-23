@@ -180,6 +180,110 @@ Interface tactile
 Principe physique
 \end_layout
 
+\begin_layout Standard
+La localisation du point de contact avec la surface se fait à partir du
+ son que produit ce contact.
+ Après avoir enregistré le son produit par un contact sur chacun des points
+ à reconnaitre, on compare un nouveau son avec chacun des sons enregistrés,
+ et celui auquel il correspond le plus correspond au point touché.
+\end_layout
+
+\begin_layout Subsubsection
+Capture des données
+\end_layout
+
+\begin_layout Standard
+Une connaissance exhaustive de l'onde propagée dans une surface infinie
+ est possible en entourant la zone à observer de capteurs, ce qui est peu
+ commode.
+ Heureusement, on peut réduire le nombre de micros : les ondes sonnores
+ se comportent comme des paquets de particules, et si les bords de la surface
+ observée sont suffisement chaotiques, toutes les particules seront passées
+ dans une zone donnée au bout d'un temps suffisement long (appellé temps
+ de Heisenberg), eventuellement après un grand nombre de reflexions sur
+ les bords.
+ Si cette zone est la zone d'écoute d'un capteur, alors on en déduis qu'un
+ seul capteur suffit à récuperer toutes les informations autour du point
+ source.
+ C'est à dire que la source est virtuellement entourée de capteurs.
+\end_layout
+
+\begin_layout Standard
+Si le milieu dans lequel on étudie les sons est trop dissipatif, il se peut
+ que des paquets d'onde soient completement absorbés avant d'avoir atteint
+ le capteur, et on perd alors des capteurs virtuels sur un coté de la surface.
+ Pour corriger cela, on peut ajouter des capteurs à d'autres emplacements,
+ pour essayer d'intercepter les paquets dans une autre zone avant qu'ils
+ ne disparaissent.
+ C'est pourquoi nous utilisons deux micros plutôt qu'un dans le projet.
+\end_layout
+
+\begin_layout Subsubsection
+Calcul de la corrélation
+\end_layout
+
+\begin_layout Standard
+Considérons une boite noire dont la réponse impulsionnelle est 
+\begin_inset Formula $h(t)$
+\end_inset
+
+, sa sortie pour une entrée 
+\begin_inset Formula $e(t)$
+\end_inset
+
+ est 
+\begin_inset Formula $h(t)\otimes e(t)$
+\end_inset
+
+ (convolution temporelle).
+ Si on admet qu'un coup sur la surface tactile est assimilable à un dirac,
+ alors on peut définir la réponse impulsionnelle 
+\begin_inset Formula $h_{A}(t)$
+\end_inset
+
+ de la surface entre le point A et le capteur, qui sera le signal reçu par
+ le capteur.
+\end_layout
+
+\begin_layout Standard
+Or un résultat de la théorie du signal nous dit que pour des entrées normalisées
+, le maximum en sortie d'un filtre de réponse impulsionelle 
+\begin_inset Formula $h(t)$
+\end_inset
+
+ est obtenu pour une entrée 
+\begin_inset Formula $h(-t)$
+\end_inset
+
+.
+ Donc lorsque l'on reçoit un nouveau son (
+\begin_inset Formula $s(t)$
+\end_inset
+
+), si on le retourne temporellement (
+\begin_inset Formula $s(-t)$
+\end_inset
+
+) et qu'on le convolue à tous les signaux connus (
+\begin_inset Formula $s(-t)\otimes h_{i}(t)$
+\end_inset
+
+), on obtiendra un maximum pour le point correspondant à ce son.
+ La convolution calculée est la corrélation du son avec le point.
+ Avec cette méthode, on est donc capable de savoir de quel point vient un
+ son, et on peut élimier les bruits parasites (voix, bruits exterieurs...)
+ en imposant une corrélation minimum pour prendre en compte le résultat.
+\end_layout
+
+\begin_layout Standard
+La précision maximale de cette technique est imposée par la limite de la
+ diffraction à 
+\begin_inset Formula $\frac{\lambda}{2}$
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Subsection
 Mise en application
 \end_layout
