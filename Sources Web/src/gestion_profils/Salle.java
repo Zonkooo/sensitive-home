@@ -218,7 +218,7 @@ public class Salle {
 	 * 
 	 * @return
 	 */
-	public Matrix calibrationLampes()
+	private Matrix calibrationLampes()
 	{
 		lampes = new ArrayList<Prise>();
 		photocapteurs = new ArrayList<Capteur>();
@@ -286,9 +286,17 @@ public class Salle {
 		Matrix x = A.solve(b);
 
 		HashMap<Prise, Integer> ret = new HashMap<Prise, Integer>();
-
-		for (int i = 0; i < lampes.size(); i++) {
-			ret.put(lampes.get(i), (int) Math.round(x.get(i, 1)));
+		
+		int command;
+		for (int i = 0; i < lampes.size(); i++) 
+		{
+			command = (int) Math.round(x.get(i, 1));
+			if(command > 255)
+				command = 255;
+			else if(command < 0)
+				command = 0;
+			
+			ret.put(lampes.get(i), command);
 		}
 
 		return ret;
