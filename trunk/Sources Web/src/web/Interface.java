@@ -2,10 +2,14 @@ package web;
 
 import francois.Interfacage;
 import gestion_profils.ModuleCapteurs;
+import gestion_profils.Multiprise;
+import gestion_profils.Prise;
 import gestion_profils.ProfilGlobal;
 import gestion_profils.Salle;
 import gestion_profils.Xml_manipulation;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.Timer;
 
 /**
  * Servlet implementation class Menu
@@ -71,23 +76,33 @@ public class Interface extends HttpServlet {
 		/*
 		 * ceci est un timer
 		 * 
-		 
-		Timer timer = new Timer(1000, new ActionListener()
-        {
-            public void actionPerformed(ActionEvent ae)
-            {
-                //appels à faire
-            }
-        });
+		 */
+		
+		Timer timer = new Timer(2000, new ActionListener()
+		{
+			public void actionPerformed(ActionEvent ae)
+			{
+				//appels à faire
+				for (Salle salle : hashSalle.values()) {
+					//luminosité
+					HashMap<Prise, Integer> hashCommandes = salle.getCommandesLampes();
+					for (Prise p : hashCommandes.keySet()) {
+						p.getOwner().sendMessage(p.getPosition(), hashCommandes.get(p));
+					}
+					//température
+					salle.analyse();
+					
+				}
+				
+			}
+		});
         timer.setRepeats(true);
         timer.start();
-		 */
 	}
-	
+
 	public static Interfacage getInterfacage() {
 		return interfacage;
 	}
-	
 
 	public static HashMap<String, Salle> getHashSalle() {
 		return hashSalle;
