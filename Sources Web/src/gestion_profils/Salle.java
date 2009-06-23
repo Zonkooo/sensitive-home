@@ -1,15 +1,8 @@
 package gestion_profils;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-
-import francois.Lanceur;
-
-import web.Interface;
 
 import Jama.Matrix;
 
@@ -29,18 +22,10 @@ public class Salle {
 		this.modules = new HashMap<String, ModuleCapteurs>();
 		this.availablesProfils = new ArrayList<SousProfil>();
 
+		this.defaultProfil = Maison.getMaison().getCurrentProfil();
+		this.currentProfil = defaultProfil;
 	}
 	
-	public Salle(String nom, ProfilGlobal defaut) {
-		this.nom = nom;
-		this.multiprises = new HashMap<String, Multiprise>();
-		this.modules = new HashMap<String, ModuleCapteurs>();
-		this.availablesProfils = new ArrayList<SousProfil>();
-		
-		this.defaultProfil = defaut;
-		this.currentProfil = defaut;
-	}
-
 	public int temperature_actuelle() {
 		int temp = 0;
 		int nb = 0;
@@ -214,7 +199,6 @@ public class Salle {
 	/**
 	 * calibre les lampes en les allumant à 100% une à une et en observant
 	 * leur effet sur les capteurs.
-	 * /!\ cette methode pete tout sur la configuration des prises
 	 * 
 	 * @return
 	 */
@@ -274,32 +258,40 @@ public class Salle {
 		return A;
 	}
 
-	public HashMap<Prise, Integer> getCommandesLampes() {
-		double[] vals = new double[A.getColumnDimension()];
-		for (int i = 0; i < vals.length; i++) {
-			vals[i] = currentProfil.getLuminosite()
-					- photocapteurs.get(i).getLastValeur();
-		}
-
-		Matrix b = new Matrix(vals, 1);
-
-		Matrix x = A.solve(b);
-
-		HashMap<Prise, Integer> ret = new HashMap<Prise, Integer>();
+	public HashMap<Prise, Integer> getCommandesLampes()
+	{
+		//v2 : sans calibration
+		return null;
 		
-		int command;
-		for (int i = 0; i < lampes.size(); i++) 
-		{
-			command = (int) Math.round(x.get(i, 1));
-			if(command > 255)
-				command = 255;
-			else if(command < 0)
-				command = 0;
-			
-			ret.put(lampes.get(i), command);
-		}
-
-		return ret;
+//		double[] vals = new double[A.getColumnDimension()];
+//		for (int i = 0; i < vals.length; i++)
+//		{
+//			vals[i] = currentProfil.getLuminosite() - photocapteurs.get(i).getLastValeur();
+//		}
+//
+//		Matrix b = new Matrix(vals, 1);
+//
+//		Matrix x = A.solve(b);
+//
+//		HashMap<Prise, Integer> ret = new HashMap<Prise, Integer>();
+//
+//		int command;
+//		for (int i = 0; i < lampes.size(); i++)
+//		{
+//			command = (int) Math.round(x.get(i, 1));
+//			if (command > 255)
+//			{
+//				command = 255;
+//			}
+//			else if (command < 0)
+//			{
+//				command = 0;
+//			}
+//
+//			ret.put(lampes.get(i), command);
+//		}
+//
+//		return ret;
 	}
 
 	/*
