@@ -6,13 +6,11 @@ public class Lanceur {
 
 	static Interfacage interfacage;
 	
-	
 	// n'est plus utilisée
 	public static void main(String[] args) {
 			//on redéfinit la sortie sur un fichier pour logguer ce qui se passe
 		new Interface();
 	}
-
 	
 	
 	
@@ -30,7 +28,7 @@ public class Lanceur {
 //		communication.addMessageToQueue("/REQ:0:001\\");
 //		communication.addMessageToQueue("/REQ:2:255\\");
 //		communication.addMessageToQueue("/001144444\\");
-////		interfacage.addBoutonToProfil((new ProfilGlobal("salon",20,20)), true);
+//		interfacage.addBoutonToProfil((new ProfilGlobal("salon",20,20)), true);
 ////		
 //		communication.start();
 //		interfacage.start();

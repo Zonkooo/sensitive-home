@@ -1,8 +1,13 @@
 package gestion_profils;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import francois.Lanceur;
 
 import web.Interface;
 
@@ -52,7 +57,7 @@ public class Salle {
 			return -1;
 		}
 		temp /= nb;
-		return nb;
+		return temp;
 	}
 
 	public int luminosite_actuelle() {
@@ -71,7 +76,7 @@ public class Salle {
 			return -1;
 		}
 		temp /= nb;
-		return nb;
+		return temp;
 	}
 
 	@Override
@@ -100,9 +105,6 @@ public class Salle {
 	public void addModule(ModuleCapteurs mc) {
 		// System.out.println("ajout du module " + mc + " à la salle " + this);
 		modules.put(mc.getID(), mc);
-		//on envoie un message à la multiprise pour que le module commence à envoyer des données
-		//TODO: pour l'instant on envoie à la première multiprise (vu qu'il n'y en a qu'une!!!:-))
-		Interface.getHashSalle().get("salon").getMultiprises().get("1").getCommunication().addMessageToQueue("/"+mc.getID()+"\\");
 	}
 
 	public void removeMultiprise(Multiprise m) {

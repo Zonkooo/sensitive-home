@@ -1,6 +1,7 @@
 package web;
 
 import francois.Interfacage;
+import gestion_profils.ModuleCapteurs;
 import gestion_profils.ProfilGlobal;
 import gestion_profils.Salle;
 import gestion_profils.Xml_manipulation;
@@ -36,13 +37,25 @@ public class Interface extends HttpServlet {
 	 */
 	public Interface() {
 		super();
-//		hashSalle =	Xml_manipulation.creation_Hashmap("../webapps/web_interface/WEB-INF/classes/francois/config.xml");
-//		hashProfil = Xml_manipulation.creation_Hashmap_profils("../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
+		hashSalle =	Xml_manipulation.creation_Hashmap("../webapps/web_interface/WEB-INF/classes/francois/config.xml");
+		hashProfil = Xml_manipulation.creation_Hashmap_profils("../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
 		
-		hashSalle =	Xml_manipulation.creation_Hashmap("/home/cnous3/coding/PR302/web_interface/src/francois/config.xml");
-		hashProfil = Xml_manipulation.creation_Hashmap_profils("/home/cnous3/coding/PR302/web_interface/src/gestion_profils/profils.xml");
-//		
+//		hashSalle =	Xml_manipulation.creation_Hashmap("/home/cnous3/coding/PR302/web_interface/src/francois/config.xml");
+//		hashProfil = Xml_manipulation.creation_Hashmap_profils("/home/cnous3/coding/PR302/web_interface/src/gestion_profils/profils.xml");
+		
+		
+		// Si des modules sont déjà existants dans le xml,
+		//on envoie un message à la multiprise pour que le module commence à envoyer des données
+		//TODO: pour l'instant on envoie à la première multiprise (vu qu'il n'y en a qu'une!!!:-))
+		for (Salle s : hashSalle.values()) {
+			for (ModuleCapteurs mc : s.getModules().values()) {
+				hashSalle.get("salon").getMultiprises().get("1").getCommunication().addMessageToQueue("/"+mc.getID()+"\\");
+			}
+		}
+		
 
+		
+		
 		interfacage = new Interfacage();
 //		interfacage.addBoutonToProfil((new ProfilGlobal("salon",20,20)));
 		interfacage.start();
