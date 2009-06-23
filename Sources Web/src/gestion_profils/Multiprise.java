@@ -13,7 +13,7 @@ public class Multiprise extends Socle {
 		
 		//TODO: seulement des tests
 //		communication.addMessageToQueue("/REQ:0:001\\");
-//		communication.addMessageToQueue("/REQ:2:255\\");
+		communication.addMessageToQueue("/REQ:2:255\\");
 //		communication.addMessageToQueue("/001111111\\");
 		//TODO: start est retiré pour les tests
 		communication.start();
