@@ -54,6 +54,7 @@ public class Bouton
                 double[][] audioDouble1 = new double[2][];
                 double[][] audioDouble2 = new double[2][];
 
+				capture.lockEtalon();
                 System.out.println("tapez !");
                 audio = capture.getTap();
                 Outils.antiContinu(audio);
@@ -83,7 +84,8 @@ public class Bouton
                                 }
                         }
                 }
-
+				
+				capture.unlockEtalon();
                 this.fft = audioDouble1;
         }
 

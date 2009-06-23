@@ -82,7 +82,20 @@ public class Capture
 		bufferLengthInBytes = (line.getBufferSize() / 8) * format.getFrameSize();
 	}
 
+	//verrou
 	boolean etalonnage = false;
+	boolean running = false;
+	
+	public void lockEtalon()
+	{
+		this.etalonnage = true;
+	}
+	
+	public void unlockEtalon()
+	{
+		this.etalonnage = false;
+	}
+	
 	public int[][] getTap()
 	{
 		return getTap(false);
@@ -96,11 +109,8 @@ public class Capture
 	 */
 	public int[][] getTap(boolean etalon)
 	{
-		if(etalon)
-			this.etalonnage = true; //verouillage pour être tout seul à écouter si on étalonne
-		
 		//attente plus ou moins active de la fin de l'étalonnage
-		while(!etalon || etalonnage == true)
+		while(running || etalon != etalonnage)
 		{			
 			try
 			{
@@ -111,6 +121,7 @@ public class Capture
 				System.out.println("interruption dans getTap");
 			}
 		}
+		running = true;
 		
 		
 		int[][] audioData = null;
@@ -122,7 +133,7 @@ public class Capture
 		}
 		catch (LineUnavailableException ex)
 		{
-			System.out.println(ex.toString());
+			System.out.println("erreur d'ouverture de la ligne : " + ex.toString());
 		}
 
 		line.start(); //silence, ça tourne
@@ -149,9 +160,7 @@ public class Capture
 		// we reached the end of the stream.  stop and close the line.
 		line.stop();
 		line.close();
-		
-		if(etalon)
-			this.etalonnage = false; //libération de la méthode
+		running = false;
 	
 		return audioData;
 	}
