@@ -233,7 +233,7 @@ public class Xml_manipulation {
 			racine.addContent(salle);		
 		}
 		Document document = new Document(racine);
-		affiche(document);
+//		affiche(document);
 		enregistre(fichier, document);
 	}
 

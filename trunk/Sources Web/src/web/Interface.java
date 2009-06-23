@@ -42,11 +42,11 @@ public class Interface extends HttpServlet {
 	 */
 	public Interface() {
 		super();
-		hashSalle =	Xml_manipulation.creation_Hashmap("../webapps/web_interface/WEB-INF/classes/francois/config.xml");
-		hashProfil = Xml_manipulation.creation_Hashmap_profils("../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
+//		hashSalle =	Xml_manipulation.creation_Hashmap("../webapps/web_interface/WEB-INF/classes/francois/config.xml");
+//		hashProfil = Xml_manipulation.creation_Hashmap_profils("../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
 		
-//		hashSalle =	Xml_manipulation.creation_Hashmap("/home/cnous3/coding/PR302/web_interface/src/francois/config.xml");
-//		hashProfil = Xml_manipulation.creation_Hashmap_profils("/home/cnous3/coding/PR302/web_interface/src/gestion_profils/profils.xml");
+		hashSalle =	Xml_manipulation.creation_Hashmap("/home/cnous3/coding/PR302/web_interface/src/francois/config.xml");
+		hashProfil = Xml_manipulation.creation_Hashmap_profils("/home/cnous3/coding/PR302/web_interface/src/gestion_profils/profils.xml");
 		
 		
 		// Si des modules sont déjà existants dans le xml,
@@ -84,11 +84,11 @@ public class Interface extends HttpServlet {
 			{
 				//appels à faire
 				for (Salle salle : hashSalle.values()) {
-					//luminosité
-					HashMap<Prise, Integer> hashCommandes = salle.getCommandesLampes();
-					for (Prise p : hashCommandes.keySet()) {
-						p.getOwner().sendMessage(p.getPosition(), hashCommandes.get(p));
-					}
+//					//luminosité
+//					HashMap<Prise, Integer> hashCommandes = salle.getCommandesLampes();
+//					for (Prise p : hashCommandes.keySet()) {
+//						p.getOwner().sendMessage(p.getPosition(), hashCommandes.get(p));
+//					}
 					//température
 					salle.analyse();
 					
