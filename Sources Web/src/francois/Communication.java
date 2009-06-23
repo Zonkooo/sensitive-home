@@ -149,6 +149,31 @@ public class Communication extends Thread {
 		// on sait de quelle multiprise vient les données puisqu'on est conecté
 		// à celle-ci
 		// on a besoin de savoir de quel capteur viennent les données
+		
+		
+		
+		
+		
+		//TODO: tesssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssst
+		
+		
+		if(message.equalsIgnoreCase("001111111:")){
+			message = "001111111:90:70:90:40";
+		} else if(message.equalsIgnoreCase("001122222:")){
+			message = "001122222:45:24:10:6";
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		message_split = message.split(":");
 		// On regarde si on a affaire à des données ou un accusé de réception
 		if (message_split.length == 5) { // données car message de la forme
@@ -157,7 +182,7 @@ public class Communication extends Thread {
 			// On met à jour la valeur des capteurs dont on vient de recevoir
 			// l'info
 			// On parcourt la liste de salles
-			for (Salle itS : Maison.getMaison().getSalles()) {
+			for (Salle itS : Interface.getHashSalle().values()) {
 				Salle salleCourante = itS;
 				// on parcourt la liste des modules de capteurs de la salle
 				// courante
@@ -165,7 +190,7 @@ public class Communication extends Thread {
 					// est-ce que le module dont on vient de recevoir les
 					// données est celui que l'on parcourt?
 					ModuleCapteurs moduleCourant = itMC;
-					if (moduleCourant.getID() == message_split[0]) {
+					if (moduleCourant.getID().equalsIgnoreCase(message_split[0])) {
 						System.out.println("Le message provient de la salle: "
 								+ salleCourante);
 						for (int i = 0; i < 4; i++) { // on modifie la valeur du
@@ -176,8 +201,9 @@ public class Communication extends Thread {
 							//on modifie le XML pour que l'interface web soit mise à jour
 							Xml_manipulation.etat_actuel(Interface.getHashSalle(),"../webapps/web_interface/etat.xml");
 						}
-					}
+					} else {
 					System.out.println("Le message provient d'une salle non enregistrée");
+					}
 				}
 			}
 		} else if (message_split.length == 3) { // accusé de commande car message de la
@@ -313,6 +339,9 @@ public class Communication extends Thread {
 	 */
 	public void addMessageToQueue(String arg0) {
 		messageAenvoyer.add(arg0);
+	}
+	public ConcurrentLinkedQueue<String> getQueue() {
+		return messageAenvoyer;
 	}
 	
 	/*

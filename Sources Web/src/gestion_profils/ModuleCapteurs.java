@@ -37,7 +37,7 @@ public class ModuleCapteurs extends Socle
 			return -1;
 		}
 		temp/=nb;
-		return nb;
+		return temp;
 	}
 	
 	public int getLumMoy(){
@@ -55,6 +55,6 @@ public class ModuleCapteurs extends Socle
 			return -1;
 		}
 		temp/=nb;
-		return nb;
+		return temp;
 	}
 }

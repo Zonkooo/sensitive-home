@@ -18,7 +18,7 @@ public class Capteur extends Morceau
 	public int data(){
 		switch(type){
 		case TEMPERATURE :
-			return lastValeur*10/49;
+			return lastValeur*49/100;
 		case LUMINOSITE :
 			return lastValeur/10;
 		case AUTRE :
