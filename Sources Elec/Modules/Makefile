@@ -31,7 +31,8 @@ CORE_A = 168core.a
 INSTALL_DIR = /home/noxon/softs/arduino-0016
 
 UPLOAD_RATE = 19200
-AVRDUDE_PROGRAMMER = stk500v1
+#AVRDUDE_PROGRAMMER = stk500v1
+AVRDUDE_PROGRAMMER = stk500
 MCU = atmega168
 F_CPU = 16000000
 OTHER_C_INCLUDES = ../libXBee/XBee.c
@@ -92,7 +93,7 @@ LDFLAGS = -lm
 AVRDUDE_PORT = $(PORT)
 AVRDUDE_CONF = 
 AVRDUDE_WRITE_FLASH = -U flash:w:$(OUTPUT_DIR)/$(TARGET).hex
-AVRDUDE_FLAGS = -V -F -C $(INSTALL_DIR)/hardware/tools/avrdude.conf \
+AVRDUDE_FLAGS = -VVVV -F -C $(INSTALL_DIR)/hardware/tools/avrdude.conf \
 -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \
 -b $(UPLOAD_RATE)
 
