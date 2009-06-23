@@ -309,6 +309,8 @@ public class Salle {
 		if(tropBas != luminositeMoyenne < currentProfil.getLuminosite())
 		{
 			pas /= 2; //si on est passé au dessus, on réduit le pas.
+			if(pas < 2)
+				pas = 2;
 			tropBas = !tropBas;
 		}
 		
@@ -318,6 +320,10 @@ public class Salle {
 				commande += pas;
 			else
 				commande -= pas;
+		}
+		else
+		{//retablissement du pas pour l'ajustement suivant
+			pas = 32;
 		}
 		
 		//ajustement des bornes
