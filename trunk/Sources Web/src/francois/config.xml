@@ -24,4 +24,6 @@
 		<capteur type="V" />
 	</module_capteurs>
 </salle>
+<salle name="vide">
+</salle>
 </maison>
