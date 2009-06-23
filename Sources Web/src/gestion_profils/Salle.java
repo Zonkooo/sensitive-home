@@ -307,38 +307,9 @@ public class Salle {
 	 * la multiprise
 	 */
 	public void analyse() {
-		int tempMoyCapt = 0;
-		int nb_capteurs_de_temperature = 0;
-		// on parcourt l'ensemble des modules de capteurs présents dans la
-		// pièce
-		for (ModuleCapteurs mc : modules.values()) {
-			// on fait la moyenne des valeurs des capteurs de meme type
-			for (int i = 0; i < mc.getCapacity(); i++) { // on parcourt les
-															// capteurs de
-															// chaque module
-				Capteur capteurCourant = mc.getCapteur(i);
-
-				if (capteurCourant != null) {
-					if (capteurCourant.getType() == TypeMorceau.TEMPERATURE) {
-						tempMoyCapt += capteurCourant
-								.getLastValeur();
-						nb_capteurs_de_temperature++;
-					} else if (capteurCourant.getType() == TypeMorceau.LUMINOSITE) {
-						System.out.println("Raphael s'occupe de toi");
-					} else {
-						System.out.println("type de capteur non géré");
-					}
-				}
-			}
-		}
-
-		if (nb_capteurs_de_temperature != 0)
-			tempMoyCapt /= nb_capteurs_de_temperature;
-
 		// tous les capteurs ont été relevés, on s'occupe d'analyser et
 		// d'envoyer les commandes
-		int commande = (tempMoyCapt < currentProfil.getTemperature()) ? 1 : 0;
-
+		int commande = (temperature_actuelle() < currentProfil.getTemperature()) ? 1 : 0;
 		for (Multiprise mp : getMultiprises().values()) {
 			for (int i = 0; i < 5; i++) {
 				if (mp.getPrise(i).getType() == TypeMorceau.TEMPERATURE) {
