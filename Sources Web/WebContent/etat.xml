@@ -2,5 +2,12 @@
 <maison>
   <salle name="salon" temp_actuelle="0" lum_actuelle="2" />
   <salle name="cuisine" temp_actuelle="0" lum_actuelle="2" />
+  <multiprise>
+  	<prise type="s" valeur="1"/>
+  	<prise type="s" valeur="0"/>
+	<prise type="v" valeur="0"/>
+	<prise type="v" valeur="25"/>
+	<prise type="v" valeur="255"/>  	
+  </multiprise>
 </maison>
 
