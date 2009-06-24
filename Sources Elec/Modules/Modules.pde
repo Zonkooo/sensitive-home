@@ -25,10 +25,13 @@
  * 
  */
 #define SERIES_1
+#define JDP
 #include "GenericFcts.h"
 #include "Hibernate.h"
 #include "Modules.h"
+#ifndef JDP
 #include "XbeeCnx.h"
+#endif
 
 // définition des valeurs
 int sensor1Val = 0;
@@ -40,9 +43,12 @@ int sensor4Val = 0;
 int count = 0;
 
 void setup() {
+#ifdef JDP
+	Serial.begin(9600); // permet de communiquer en série via Arduino (à virer pour le produit final)
+#else
 	initXB(9600);
-	//Serial.begin(9600); // permet de communiquer en série via Arduino (à virer pour le produit final)
 	attachInterrupt(1, wakeUp, LOW); // voir commentaire dans sleepMode
+#endif
 	// on précise que les pin sont des pins de lecture:
 	pinMode(sensor1Pin, INPUT);
 	pinMode(sensor2Pin, INPUT);
@@ -50,7 +56,9 @@ void setup() {
 	pinMode(sensor4Pin, INPUT);
 	// on allume la led interne
 	digitalWrite(ledInternal, HIGH);
+#ifndef JDP
 	initMPXBCnx();
+#endif
 	flash(ledInternal, 5, 50);
 }
 
@@ -58,10 +66,7 @@ void loop() {
 	if (isAsleep()) {
 		digitalWrite(ledInternal, LOW);
 		delay(50); // le temps d'éteindre la LED (on sait jamais...)
-#ifdef DEBUG
-		setAsleep(false);
-		return;
-#else
+#ifndef JDP
 		sleepMode();
 #endif
 	}
@@ -75,11 +80,17 @@ void loop() {
 	sensor4Val /= 2;
 
 	if (count > SLEEPTIMER) {
+#ifndef JDP
 		uint8_t tmpData[64];
-		//sprintf_P((char*)tmpData, "%i:%i:%i:%i",sensor1Val,sensor2Val,sensor3Val,sensor4Val);
+		sprintf_P((char*)tmpData, "%i:%i:%i:%i",sensor1Val,sensor2Val,sensor3Val,sensor4Val);
 		setTxData(tmpData);
 		sendXB();
 		delay(100); /* this delay is needed, the sleep function will provoke a Serial error otherwise!! */
+#else
+		char tmpData[64];
+		sprintf_P(tmpData, "%i:%i:%i:%i",sensor1Val,sensor2Val,sensor3Val,sensor4Val);
+		Serial.println(tmpData);
+#endif
 		count = 0;
 		sensor1Val = 0;
 		sensor2Val = 0;
@@ -89,5 +100,4 @@ void loop() {
 	}
 	count++;
 	delay(100); /* one third of a second!*/
-
 }
