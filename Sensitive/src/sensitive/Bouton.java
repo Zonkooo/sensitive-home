@@ -3,6 +3,7 @@ package sensitive;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.JLabel;
 
 /**
  * représente une zone sur la surface tactile
@@ -46,7 +47,7 @@ public class Bouton
 	 *
 	 * @param capture entrée à écouter
 	 */
-	public Bouton(Capture capture)
+	public Bouton(Capture capture, JLabel info)
 	{
 		this.listeners = new ArrayList<ActionListener>();
 
@@ -55,7 +56,8 @@ public class Bouton
 		double[][] audioDouble2 = new double[2][];
 
 		capture.lockEtalon();
-		System.out.println("tapez !");
+		//System.out.println("tapez !");
+		info.setText("tapez la zone");
 		audio = capture.getTap(true);
 		Outils.antiContinu(audio);
 		audioDouble1[0] = Outils.normalize(FFT.fftMag(FFT.zeroPadding(audio[0])));
@@ -66,7 +68,8 @@ public class Bouton
 
 		for (int i = 0; i < NB_TAP_CALIBRATION; i++)
 		{
-			System.out.println("encore !");
+			//System.out.println("encore !");
+			info.setText("tapez encore " + (NB_TAP_CALIBRATION - i) + " fois");
 			audio = capture.getTap(true);
 			Outils.antiContinu(audio);
 			audioDouble2[0] = Outils.normalize(FFT.fftMag(FFT.zeroPadding(audio[0])));
@@ -80,8 +83,17 @@ public class Bouton
 			{
 				for (int k = 0; k < audioDouble1[0].length; k++)
 				{
-					audioDouble1[j][k] = (audioDouble1[j][k] + audioDouble2[j][k]) / 2;
+					audioDouble1[j][k] += audioDouble2[j][k];
 				}
+			}
+		}
+		
+		//divsion pour avoir un vecteur normalisé
+		for (int j = 0; j < audioDouble1.length; j++)
+		{
+			for (int k = 0; k < audioDouble1[0].length; k++)
+			{
+				audioDouble1[j][k] /= NB_TAP_CALIBRATION + 1;
 			}
 		}
 
