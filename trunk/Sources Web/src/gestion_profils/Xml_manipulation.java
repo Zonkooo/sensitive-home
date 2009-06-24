@@ -232,6 +232,7 @@ public class Xml_manipulation {
 			salle.setAttribute(at);		
 			racine.addContent(salle);		
 		}
+		
 		Document document = new Document(racine);
 //		affiche(document);
 		enregistre(fichier, document);
