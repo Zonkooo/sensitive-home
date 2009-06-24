@@ -31,14 +31,15 @@
 \topmargin 2.5cm
 \rightmargin 2.5cm
 \bottommargin 2.5cm
-\secnumdepth 3
-\tocdepth 3
+\secnumdepth 2
+\tocdepth 2
 \paragraph_separation skip
 \defskip medskip
 \quotes_language english
 \papercolumns 1
 \papersides 1
 \paperpagestyle headings
+\bullet 1 0 9 -1
 \tracking_changes false
 \output_changes false
 \author "" 
@@ -169,6 +170,10 @@ travail dans le bureau
 \end_layout
 
 \begin_layout Section
+Profils de configuration
+\end_layout
+
+\begin_layout Section
 Interface Web
 \end_layout
 
@@ -286,6 +291,18 @@ La précision maximale de cette technique est imposée par la limite de la
 
 \begin_layout Subsection
 Mise en application
+\end_layout
+
+\begin_layout Subsubsection
+Capture du son
+\end_layout
+
+\begin_layout Subsubsection
+Calcul de corrélation par FFT
+\end_layout
+
+\begin_layout Subsubsection
+Problèmes rencontrés
 \end_layout
 
 \begin_layout Subsection
