@@ -10,9 +10,9 @@
 #include <inttypes.h>
 #include <stdio.h>
 // définition des pins
-const int ledInternal = 10;
-const int sensor1Pin = 1;
-const int sensor2Pin = 2;
-const int sensor3Pin = 3;
-const int sensor4Pin = 4;
+const int ledInternal = 13;
+const int sensor1Pin = 26;
+const int sensor2Pin = 25;
+const int sensor3Pin = 24;
+const int sensor4Pin = 23;
 #endif /*MODULES_HPP_*/
