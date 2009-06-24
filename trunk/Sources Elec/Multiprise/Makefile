@@ -26,14 +26,16 @@
 
 TARGET = Multiprise
 OUTPUT_DIR = bin
-PORT = /dev/ttyUSB*
+#PORT = /dev/ttyUSB*
+PORT = /dev/parport0
 CORE_A = 128core.a
 INSTALL_DIR = /home/noxon/softs/arduino-0016
 
 UPLOAD_RATE = 19200
-AVRDUDE_PROGRAMMER = stk500v1
+AVRDUDE_PROGRAMMER = dapa
+FUSE_CONF = -U lfuse:w:0x3f:m -U hfuse:w:0xc8:m -U efuse:w:0xfd:m 
 MCU = atmega128
-F_CPU = 16000000
+F_CPU = 8000000
 OTHER_C_INCLUDES = ../libXBee/XBee.c
 OTHER_CXX_INCLUDES =  XPortCnx.cpp XBeeCnx.cpp
 ############################################################################
@@ -94,7 +96,7 @@ AVRDUDE_CONF =
 AVRDUDE_WRITE_FLASH = -U flash:w:$(OUTPUT_DIR)/$(TARGET).hex
 AVRDUDE_FLAGS = -V -F -C $(INSTALL_DIR)/hardware/tools/avrdude.conf \
 -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \
--b $(UPLOAD_RATE)
+-b $(UPLOAD_RATE) $(FUSE_CONF)
 
 # Program settings
 CC = $(AVR_TOOLS_PATH)/avr-gcc
