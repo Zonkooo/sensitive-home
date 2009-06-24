@@ -19,6 +19,7 @@ import web.Interface;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 
@@ -87,7 +88,7 @@ public class Communication extends Thread {
 		port = 31337;
 		messageAenvoyer = new ConcurrentLinkedQueue<String>();
 //		TODO: checkconnection viré pour les tests
-		checkConnection(host, port); 		
+//		checkConnection(host, port); 		
 	}
 
 	public void run(){
@@ -158,9 +159,9 @@ public class Communication extends Thread {
 		
 		
 		if(message.equalsIgnoreCase("001111111:")){
-			message = "001111111:90:70:90:40";
+			message = "001111111:500:500:500:500";
 		} else if(message.equalsIgnoreCase("001122222:")){
-			message = "001122222:45:24:10:6";
+			message = "001122222:50:50:50:50";
 		}
 		
 		
