@@ -50,8 +50,8 @@
 #include "XBeeCnx.h"
 #include "XPortCnx.h"
 // permet d'avoir un code clair mais concis en mémoire (moins d'appels)
-#define sendXPort Serial.print
-#define initXPort Serial.begin
+#define sendXPort Serial1.print
+#define initXPort Serial1.begin
 /* prises définit les pins qui contrôlent les prises. La commande contient le numéro de la prise et non le pin associé.
  * A MODIFIER!!
  * ATTENTION: les deux premières sont des prises NORMALES les autres PWM
@@ -64,6 +64,7 @@ char valueC[3], ackMsg[12], *recvXP, priseC[1], iterator,
 		sensorToXpMsg[xbRecvMsgLength+ADDR_LENGTH+1+1], count=0;
 /* en static pour ne pas avoir de problème de compilation mais je ne sais pas où elle est redéfinie*/
 static char xbSensorModulesAddrTmp[ADDR_LENGTH+1];
+
 void setup() {
 	initXPort(9600);
 	for (iterator=NB_PRISES-1; iterator>=0; iterator--) {
