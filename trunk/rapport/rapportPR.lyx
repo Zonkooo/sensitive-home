@@ -3,6 +3,9 @@
 \begin_document
 \begin_header
 \textclass article
+\begin_preamble
+\floatname{algorithm}{Extrait de code}
+\end_preamble
 \use_default_options false
 \language french
 \inputencoding auto
@@ -295,6 +298,183 @@ Mise en application
 
 \begin_layout Subsubsection
 Capture du son
+\end_layout
+
+\begin_layout Standard
+Pour enregistrer le son, on utilise des capteurs piezoélectriques (MuRata
+ PKS1), ce qui permet d'écouter uniquement les vibrations de la table sur
+ laquelle ils sont plaqués, et pas les bruits exterieurs (un capteur piézoélectr
+ique émet un courant proportionel à la déformation qui lui est appliquée).
+ En réalité, on reçoit quand même les bruits exterieurs, mais avec une amplitude
+ faible par rapport aux bruits propagés dans la table.
+ Pour vraiment isoler les micros du monde exterieur, nous utilisons de la
+ pâte à modeler, ce qui permet en même temps de les fixer sur la table.
+\end_layout
+
+\begin_layout Standard
+Pour écouter l'entrée son, on utilise le code Java présenté dans l'extrait
+ de code 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "alg:son"
+
+\end_inset
+
+.
+ La ligne 1 définit les paramètres de capture.
+ Pour le projet nous avons utilisé du son échantilloné à 44,1 kHz et représenté
+ sur 16 bits, ce qui est la meilleure qualité que l'on peut obtenir sur
+ les cartes son standards.
+ Nous avons besoin de cette qualité pour bien différencier les signaux venant
+ des points de la surface, car les écarts entre les sons réverbérés sont
+ minces (d'autant plus que le son se propage plus rapidement dans les solides).
+ À la ligne 2, on récupère l'entrée micro de l'ordinateur, les lignes 3
+ et 4 ouvrent la ligne en écoute, et à la ligne 5, on récupère dans un tableau
+ d'octets (bytes) les données brutes venant de la carte son.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "alg:son"
+
+\end_inset
+
+Capture du son
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, sampleRate,
+ sampleSizeInBits,
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+channels, (sampleSizeInBits / 8) * channels, sampleRate, true);
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+line = (TargetDataLine) AudioSystem.getLine(new DataLine.Info(TargetDataLine.class,
+ format));
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+line.open(format, line.getBufferSize());
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+line.start();
+\end_layout
+
+\begin_layout LyX-Code
+
+\size footnotesize
+line.read(data, 0, bufferLengthInBytes);
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Sachant que les données sont récupérées octet par octet alors que l'amplitude
+ est échantillonnée sur 16 bits, il faut appliquer un traitement sur les
+ données reçues pour concatener les octets reçus deux à deux (et obtenir
+ ainsi des données sur 16 bits i.e.
+ 2 octets) ce qui est illustré par la figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:schema_concatene"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset External
+	template RasterImage
+	filename schema_concatene.png
+	lyxscale 50
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:schema_concatene"
+
+\end_inset
+
+Concaténation des données
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Par ailleurs, sachant que nous récupérons les données de 2 capteurs en 
+\begin_inset Quotes eld
+\end_inset
+
+stéréo
+\begin_inset Quotes erd
+\end_inset
+
+ sur la même entrée, les données alternent entre l'un et l'autre, et il
+ faut, après avoir appliqué le premier traitement, les dissocier pour les
+ placer dans deux tableaux différents.
+ 
 \end_layout
 
 \begin_layout Subsubsection
