@@ -308,7 +308,7 @@ public class Salle {
 			luminositeMoyenne /= photocapteurs.size();
 		}
 			
-		if(tropBas != luminositeMoyenne < currentProfil.getLuminosite())
+		if(tropBas != luminositeMoyenne < Maison.getMaison().getCurrentProfil().getLuminosite())
 		{
 			pas /= 2; //si on est passé au dessus, on réduit le pas.
 			if(pas < 2)
@@ -316,9 +316,9 @@ public class Salle {
 			tropBas = !tropBas;
 		}
 		
-		if(Math.abs(luminositeMoyenne - currentProfil.getLuminosite()) > TOLERANCE_LUMINOSITE)
+		if(Math.abs(luminositeMoyenne - Maison.getMaison().getCurrentProfil().getLuminosite()) > TOLERANCE_LUMINOSITE)
 		{
-			if(luminositeMoyenne < currentProfil.getLuminosite())
+			if(luminositeMoyenne < Maison.getMaison().getCurrentProfil().getLuminosite())
 				commande += pas;
 			else
 				commande -= pas;
