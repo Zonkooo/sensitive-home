@@ -6,6 +6,7 @@
 #ifndef XBEECNX_H_
 #define XBEECNX_H_
 #include <../libXBee/XBee.h>
+#include "WProgram.h"
 #define MAX_SENSOR_MODULES 5
 #define ADDR_LENGTH 9
 #define SEND_NEW 0

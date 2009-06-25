@@ -56,6 +56,7 @@ void setup() {
 	pinMode(sensor3Pin, INPUT);
 	pinMode(sensor4Pin, INPUT);
 	// on allume la led interne
+	pinMode(ledInternal,OUTPUT);
 	digitalWrite(ledInternal, HIGH);
 #ifndef JDP
 	initMPXBCnx();

@@ -13,7 +13,7 @@ char recvBuffer[12];
 }*/
 void recvXPort() {
 	time = millis();
-	if(Serial1.available() <= 0) return;
+	if(Serial.available() <= 0) return;
 	while (((millis() - time) < recvDelay) && (recvIt < recvMsgLength)) {
 		recvBuffer[recvIt++] = Serial.read();
 	}
