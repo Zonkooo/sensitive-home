@@ -4,8 +4,6 @@ package sensitive;
  * source : http://java.sun.com/products/java-media/sound/samples/JavaSoundDemo/
  */
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.*;
 
 /**
@@ -16,7 +14,7 @@ import javax.sound.sampled.*;
 public class Capture
 {
 
-	private static final int seuil = 400; //amplitude de declenchement du tap
+	private static final int seuil = 2000; //amplitude de declenchement du tap
 	private TargetDataLine line;
 	private AudioFormat format;
 	private int bufferLengthInBytes;
@@ -42,7 +40,7 @@ public class Capture
 	 */
 	public Capture()
 	{
-		this(44100, 16, 2);
+		this(44100, 16, 1);
 	}
 
 	/**
@@ -215,6 +213,11 @@ public class Capture
 		}
 
 		return intData;
+	}
+	
+	public int getNbChannels()
+	{
+		return this.format.getChannels();
 	}
 } // End class Capture
 

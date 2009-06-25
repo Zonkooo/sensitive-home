@@ -52,8 +52,8 @@ public class Bouton
 		this.listeners = new ArrayList<ActionListener>();
 
 		int[][] audio;
-		double[][] audioDouble1 = new double[2][];
-		double[][] audioDouble2 = new double[2][];
+		double[][] audioDouble1 = new double[capture.getNbChannels()][];
+		double[][] audioDouble2 = new double[capture.getNbChannels()][];
 
 		capture.lockEtalon();
 		//System.out.println("tapez !");
@@ -110,7 +110,7 @@ public class Bouton
 	 */
 	public static void traiterSignal(int[][] audio, ArrayList<Bouton> btns)
 	{
-		double[][] audioDouble = new double[2][];
+		double[][] audioDouble = new double[audio.length][];
 
 		//Outils.reverse(audio);
 		Outils.antiContinu(audio);
