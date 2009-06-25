@@ -45,26 +45,33 @@
  * Si le module de capteurs est déjà identifié sur une multiprise, alors il change de multiprise.
  */
 #define SERIES_1
+#define JDP
 #define resetChar(x) x[0]=0;
 #define NB_PRISES 5
 #define NB_PRISES_PWM 3
+#include "HardwareSerial.h"
+#ifdef JDP
+#include "XBouchon.h"
+#else
 #include "XBeeCnx.h"
+#endif
 #include "XPortCnx.h"
 // permet d'avoir un code clair mais concis en mémoire (moins d'appels)
-#define sendXPort Serial.print
-#define initXPort Serial.begin
+#define sendXPort Serial1.print
+#define initXPort Serial1.begin
 /* prises définit les pins qui contrôlent les prises. La commande contient le numéro de la prise et non le pin associé.
  * A MODIFIER!!
  * ATTENTION: les deux premières sont des prises NORMALES les autres PWM
  */
-const unsigned char prises[NB_PRISES] = { 7, 8, 9, 10, 11 };
-unsigned char pwmObj[NB_PRISES_PWM]= { 0, 0, 0 };
+const unsigned char prises[NB_PRISES] = { 51, 50, 14, 15, 16 };
+unsigned char pwmObj[NB_PRISES_PWM]= { 255, 0, 0 };
 unsigned char pwmAct[NB_PRISES_PWM]= { 0, 0, 0 };
 unsigned char valueI, priseI;
 char valueC[3], ackMsg[12], *recvXP, priseC[1], iterator,
 		sensorToXpMsg[xbRecvMsgLength+ADDR_LENGTH+1+1], count=0;
 /* en static pour ne pas avoir de problème de compilation mais je ne sais pas où elle est redéfinie*/
 static char xbSensorModulesAddrTmp[ADDR_LENGTH+1];
+
 void setup() {
 	initXPort(9600);
 	for (iterator=NB_PRISES-1; iterator>=0; iterator--) {
@@ -83,12 +90,10 @@ void loop() {
 	if (++count == 40) {
 		// toutes les deux secondes on envoie des requêtes de données aux modules de capteurs
 		count=0;
-		// implémentation bouchon: envoi de données fausses de capteurs
 		for (iterator=getRegisteredNumber()-1; iterator >= 0; iterator --) {
 			sendXB(SEND_REQ, iterator);
 			sprintf(sensorToXpMsg, "/%s:%s\\", getRegisteredAddr(iterator),
 					readXB());
-			//sprintf(sensorToXpMsg, "/%s\\",readXB());
 			sendXPort(sensorToXpMsg);
 			resetChar(sensorToXpMsg);
 			sendXB(SEND_ACK, iterator);
@@ -135,11 +140,21 @@ void loop() {
 	// on ne met pas de delai parce qu'il y en a un avec la lecture XPort (voir XPortCnx.h).
 	delay(50);
 }
+#include <avr/wdt.h> 
+uint8_t mcusr_mirror;
+void get_mcusr(void) __attribute__((naked)) __attribute__((section(".init3")));
+
 int main(void) {
-	init();
+	get_mcusr(); // Disable the watchdog timer
 	setup();
 	for (;;) {
 		loop();
 	}
 	return 0;
+}
+
+void get_mcusr(void) {
+      mcusr_mirror = MCUSR;
+      MCUSR = 0;
+      wdt_disable(); 
 }

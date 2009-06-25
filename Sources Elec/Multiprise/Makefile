@@ -35,22 +35,24 @@ UPLOAD_RATE = 19200
 AVRDUDE_PROGRAMMER = dapa
 FUSE_CONF = -U lfuse:w:0x3f:m -U hfuse:w:0xc8:m -U efuse:w:0xfd:m 
 MCU = atmega128
-F_CPU = 8000000
+F_CPU = 16000000
 OTHER_C_INCLUDES = ../libXBee/XBee.c
-OTHER_CXX_INCLUDES =  XPortCnx.cpp XBeeCnx.cpp
+OTHER_CXX_INCLUDES =  XPortCnx.cpp XBeeCnx.cpp XBouchon.c
 ############################################################################
 # Below here nothing should be changed...
 
-ARDUINO = $(INSTALL_DIR)/hardware/cores/arduino
+#ARDUINO = $(INSTALL_DIR)/hardware/cores/arduino
+ARDUINO = ../lib128
 AVR_TOOLS_PATH = /opt/cross/bin
-SRC =  $(ARDUINO)/pins_arduino.c $(ARDUINO)/wiring.c \
-$(ARDUINO)/wiring_analog.c $(ARDUINO)/wiring_digital.c \
-$(ARDUINO)/wiring_pulse.c $(ARDUINO)/wiring_serial.c \
-$(ARDUINO)/wiring_shift.c $(ARDUINO)/WInterrupts.c \
-$(OTHER_C_INCLUDES)
-
-CXXSRC = $(ARDUINO)/HardwareSerial.cpp $(ARDUINO)/WMath.cpp \
-$(ARDUINO)/Print.cpp $(OTHER_CXX_INCLUDES)
+#SRC =  $(ARDUINO)/pins_arduino.c $(ARDUINO)/wiring.c \
+#$(ARDUINO)/wiring_analog.c $(ARDUINO)/wiring_digital.c \
+#$(ARDUINO)/wiring_pulse.c $(ARDUINO)/wiring_serial.c \
+#$(ARDUINO)/wiring_shift.c $(ARDUINO)/WInterrupts.c \
+SRC = $(OTHER_C_INCLUDES)
+ 
+CXXSRC = $(ARDUINO)/HardwareSerial.cpp $(ARDUINO)/uart.cpp $(ARDUINO)/buffer.cpp $(OTHER_CXX_INCLUDES)
+# $(ARDUINO)/WMath.cpp 
+#$(ARDUINO)/Print.cpp $(OTHER_CXX_INCLUDES)
 
 FORMAT = ihex
 
@@ -236,7 +238,8 @@ $(OUTPUT_DIR)/$(CORE_A): $(OBJ)
 # Target: clean project.
 clean:
 	$(REMOVE) $(OUTPUT_DIR)/$(TARGET).hex $(OUTPUT_DIR)/$(TARGET).eep $(OUTPUT_DIR)/$(TARGET).cof $(OUTPUT_DIR)/$(TARGET).elf \
-	$(OUTPUT_DIR)/$(TARGET).map $(OUTPUT_DIR)/$(TARGET).sym $(OUTPUT_DIR)/$(TARGET).lss $(OUTPUT_DIR)/$(CORE_A) $(TARGET).cpp
+	$(OUTPUT_DIR)/$(TARGET).map $(OUTPUT_DIR)/$(TARGET).sym $(OUTPUT_DIR)/$(TARGET).lss $(OUTPUT_DIR)/$(CORE_A) $(TARGET).cpp \
+	$(ARDUINO)/*.o $(OUTPUT_DIR)/$(CORE_A) 
 #	$(OBJ) $(LST) $(SRC:.c=.s) $(SRC:.c=.d) $(CXXSRC:.cpp=.s) $(CXXSRC:.cpp=.d)
 
 .PHONY:	all build elf hex eep lss sym program coff extcoff clean applet_files sizebefore sizeafter

@@ -44,10 +44,16 @@
  * Si le module de capteurs est déjà identifié sur une multiprise, alors il change de multiprise.
  */
 #define SERIES_1
+#define JDP
 #define resetChar(x) x[0]=0;
 #define NB_PRISES 5
 #define NB_PRISES_PWM 3
+#include "HardwareSerial.h"
+#ifdef JDP
+#include "XBouchon.h"
+#else
 #include "XBeeCnx.h"
+#endif
 #include "XPortCnx.h"
 // permet d'avoir un code clair mais concis en mémoire (moins d'appels)
 #define sendXPort Serial1.print
@@ -56,8 +62,8 @@
  * A MODIFIER!!
  * ATTENTION: les deux premières sont des prises NORMALES les autres PWM
  */
-const unsigned char prises[NB_PRISES] = { 7, 8, 9, 10, 11 };
-unsigned char pwmObj[NB_PRISES_PWM]= { 0, 0, 0 };
+const unsigned char prises[NB_PRISES] = { 51, 50, 14, 15, 16 };
+unsigned char pwmObj[NB_PRISES_PWM]= { 255, 0, 0 };
 unsigned char pwmAct[NB_PRISES_PWM]= { 0, 0, 0 };
 unsigned char valueI, priseI;
 char valueC[3], ackMsg[12], *recvXP, priseC[1], iterator,
@@ -83,12 +89,10 @@ void loop() {
 	if (++count == 40) {
 		// toutes les deux secondes on envoie des requêtes de données aux modules de capteurs
 		count=0;
-		// implémentation bouchon: envoi de données fausses de capteurs
 		for (iterator=getRegisteredNumber()-1; iterator >= 0; iterator --) {
 			sendXB(SEND_REQ, iterator);
 			sprintf(sensorToXpMsg, "/%s:%s\\", getRegisteredAddr(iterator),
 					readXB());
-			//sprintf(sensorToXpMsg, "/%s\\",readXB());
 			sendXPort(sensorToXpMsg);
 			resetChar(sensorToXpMsg);
 			sendXB(SEND_ACK, iterator);

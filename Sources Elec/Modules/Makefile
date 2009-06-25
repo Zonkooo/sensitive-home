@@ -34,7 +34,8 @@ INSTALL_DIR = /home/noxon/softs/arduino-0016
 UPLOAD_RATE = 19200
 #AVRDUDE_PROGRAMMER = stk500v1
 AVRDUDE_PROGRAMMER = dapa
-FUSE_CONF = -U lfuse:w:0x3f:m -U hfuse:w:0xcc:m
+#FUSE_CONF = -U lfuse:w:0x3f:m -U hfuse:w:0xcf:m -U efuse:w:0xf9:m
+FUSE_CONF =
 MCU = atmega168
 F_CPU = 16000000
 OTHER_C_INCLUDES = ../libXBee/XBee.c
@@ -97,7 +98,7 @@ AVRDUDE_CONF =
 AVRDUDE_WRITE_FLASH = -U flash:w:$(OUTPUT_DIR)/$(TARGET).hex
 AVRDUDE_FLAGS = -C $(INSTALL_DIR)/hardware/tools/avrdude.conf \
 -p $(MCU) -P $(AVRDUDE_PORT) -c $(AVRDUDE_PROGRAMMER) \
--b $(UPLOAD_RATE) $(FUSE_CONF) 
+-b $(UPLOAD_RATE) $(FUSE_CONF)
 
 # Program settings
 CC = $(AVR_TOOLS_PATH)/avr-gcc
