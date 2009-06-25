@@ -232,9 +232,26 @@ public class Xml_manipulation {
 			salle.setAttribute(at);		
 			racine.addContent(salle);		
 		}
-		
+		Element multiprise = new Element("multiprise");
+		racine.addContent(multiprise);
+		for(int i=0;i<5;i++) {
+		Element prise = new Element("prise");
+		if(hashSalle.get("salon").getMultiprises().get("1").getPrise(i).getType()==TypeMorceau.TEMPERATURE) {
+			at = new Attribute("type","s");
+			prise.setAttribute(at);
+			at = new Attribute("valeur",((Integer)hashSalle.get("salon").getMultiprises().get("1").getPrise(i).getValeur()).toString());
+			prise.setAttribute(at);
+		} else {
+			at = new Attribute("type","v");
+			prise.setAttribute(at);
+			at = new Attribute("valeur",((Integer)(hashSalle.get("salon").getMultiprises().get("1").getPrise(i).getValeur()*100/255)).toString());
+			prise.setAttribute(at);
+		}
+		multiprise.addContent(prise);
+		}
+
 		Document document = new Document(racine);
-//		affiche(document);
+		affiche(document);
 		enregistre(fichier, document);
 	}
 

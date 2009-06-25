@@ -57,7 +57,9 @@ public class Maison
 		this.currentProfil = currentProfil;
 		for (Salle salle : salles)
 		{
+			System.out.println("avant "+salle+" "+salle.getCurrentProfil());
 			salle.setProfilGlobal(currentProfil);
+			System.out.println("apres "+salle+" "+salle.getCurrentProfil());
 		}
 	}
 

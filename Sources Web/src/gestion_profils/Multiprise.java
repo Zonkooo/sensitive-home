@@ -55,5 +55,6 @@ public class Multiprise extends Socle {
 		if(valeur<10) decalage="00";
 		else if(valeur<100) decalage="0";
 		communication.addMessageToQueue("/REQ:"+prisePosition+":"+decalage+valeur+"\\");
+		getPrise(prisePosition).addValeur(valeur);
 	}
 }

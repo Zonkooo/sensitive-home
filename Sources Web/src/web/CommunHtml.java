@@ -129,6 +129,8 @@ public class CommunHtml {
 			break;
 		case 3:
 			if (request.getParameter("profil") != null) {
+				System.out.println("surper"+Interface.getHashProfil().get(
+						request.getParameter("profil")));
 				Maison.getMaison().setCurrentProfil(
 						Interface.getHashProfil().get(
 								request.getParameter("profil")));
