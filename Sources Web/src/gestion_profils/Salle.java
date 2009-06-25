@@ -260,7 +260,7 @@ public class Salle {
 		return A;
 	}
 
-	int pas = 32;
+	int pas = 64;
 	int commande = 0;
 	boolean tropBas = true;
 	
@@ -345,36 +345,6 @@ public class Salle {
 		}
 		
 		return ret;
-		
-//		double[] vals = new double[A.getColumnDimension()];
-//		for (int i = 0; i < vals.length; i++)
-//		{
-//			vals[i] = currentProfil.getLuminosite() - photocapteurs.get(i).getLastValeur();
-//		}
-//
-//		Matrix b = new Matrix(vals, 1);
-//
-//		Matrix x = A.solve(b);
-//
-//		HashMap<Prise, Integer> ret = new HashMap<Prise, Integer>();
-//
-//		int command;
-//		for (int i = 0; i < lampes.size(); i++)
-//		{
-//			command = (int) Math.round(x.get(i, 1));
-//			if (command > 255)
-//			{
-//				command = 255;
-//			}
-//			else if (command < 0)
-//			{
-//				command = 0;
-//			}
-//
-//			ret.put(lampes.get(i), command);
-//		}
-//
-//		return ret;
 	}
 
 	/*
@@ -391,14 +361,14 @@ public class Salle {
 				mc.getCapteur(i).setLastValeur(200);
 			}
 		}
-		int commande=0;
+		int comm=0;
 		if((temperature_actuelle()/10) < Maison.getMaison().getCurrentProfil().getTemperature()){
-			commande=1;
+			comm=1;
 		}
 		for (Multiprise mp : getMultiprises().values()) {
 			for (int i = 0; i < 5; i++) {
 				if (mp.getPrise(i).getType() == TypeMorceau.TEMPERATURE) {
-					mp.sendMessage(i,commande);
+					mp.sendMessage(i,comm);
 				}
 			}
 		}
