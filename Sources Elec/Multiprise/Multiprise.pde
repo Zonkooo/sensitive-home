@@ -43,6 +43,8 @@
  * 		Exemple: /BIENVENUE\
  * Si le module de capteurs est déjà identifié sur une multiprise, alors il change de multiprise.
  */
+#include <stdio.h>
+//#include <inttypes.h>
 #define SERIES_1
 #define JDP
 #define resetChar(x) x[0]=0;
@@ -56,13 +58,25 @@
 #endif
 #include "XPortCnx.h"
 // permet d'avoir un code clair mais concis en mémoire (moins d'appels)
-#define sendXPort Serial1.print
-#define initXPort Serial1.begin
+#define sendXPort Serial.print
+#define initXPort Serial.begin
+// définition des pins
+const int ledInternal = 13;
+const int sensor1Pin = 0;
+const int sensor2Pin = 1;
+const int sensor3Pin = 2;
+const int sensor4Pin = 3;
+// définition des valeurs
+int sensor1Val = 0;
+int sensor2Val = 0;
+int sensor3Val = 0;
+int sensor4Val = 0;
 /* prises définit les pins qui contrôlent les prises. La commande contient le numéro de la prise et non le pin associé.
  * A MODIFIER!!
  * ATTENTION: les deux premières sont des prises NORMALES les autres PWM
  */
-const unsigned char prises[NB_PRISES] = { 51, 50, 14, 15, 16 };
+
+const unsigned char prises[NB_PRISES] = { 7, 8, 9, 10, 11 };
 unsigned char pwmObj[NB_PRISES_PWM]= { 255, 0, 0 };
 unsigned char pwmAct[NB_PRISES_PWM]= { 0, 0, 0 };
 unsigned char valueI, priseI;
@@ -85,18 +99,29 @@ void loop() {
 	 * Si on est connu alors la multiprise nous envoye la liste des modules de capteurs
 	 * que l'on contrôle 
 	 */
-	// XBeeCnx
+	// Valeurs
+	sensor1Val += analogRead(sensor1Pin);
+	sensor1Val /= 2;
+	sensor2Val += analogRead(sensor2Pin);
+	sensor2Val /= 2;
+	sensor3Val += analogRead(sensor3Pin);
+	sensor3Val /= 2;
+	sensor4Val += analogRead(sensor4Pin);
+	sensor4Val /= 2;
 	if (++count == 40) {
 		// toutes les deux secondes on envoie des requêtes de données aux modules de capteurs
 		count=0;
-		for (iterator=getRegisteredNumber()-1; iterator >= 0; iterator --) {
-			sendXB(SEND_REQ, iterator);
-			sprintf(sensorToXpMsg, "/%s:%s\\", getRegisteredAddr(iterator),
-					readXB());
-			sendXPort(sensorToXpMsg);
-			resetChar(sensorToXpMsg);
-			sendXB(SEND_ACK, iterator);
-		}
+		sprintf(sensorToXpMsg, "/4008EBFD:%i:%i:%i:%i\\",sensor1Val,sensor2Val,sensor3Val,sensor4Val);
+		sendXPort(sensorToXpMsg);
+		/*
+		 for (iterator=getRegisteredNumber()-1; iterator >= 0; iterator --) {
+		 sendXB(SEND_REQ, iterator);
+		 sprintf(sensorToXpMsg, "/%s:%s\\", getRegisteredAddr(iterator),
+		 readXB());
+		 sendXPort(sensorToXpMsg);
+		 resetChar(sensorToXpMsg);
+		 sendXB(SEND_ACK, iterator);
+		 }*/
 	}
 	for (iterator=NB_PRISES_PWM-1; iterator >= 0; iterator--) {
 		if (pwmObj[(int)iterator] == pwmAct[(int)iterator])
@@ -125,12 +150,12 @@ void loop() {
 				pwmObj[priseI-2]=valueI;
 			}
 		} else { // c'est un message demandant de gérer un module de capteurs
-			if (getRegisteredNumber()< MAX_SENSOR_MODULES) {
+			//if (getRegisteredNumber()< MAX_SENSOR_MODULES) {
 				strncpy(xbSensorModulesAddrTmp, &recvXP[1], 9);
 				xbSensorModulesAddrTmp[9]=0;
 				addObj(xbSensorModulesAddrTmp);
 				resetChar(xbSensorModulesAddrTmp);
-			}
+			//}
 		}
 		sprintf(ackMsg, beginAckMsg, &recvXP[5]);
 		sendXPort(ackMsg);

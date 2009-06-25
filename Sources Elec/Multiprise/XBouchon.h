@@ -22,9 +22,9 @@ const int xbSentMsgLength = 5;
  */
 const int xbRecvMsgLength = 17;
 
-void addObj(char* xbAddrStr);
-char getRegisteredNumber();
 char *getRegisteredAddr(char who);
 char sendXB(char what, char who);
-uint8_t *readXB();
+//int *readXB();
+void addObj(char* xbAddrStr);
+char getRegisteredNumber();
 #endif /*XBOUCHON_H_*/
