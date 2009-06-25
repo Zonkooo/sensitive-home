@@ -7,6 +7,8 @@
  */
 #ifndef XPORTCNX_H_
 #define XPORTCNX_H_
+#include "WProgram.h"
+#include "HardwareSerial.h"
 /* recvMsgLength contient le nombre maximum d'octets que l'on lit du XPort
  */
 const int recvMsgLength = 11;

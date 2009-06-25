@@ -1,5 +1,5 @@
 #include "XPortCnx.h"
-#include "WProgram.h"
+
 /* recvIt sert à se positionner dans la chaine reçue depuis le XPort
  */
 int recvIt = 0;
@@ -13,7 +13,7 @@ char recvBuffer[12];
 }*/
 void recvXPort() {
 	time = millis();
-	if(Serial.available() <= 0) return;
+	if(Serial1.available() <= 0) return;
 	while (((millis() - time) < recvDelay) && (recvIt < recvMsgLength)) {
 		recvBuffer[recvIt++] = Serial.read();
 	}
