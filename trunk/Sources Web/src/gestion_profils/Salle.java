@@ -272,26 +272,27 @@ public class Salle {
 		photocapteurs = new ArrayList<Capteur>();
 
 		//extraction des prises correspondant à des lampes
-		for (Multiprise multiprise : multiprises.values())
+		for (Multiprise multiprise : getMultiprises().values())
 		{
 			for (int i = 0; i < multiprise.getCapacity(); i++)
 			{
 				Prise p = multiprise.getPrise(i);
 				if (p != null && p.getType() == TypeMorceau.LUMINOSITE)
 				{
-					p.setEtat(Etat.OFF);
-					if(p.getEtat() == Etat.AUTO)
-						lampes.add(p);
+					lampes.add(p);
 				}
 			}
 		}
 
 		//extraction des capteurs de luminosité
-		for (ModuleCapteurs moduleCapteurs : modules.values())
+		for (ModuleCapteurs moduleCapteurs : getModules().values())
 		{
 			for (int i = 0; i < moduleCapteurs.getCapacity(); i++)
 			{
+				System.out.println("mc: "+moduleCapteurs);
+				
 				Capteur c = moduleCapteurs.getCapteur(i);
+				System.out.println("capteur: "+c);
 				if (c != null && c.getType() == TypeMorceau.LUMINOSITE)
 				{
 					photocapteurs.add(c);
