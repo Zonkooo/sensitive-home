@@ -42,11 +42,11 @@ public class Interface extends HttpServlet {
 	 */
 	public Interface() {
 		super();
-		hashSalle =	Xml_manipulation.creation_Hashmap("../webapps/web_interface/WEB-INF/classes/francois/config.xml");
-		hashProfil = Xml_manipulation.creation_Hashmap_profils("../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
+//		hashSalle =	Xml_manipulation.creation_Hashmap("../webapps/web_interface/WEB-INF/classes/francois/config.xml");
+//		hashProfil = Xml_manipulation.creation_Hashmap_profils("../webapps/web_interface/WEB-INF/classes/gestion_profils/profils.xml");
 		
-//		hashSalle =	Xml_manipulation.creation_Hashmap("/home/cnous3/coding/PR302/web_interface/src/francois/config.xml");
-//		hashProfil = Xml_manipulation.creation_Hashmap_profils("/home/cnous3/coding/PR302/web_interface/src/gestion_profils/profils.xml");
+		hashSalle =	Xml_manipulation.creation_Hashmap("/home/cnous3/coding/PR302/web_interface/src/francois/config.xml");
+		hashProfil = Xml_manipulation.creation_Hashmap_profils("/home/cnous3/coding/PR302/web_interface/src/gestion_profils/profils.xml");
 		
 		
 		// Si des modules sont déjà existants dans le xml,
@@ -65,12 +65,12 @@ public class Interface extends HttpServlet {
 		interfacage.start();
 
 		//on redéfinit la sortie sur un fichier pour logguer ce qui se passe
-		try {
-			System.setOut(new PrintStream(new FileOutputStream("/home/cnous3/Desktop/out.log")));
-			System.setErr(new PrintStream(new FileOutputStream("/home/cnous3/Desktop/err.log")));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			System.setOut(new PrintStream(new FileOutputStream("/home/cnous3/Desktop/out.log")));
+//			System.setErr(new PrintStream(new FileOutputStream("/home/cnous3/Desktop/err.log")));
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
 
 		/*
 		 * ceci est un timer
@@ -81,13 +81,13 @@ public class Interface extends HttpServlet {
 		{
 			public void actionPerformed(ActionEvent ae)
 			{
+				//luminosité
+				HashMap<Prise, Integer> hashCommandes = hashSalle.get("salon").getCommandesLampes();
+				for (Prise p : hashCommandes.keySet()) {
+					p.getOwner().sendMessage(p.getPosition(), hashCommandes.get(p));
+				}
 				//appels à faire
-				for (Salle salle : hashSalle.values()) {
-					//luminosité
-					HashMap<Prise, Integer> hashCommandes = salle.getCommandesLampes();
-					for (Prise p : hashCommandes.keySet()) {
-						p.getOwner().sendMessage(p.getPosition(), hashCommandes.get(p));
-					}
+				for (Salle salle : hashSalle.values()) {	
 					//température
 					salle.analyse();
 					//on modifie le XML pour que l'interface web soit mise à jour
