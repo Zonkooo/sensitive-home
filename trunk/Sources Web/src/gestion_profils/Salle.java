@@ -304,8 +304,10 @@ public class Salle {
 		{
 			luminositeMoyenne += capteur.getLastValeur();
 		}
-		luminositeMoyenne /= photocapteurs.size();
-
+		if(photocapteurs.size()!=0) {
+			luminositeMoyenne /= photocapteurs.size();
+		}
+			
 		if(tropBas != luminositeMoyenne < currentProfil.getLuminosite())
 		{
 			pas /= 2; //si on est passé au dessus, on réduit le pas.
@@ -382,7 +384,17 @@ public class Salle {
 	public void analyse() {
 		// tous les capteurs ont été relevés, on s'occupe d'analyser et
 		// d'envoyer les commandes
-		int commande = (temperature_actuelle() < currentProfil.getTemperature()) ? 1 : 0;
+		
+		//TODO:           Seulement pour les tests !!!
+		for (ModuleCapteurs mc : getModules().values()) {
+			for(int i=0;i<4;i++){
+				mc.getCapteur(i).setLastValeur(200);
+			}
+		}
+		int commande=0;
+		if((temperature_actuelle()/10) < Maison.getMaison().getCurrentProfil().getTemperature()){
+			commande=1;
+		}
 		for (Multiprise mp : getMultiprises().values()) {
 			for (int i = 0; i < 5; i++) {
 				if (mp.getPrise(i).getType() == TypeMorceau.TEMPERATURE) {

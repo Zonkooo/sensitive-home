@@ -199,11 +199,7 @@ public class Communication extends Thread {
 														// message reçu
 							moduleCourant.getCapteur(i).setLastValeur(
 									Integer.parseInt(message_split[i + 1]));
-							//on modifie le XML pour que l'interface web soit mise à jour
-							Xml_manipulation.etat_actuel(Interface.getHashSalle(),"../webapps/web_interface/etat.xml");
 						}
-					} else {
-					System.out.println("Le message provient d'une salle non enregistrée");
 					}
 				}
 			}

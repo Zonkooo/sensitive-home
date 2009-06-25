@@ -62,7 +62,6 @@ public class Interface extends HttpServlet {
 		
 		
 		interfacage = new Interfacage();
-//		interfacage.addBoutonToProfil((new ProfilGlobal("salon",20,20)));
 		interfacage.start();
 
 		//on redéfinit la sortie sur un fichier pour logguer ce qui se passe
@@ -84,16 +83,16 @@ public class Interface extends HttpServlet {
 			{
 				//appels à faire
 				for (Salle salle : hashSalle.values()) {
-//					//luminosité
-//					HashMap<Prise, Integer> hashCommandes = salle.getCommandesLampes();
-//					for (Prise p : hashCommandes.keySet()) {
-//						p.getOwner().sendMessage(p.getPosition(), hashCommandes.get(p));
-//					}
+					//luminosité
+					HashMap<Prise, Integer> hashCommandes = salle.getCommandesLampes();
+					for (Prise p : hashCommandes.keySet()) {
+						p.getOwner().sendMessage(p.getPosition(), hashCommandes.get(p));
+					}
 					//température
 					salle.analyse();
-					
+					//on modifie le XML pour que l'interface web soit mise à jour
+					Xml_manipulation.etat_actuel(Interface.getHashSalle(),"../webapps/web_interface/etat.xml");
 				}
-				
 			}
 		});
         timer.setRepeats(true);

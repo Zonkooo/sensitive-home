@@ -3,6 +3,7 @@ package gestion_profils;
 public class Prise extends Morceau
 {
 	private Etat etat;
+	private int valeur;
 
 	public Prise(Etat etat, TypeMorceau type, Socle owner, int position)
 	{
@@ -31,5 +32,13 @@ public class Prise extends Morceau
 	public Etat getEtat()
 	{
 		return this.etat;
+	}
+	
+	public int getValeur() {
+		return valeur;
+	}
+	
+	public void addValeur(int v) {
+		valeur = v;
 	}
 }
