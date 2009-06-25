@@ -255,7 +255,7 @@ Considérons une boite noire dont la réponse impulsionnelle est
 
 \begin_layout Standard
 Or un résultat de la théorie du signal nous dit que pour des entrées normalisées
-, le maximum en sortie d'un filtre de réponse impulsionelle 
+, le maximum en sortie d'un filtre de réponse impulsionnelle 
 \begin_inset Formula $h(t)$
 \end_inset
 
@@ -276,11 +276,34 @@ Or un résultat de la théorie du signal nous dit que pour des entrées normalis
 \begin_inset Formula $s(-t)\otimes h_{i}(t)$
 \end_inset
 
-), on obtiendra un maximum pour le point correspondant à ce son.
- La convolution calculée est la corrélation du son avec le point.
+), le signal obtenu présentera un pic maximum pour le point correspondant
+ à ce son.
+ L'amplitude du pic principal de la convolution calculée est la corrélation
+ du son avec le point.
  Avec cette méthode, on est donc capable de savoir de quel point vient un
  son, et on peut élimier les bruits parasites (voix, bruits exterieurs...)
  en imposant une corrélation minimum pour prendre en compte le résultat.
+\end_layout
+
+\begin_layout Paragraph
+Explication physique :
+\end_layout
+
+\begin_layout Standard
+Convoluer le signal retourné temporellement par 
+\begin_inset Formula $h_{i}(t)$
+\end_inset
+
+, qui est la réponse imulsionnelle de la table, équivaut à renvoyer virtuellemen
+t à travers la table l'onde vers sa source : on fait défiler le temps à
+ l'envers, et on observe le signal que l'on a émit avec le coup au point
+ 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ Le pic principal sera d'autant plus grand que l'on est virtuellement près
+ de la source, et on aura évidement un maximum sur la source elle même.
 \end_layout
 
 \begin_layout Standard
@@ -312,7 +335,20 @@ ique émet un courant proportionel à la déformation qui lui est appliquée).
 \end_layout
 
 \begin_layout Standard
-Pour écouter l'entrée son, on utilise le code Java présenté dans l'extrait
+Pour écouter l'entrée son, nous nous sommes basés sur le code d'exemple
+ fourni par Sun pour les application audio an Java
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Code source de l'application de démonstration de Sun accessible à l'adresse
+ suivante : http://java.sun.com/products/java-media/sound/samples/JavaSoundDemo/
+\end_layout
+
+\end_inset
+
+.
+ Le code Java utilisé pour la capture audio est présenté dans l'extrait
  de code 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -320,7 +356,7 @@ reference "alg:son"
 
 \end_inset
 
-.
+, sans tenir compte des exceptions et des tests de compatibilité.
  La ligne 1 définit les paramètres de capture.
  Pour le projet nous avons utilisé du son échantilloné à 44,1 kHz et représenté
  sur 16 bits, ce qui est la meilleure qualité que l'on peut obtenir sur
@@ -401,10 +437,14 @@ line.read(data, 0, bufferLengthInBytes);
 \end_layout
 
 \begin_layout Standard
-Sachant que les données sont récupérées octet par octet alors que l'amplitude
- est échantillonnée sur 16 bits, il faut appliquer un traitement sur les
- données reçues pour concatener les octets reçus deux à deux (et obtenir
- ainsi des données sur 16 bits i.e.
+Après avoir reçu les données de la carte son avec 
+\family typewriter
+line.read
+\family default
+, il reste quelques traitements à appliquer sur l'échantillon : Sachant
+ que les données sont récupérées octet par octet alors que l'amplitude est
+ échantillonnée sur 16 bits, il faut concatener les octets reçus deux à
+ deux (et obtenir ainsi des données sur 16 bits i.e.
  2 octets) ce qui est illustré par la figure 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -413,6 +453,27 @@ reference "fig:schema_concatene"
 \end_inset
 
 .
+ Par ailleurs, sachant que nous récupérons les données de 2 capteurs en
+ 
+\begin_inset Quotes eld
+\end_inset
+
+stéréo
+\begin_inset Quotes erd
+\end_inset
+
+ sur la même entrée, les données alternent entre l'un et l'autre, et il
+ faut, après avoir appliqué le premier traitement, les dissocier pour les
+ placer dans deux tableaux différents.
+ Dans le cas de données 
+\begin_inset Quotes eld
+\end_inset
+
+mono
+\begin_inset Quotes erd
+\end_inset
+
+ (1 seul canal), aucun traitement n'est nécéssaire.
 \end_layout
 
 \begin_layout Standard
@@ -463,26 +524,97 @@ Concaténation des données
 \end_layout
 
 \begin_layout Standard
-Par ailleurs, sachant que nous récupérons les données de 2 capteurs en 
-\begin_inset Quotes eld
-\end_inset
-
-stéréo
-\begin_inset Quotes erd
-\end_inset
-
- sur la même entrée, les données alternent entre l'un et l'autre, et il
- faut, après avoir appliqué le premier traitement, les dissocier pour les
- placer dans deux tableaux différents.
- 
+Pour détecter le signal qui nous intéresse (un choc), nous aurions pu utiliser
+ un algorithme pour detecter une forte variation du signal, mais il est
+ plus simple et plus rapide de simplement se fixer un seuil d'amplitude
+ en deça duquel les sons ne sont pas pris en compte.
+ Pour déterminer ce seuil, nous avons capturé le son pendant 1 seconde avec
+ du bruit ambiant pour se fixer une limite inférieure (le bruit ambiant
+ ne doit pas être pris en compte), puis nous avons capturé le bruit d'un
+ choc, ce qui nous donne une limite supérieure pour le seuil.
+ Pour résumer, on fixe le seuil de détection tel que : bruit ambiant < seuil
+ < amplitude maximale d'un coup.
 \end_layout
 
 \begin_layout Subsubsection
 Calcul de corrélation par FFT
 \end_layout
 
+\begin_layout Standard
+Après avoir capturé le son d'un choc sur la surface, on va chercher à calculer
+ sa corrélation avec les sons connus, ce qui est, je le rappelle, une opération
+ de convolution temporelle.
+ Un calcul direct de convolution temporelle est effectué par un ordinateur
+ en 
+\begin_inset Formula $O(n^{2})$
+\end_inset
+
+, mais nous pouvons améliorer cette complexité en passant par la tranformée
+ de Fourier des signaux : en effet, une convolution temporelle correspond
+ à une multiplication fréquentielle, et le calcul d'une transformée de Fourier
+ rapide (FFT) est opéré en 
+\begin_inset Formula $O(n\lg(n))$
+\end_inset
+
+ quand 
+\begin_inset Formula $n$
+\end_inset
+
+ est une puissance de 2, et la multiplication est effectuée composante par
+ composante, donc en 
+\begin_inset Formula $O(n)$
+\end_inset
+
+, puis la transformée de fourier inverse est identique à la FFT, et la recherche
+ du maximum est en 
+\begin_inset Formula $O(n)$
+\end_inset
+
+.
+ La complexité de l'opération est alors dominée par la FFT, en 
+\begin_inset Formula $O(n\lg(n))$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+On vient de voir que la FFT est plus rapide si n est une puissance de 2,
+ mais notre signal capturé n'a pas forcément une longueur qui est une puissance
+ de 2.
+ Pour corriger cela, on va effectuer un zero padding sur le signal, c'est
+ à dire rajouter une série de zéros à la fin du signal jusqu'à atteindre
+ la longueur voulue.
+ Par ailleurs, on ne cherche à comparer que l'aspect du signal, sans se
+ préoccuper de sa puissance, on normalise donc la transormée de fourrier
+ du signal, ce qui nous permet de plus d'avoir une corrélation en pourcentage
+ (1 correspondant à 100%).
+\end_layout
+
+\begin_layout Standard
+l'ordre des opérations est donc le suivant :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\textrm{zero padding}\longrightarrow\textrm{FFT}\longrightarrow\textrm{normalisation}\longrightarrow\textrm{multiplication}\longrightarrow\textrm{FFT}^{-1}\longrightarrow\textrm{recherche du maximum (pic)}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+et les 3 dernières opérations sont répétées pour chaque son connu.
+ On peut effectuer une recherche du maximum de corrélation à la volée.
+\end_layout
+
 \begin_layout Subsubsection
 Problèmes rencontrés
+\end_layout
+
+\begin_layout Subsubsection
+Pistes d'amélioration
 \end_layout
 
 \begin_layout Subsection
