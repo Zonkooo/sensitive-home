@@ -5,6 +5,7 @@
 \textclass article
 \begin_preamble
 \floatname{algorithm}{Extrait de code}
+\usepackage{pdfpages}
 \end_preamble
 \use_default_options false
 \language french
@@ -56,7 +57,25 @@ Sensitive Home Informatique
 \end_layout
 
 \begin_layout Author
+
+\noun on
 Colombel François, Hauchecorne Eric, Vandon Raphaël
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{empty}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -106,8 +125,8 @@ ue.
 
 \begin_layout Standard
 L'objectif du projet est de développer une solution de domotique qui soit
- simple à mettre en place pour l'utilisateur, et sans nécéssiter de travaux
- de maconnerie.
+ simple à mettre en place pour l'utilisateur, et sans nécessiter de travaux
+ de maçonnerie.
  Cette facilité d'installation est permise par l'utilisation de multiprises
  communiquantes sur lesquelles viennent se brancher les appareils de la
  maison, et qui relaie les informations venant de capteurs sans fil situés
@@ -118,7 +137,7 @@ L'objectif du projet est de développer une solution de domotique qui soit
 \begin_layout Standard
 Le comportement de la maison est ensuite régit par des profils d'utilisation
  : on distingue des profils globaux, qui s'appliquent sur la maison dans
- son ensemble, et définissent des constantes telles que la temperature moyenne
+ son ensemble, et définissent des constantes telles que la température moyenne
  à maintenir, ou la luminosité globale dans la maison ; et des profils locaux,
  qui ne s'appliquent qu'à une seule pièce, sont prioritaires sur le profil
  global, et correspondent à une activité spécifique.
@@ -165,15 +184,31 @@ travail dans le bureau
 .
  Le rôle de la partie informatique du projet est de permettre la création
  et la gestion de ces profils, ce qui est réalisé à travers une interface
- Web, adaptée à nimporte quel ordinateur, mais aussi à un iPhone ou un iPod
- Touch.
+ Web, adaptée à n'importe quel ordinateur, mais aussi à un iPhone ou un
+ iPod Touch.
  Les changements de profil sont possibles également à travers une interface
- tactile qui est mise en place facilement sur nimporte quelle surface :
+ tactile qui est mise en place facilement sur n'importe quelle surface :
  murs, portes ou tables.
 \end_layout
 
 \begin_layout Section
 Profils de configuration
+\end_layout
+
+\begin_layout Subsection
+Profils globaux
+\end_layout
+
+\begin_layout Subsection
+Profils locaux
+\end_layout
+
+\begin_layout Subsection
+Problèmes rencontrés
+\end_layout
+
+\begin_layout Standard
+collision des architectures : need UML dès le début du projet
 \end_layout
 
 \begin_layout Section
@@ -184,6 +219,20 @@ Interface Web
 Interface tactile
 \end_layout
 
+\begin_layout Standard
+Nous pensions au début du projet utiliser un produit de la société Sensitive
+ Object, qui réalise des boitiers prets à l'emploi utilisant cette technologie.
+ Mais après les avoir contactés, ils ont refusé de nous en vendre, car ils
+ ne convenaient pas à l'image qu'ils voulaient donner, et etaient en phase
+ de développement d'un nouveau produit.
+ Nous avons donc provisoirement abandonné cette idée, mais plus tard nous
+ avons rencontré un scientifique, Stephan Catheline, qui avait travaillé
+ au développement de cette technologie, et nous a assuré qu'il était tout
+ à fait possible de la mettre en place nous mêmes en se basant sur l'article
+ scientifique joint à ce rapport.
+ Nous nous sommes donc mis au travail, et l'idée a été réintégrée au projet.
+\end_layout
+
 \begin_layout Subsection
 Principe physique
 \end_layout
@@ -192,8 +241,9 @@ Principe physique
 La localisation du point de contact avec la surface se fait à partir du
  son que produit ce contact.
  Après avoir enregistré le son produit par un contact sur chacun des points
- à reconnaitre, on compare un nouveau son avec chacun des sons enregistrés,
+ à reconnaître, on compare un nouveau son avec chacun des sons enregistrés,
  et celui auquel il correspond le plus correspond au point touché.
+ Cette technologie est basée sur le retournement des ondes sonores.
 \end_layout
 
 \begin_layout Subsubsection
@@ -204,21 +254,21 @@ Capture des données
 Une connaissance exhaustive de l'onde propagée dans une surface infinie
  est possible en entourant la zone à observer de capteurs, ce qui est peu
  commode.
- Heureusement, on peut réduire le nombre de micros : les ondes sonnores
- se comportent comme des paquets de particules, et si les bords de la surface
- observée sont suffisement chaotiques, toutes les particules seront passées
- dans une zone donnée au bout d'un temps suffisement long (appellé temps
- de Heisenberg), eventuellement après un grand nombre de reflexions sur
+ Heureusement, on peut réduire le nombre de micros : les ondes sonores se
+ comportent comme des paquets de particules, et si les bords de la surface
+ observée sont suffisamment chaotiques, toutes les particules seront passées
+ dans une zone donnée au bout d'un temps suffisamment long (appelé temps
+ de Heisenberg), éventuellement après un grand nombre de réflexions sur
  les bords.
  Si cette zone est la zone d'écoute d'un capteur, alors on en déduis qu'un
- seul capteur suffit à récuperer toutes les informations autour du point
+ seul capteur suffit à récupérer toutes les informations autour du point
  source.
  C'est à dire que la source est virtuellement entourée de capteurs.
 \end_layout
 
 \begin_layout Standard
 Si le milieu dans lequel on étudie les sons est trop dissipatif, il se peut
- que des paquets d'onde soient completement absorbés avant d'avoir atteint
+ que des paquets d'onde soient complètement absorbés avant d'avoir atteint
  le capteur, et on perd alors des capteurs virtuels sur un coté de la surface.
  Pour corriger cela, on peut ajouter des capteurs à d'autres emplacements,
  pour essayer d'intercepter les paquets dans une autre zone avant qu'ils
@@ -281,7 +331,7 @@ Or un résultat de la théorie du signal nous dit que pour des entrées normalis
  L'amplitude du pic principal de la convolution calculée est la corrélation
  du son avec le point.
  Avec cette méthode, on est donc capable de savoir de quel point vient un
- son, et on peut élimier les bruits parasites (voix, bruits exterieurs...)
+ son, et on peut éliminer les bruits parasites (voix, bruits extérieurs...)
  en imposant une corrélation minimum pour prendre en compte le résultat.
 \end_layout
 
@@ -294,8 +344,8 @@ Convoluer le signal retourné temporellement par
 \begin_inset Formula $h_{i}(t)$
 \end_inset
 
-, qui est la réponse imulsionnelle de la table, équivaut à renvoyer virtuellemen
-t à travers la table l'onde vers sa source : on fait défiler le temps à
+, qui est la réponse impulsionnelle de la table, équivaut à renvoyer virtuelleme
+nt à travers la table l'onde vers sa source : on fait défiler le temps à
  l'envers, et on observe le signal que l'on a émit avec le coup au point
  
 \begin_inset Formula $i$
@@ -324,13 +374,13 @@ Capture du son
 \end_layout
 
 \begin_layout Standard
-Pour enregistrer le son, on utilise des capteurs piezoélectriques (MuRata
+Pour enregistrer le son, on utilise des capteurs piézoélectriques (MuRata
  PKS1), ce qui permet d'écouter uniquement les vibrations de la table sur
- laquelle ils sont plaqués, et pas les bruits exterieurs (un capteur piézoélectr
+ laquelle ils sont plaqués, et pas les bruits extérieurs (un capteur piézoélectr
 ique émet un courant proportionel à la déformation qui lui est appliquée).
- En réalité, on reçoit quand même les bruits exterieurs, mais avec une amplitude
+ En réalité, on reçoit quand même les bruits extérieurs, mais avec une amplitude
  faible par rapport aux bruits propagés dans la table.
- Pour vraiment isoler les micros du monde exterieur, nous utilisons de la
+ Pour vraiment isoler les micros de l'environement, nous utilisons de la
  pâte à modeler, ce qui permet en même temps de les fixer sur la table.
 \end_layout
 
@@ -341,8 +391,8 @@ Pour écouter l'entrée son, nous nous sommes basés sur le code d'exemple
 status collapsed
 
 \begin_layout Plain Layout
-Code source de l'application de démonstration de Sun accessible à l'adresse
- suivante : http://java.sun.com/products/java-media/sound/samples/JavaSoundDemo/
+Code source disponible à l'adresse : http://java.sun.com/products/java-media/sound
+/samples/JavaSoundDemo/
 \end_layout
 
 \end_inset
@@ -358,7 +408,7 @@ reference "alg:son"
 
 , sans tenir compte des exceptions et des tests de compatibilité.
  La ligne 1 définit les paramètres de capture.
- Pour le projet nous avons utilisé du son échantilloné à 44,1 kHz et représenté
+ Pour le projet nous avons utilisé du son échantillonné à 44,1 kHz et représenté
  sur 16 bits, ce qui est la meilleure qualité que l'on peut obtenir sur
  les cartes son standards.
  Nous avons besoin de cette qualité pour bien différencier les signaux venant
@@ -443,7 +493,7 @@ line.read
 \family default
 , il reste quelques traitements à appliquer sur l'échantillon : Sachant
  que les données sont récupérées octet par octet alors que l'amplitude est
- échantillonnée sur 16 bits, il faut concatener les octets reçus deux à
+ échantillonnée sur 16 bits, il faut concaténer les octets reçus deux à
  deux (et obtenir ainsi des données sur 16 bits i.e.
  2 octets) ce qui est illustré par la figure 
 \begin_inset CommandInset ref
@@ -473,7 +523,7 @@ mono
 \begin_inset Quotes erd
 \end_inset
 
- (1 seul canal), aucun traitement n'est nécéssaire.
+ (1 seul canal), aucun traitement n'est nécessaire.
 \end_layout
 
 \begin_layout Standard
@@ -525,15 +575,23 @@ Concaténation des données
 
 \begin_layout Standard
 Pour détecter le signal qui nous intéresse (un choc), nous aurions pu utiliser
- un algorithme pour detecter une forte variation du signal, mais il est
- plus simple et plus rapide de simplement se fixer un seuil d'amplitude
- en deça duquel les sons ne sont pas pris en compte.
+ un algorithme pour repérer une forte variation du signal, mais il est plus
+ simple et plus rapide de simplement se fixer un seuil d'amplitude en deçà
+ duquel les sons ne sont pas pris en compte.
  Pour déterminer ce seuil, nous avons capturé le son pendant 1 seconde avec
  du bruit ambiant pour se fixer une limite inférieure (le bruit ambiant
  ne doit pas être pris en compte), puis nous avons capturé le bruit d'un
  choc, ce qui nous donne une limite supérieure pour le seuil.
- Pour résumer, on fixe le seuil de détection tel que : bruit ambiant < seuil
- < amplitude maximale d'un coup.
+ Pour résumer, on fixe le seuil de détection tel que : 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+\textrm{bruit ambiant}<\textrm{seuil}<\textrm{amplitude maximale d'un coup}\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -542,14 +600,14 @@ Calcul de corrélation par FFT
 
 \begin_layout Standard
 Après avoir capturé le son d'un choc sur la surface, on va chercher à calculer
- sa corrélation avec les sons connus, ce qui est, je le rappelle, une opération
- de convolution temporelle.
+ sa corrélation avec les sons connus (qui est une opération de convolution
+ temporelle).
  Un calcul direct de convolution temporelle est effectué par un ordinateur
  en 
 \begin_inset Formula $O(n^{2})$
 \end_inset
 
-, mais nous pouvons améliorer cette complexité en passant par la tranformée
+, mais nous pouvons améliorer cette complexité en passant par la tranfsormée
  de Fourier des signaux : en effet, une convolution temporelle correspond
  à une multiplication fréquentielle, et le calcul d'une transformée de Fourier
  rapide (FFT) est opéré en 
@@ -560,12 +618,13 @@ Après avoir capturé le son d'un choc sur la surface, on va chercher à calcule
 \begin_inset Formula $n$
 \end_inset
 
- est une puissance de 2, et la multiplication est effectuée composante par
- composante, donc en 
+ est une puissance de 2 (ce qui permet de procéder par dichotomie en séparant
+ les échantillons pairs et impairs), et la multiplication est effectuée
+ composante par composante, donc en 
 \begin_inset Formula $O(n)$
 \end_inset
 
-, puis la transformée de fourier inverse est identique à la FFT, et la recherche
+, puis la transformée de Fourier inverse est identique à la FFT, et la recherche
  du maximum est en 
 \begin_inset Formula $O(n)$
 \end_inset
@@ -586,7 +645,7 @@ On vient de voir que la FFT est plus rapide si n est une puissance de 2,
  à dire rajouter une série de zéros à la fin du signal jusqu'à atteindre
  la longueur voulue.
  Par ailleurs, on ne cherche à comparer que l'aspect du signal, sans se
- préoccuper de sa puissance, on normalise donc la transormée de fourrier
+ préoccuper de sa puissance, on normalise donc la transformée de Fourier
  du signal, ce qui nous permet de plus d'avoir une corrélation en pourcentage
  (1 correspondant à 100%).
 \end_layout
@@ -606,15 +665,114 @@ l'ordre des opérations est donc le suivant :
 
 \begin_layout Standard
 et les 3 dernières opérations sont répétées pour chaque son connu.
- On peut effectuer une recherche du maximum de corrélation à la volée.
+ La recherche du maximum de corrélation peut être effectuée à la volée.
 \end_layout
 
 \begin_layout Subsubsection
 Problèmes rencontrés
 \end_layout
 
+\begin_layout Standard
+J'ai commencé à développer le projet avec une idée fausse sur la convolution
+ : je pensais calculer la corrélation en sommant le produit des deux FFT
+ (
+\begin_inset Formula $\sum_{i}fft_{1}(i)*fft_{2}(i)$
+\end_inset
+
+), alors qu'il faut non pas sommer, mais effectuer une FFT inverse puis
+ rechercher le maximum pour avoir la corrélation.
+ Car la convolution de 2 signaux n'est pas un scalaire mais bien un signal
+ temporel.
+ Mon calcul de corrélation était donc biaisé par les lobes secondaires qui
+ apparaissent normalement sur le signal convolué, et dont la puissance peut
+ être importante.
+ Malgré tout, cette méthode fonctionnait, bien qu'avec un contraste (différence
+ entre la corrélation au point source et celle sur les autres points) plus
+ faible sur les résultats.
+ Nous l'avons laissé en place pendant tout la durée du projet, car je me
+ suis aperçu de mon erreur vers la fin de la période de développement, et
+ nous n'avons pas voulu modifier un code fonctionnel et prendre le risque
+ de casser des choses à quelques jours de la présentation.
+ Cependant, je compte implémenter ceci à titre personnel après la fin du
+ projet.
+\end_layout
+
+\begin_layout Standard
+Nos autres problèmes sont venus du découpage et de la concaténation des
+ données suivant le mode de capture utilisé (16 bits, stéréo...), car ils étaient
+ mal documentés dans l'application de démonstration de Sun, et nous avons
+ mis quelque temps pour nous comprendre tout seuls comment étaient organisées
+ les données venant de la carte son.
+ Nous avons utilisé Scilab pour pouvoir afficher et manipuler facilement
+ les données.
+ En affichant les données sur la sortie standard, puis en la redirigeant
+ dans un fichier, ou peut facilement les importer dans un vecteur scilab
+ à l'aide de la fonction fscanfMat qui prend en paramètre un nom de fichier.
+\end_layout
+
 \begin_layout Subsubsection
 Pistes d'amélioration
+\end_layout
+
+\begin_layout Paragraph
+temps d'exécution
+\end_layout
+
+\begin_layout Standard
+La principale piste à suivre pour améliorer le temps d'éxecution du programme
+ serait de réduire le temps de capture au temps de Heisenberg (durée pendant
+ laquelle tous les paquets d'ondes passent par un micro), mais je ne sais
+ vraiment pas comment l'évaluer pour une surface donnée.
+ On pourrait essayer de s'en rapprocher en procedant par réductions successives
+ du temps de capture en verifiant que le contraste reste correct.
+ En dehors du temps de capture, l'algorithme est peu gourmand en ressources,
+ mais on peut l'améliorer tout dabord en utilisant un language plus proche
+ de la machine, comme le C, et en travaillant sur l'algorithme de la FFT
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+le site suivant décrit quelques pistes pour obtenir un algorithme de calcul
+ de FFT plus efficace : http://cnx.org/content/m12021/latest/
+\end_layout
+
+\end_inset
+
+ (ou en utilisant les implémentations optimisées disponnibles en C, comme
+ FFTW
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://www.fftw.org/
+\end_layout
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Paragraph
+précision
+\end_layout
+
+\begin_layout Standard
+Pour augmenter la précision de détermination des zones tapées, on pourrait
+ commencer par réduire la bande passante d'analyse des signaux, pour éviter
+ de prendre en compte du bruit à des fréquences plus élevées.
+ Il faudrait pour ça effectuer une série de tests en mesurant la fréquence
+ des signaux reçus, et en observant les résultats tout en réduisant la plage
+ de fréquences de l'étude.
+\end_layout
+
+\begin_layout Standard
+On pourrait aussi utiliser un algorithme d'apprentissage, qui permettrait
+ de différentier les boutons non pas seulement à partir de leur corrélation,
+ mais aussi à partir des corrélations des autres boutons.
+ Ainsi, on pourrait différentier deux boutons très proches si leur corrélation
+ avec un troisième bouton varie de façon significative.
+ Il est aussi possible que cette piste de mène à rien, sachant que nous
+ n'avons effectué aucun test sur ce point.
 \end_layout
 
 \begin_layout Subsection
@@ -622,14 +780,29 @@ Intégration au projet
 \end_layout
 
 \begin_layout Standard
-Le dispositif présenté ci dessus permet de rendre nimporte quelle surface
+Le dispositif présenté ci dessus permet de rendre n'importe quelle surface
  tactile avec quelques micros et après avoir calibré les boutons sur cette
  surface.
- Il s'agit d'une installation peu couteuse, rapide à mettre en place, et
- facilement adaptable à de nombreuses configurations ; elle est donc particulièr
-ement bien adaptée à une solution de domotique.
- Nous avons choisi dans notre projet de l'utiliser pour permettre un changement
- de profil dans une pièce.
+ Son principal avantage est qu'en plus d'être bon marché, le coût de cette
+ technologie ne dépends pas de la taille de la surface à rendre tactile.
+ De plus, Il s'agit d'une installation rapide à mettre en place, facilement
+ adaptable à de nombreuses configurations : un bouton peut être rajouté
+ ou supprimé à n'importe quel moment, et adaptée à un environnement hostile
+ : si on place les micros sous une table par exemple, ou peut renverser
+ un verre dessus sans endommager le système ; elle est donc particulièrement
+ bien adaptée à une solution de domotique.
+ 
+\end_layout
+
+\begin_layout Standard
+Nous avons choisi dans notre projet de l'utiliser pour permettre un changement
+ de profil dans une pièce, ou dans la maison.
+ Cela équivaut à utiliser des interrupteurs intelligents, car contrôlant
+ plusieurs dispositifs à la fois, modulables, et avec une occupation de
+ l'espace nulle, car les surfaces restent utilisables pour d'autres usages.
+ Dans une application commerciale, on peut imaginer utiliser des micros
+ sans fil, permettant par exemple au cuisinier de contrôler sa gazinière
+ et son four depuis la surface de sa chaise sans quitter ses convives.
 \end_layout
 
 \begin_layout Section
@@ -641,15 +814,36 @@ Ce que nous n'avons pas eu le temps de développer
 \end_layout
 
 \begin_layout Standard
-calendrier (synchro Google)
+Si nous avions eu plus de temps, nous aurions pu integrer un système de
+ calendrier à la gestion de la maison (par exemple google calendar), qui
+ aurait permis des changements automatiques de profils, alors qu'actuellement,
+ ils doivent être effectués à la main.
 \end_layout
 
 \begin_layout Standard
-capteurs de présence
+Nous aurions aussi aimé utiliser des capteurs de présence à l'entrée des
+ salle, toujours pour automatiser les changements de profil, ce qui aurait
+ accru le confort pour l'utilisateur, ainsi que l'acpect écologique du projet
+ : en sachant qu'il n'y a personne dans la pièce, on s'empresse d'éteindre
+ de la lumière, voire de baisser la température d'un degré, et si quelqu'un
+ arrive, la pièce se configure à ses attentes sans attendre d'ordres.
 \end_layout
 
 \begin_layout Standard
-carte electonique pour le tactile
+Dans notre vision finale du projet, nous aurions utilisé des micros sans
+ fil pour placer des interfaces tactiles vraiment partout sans encombrement.
+ Ces micros sans fils auraint pu communiquer avec les multiprises, à la
+ manière des modules de capteurs, qui auraient relayé l'information vers
+ l'ordinateur pour être traitée.
+\end_layout
+
+\begin_layout Standard
+Toujours dans une optique écologiste, nous aurions pu integrer une facette
+ de sensibilisation de l'utilisateur, lui proposant de réduire la température
+ du chauffage si le programme l'estime trop élevée, de couper la chaudière
+ quand l'été arrive, et nous aurions même pu analyser les comportements
+ de l'utilisateur et lui proposer de changer ses horaires pour profiter
+ plus longtemps de la lumière du soleil par exemple.
 \end_layout
 
 \begin_layout Standard
@@ -665,6 +859,39 @@ Conclusion
 
 \begin_layout Standard
 apprentissage de svn
+\end_layout
+
+\begin_layout Standard
+gantt project
+\end_layout
+
+\begin_layout Standard
+serveur web java
+\end_layout
+
+\begin_layout Standard
+application de FFT et resoluton de systèmes linéaires
+\end_layout
+
+\begin_layout Standard
+travail en gros groupe
+\end_layout
+
+\begin_layout Standard
+\start_of_appendix
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+includepdf[pages=-]{/home/raphael/Documents/TeX/rapport/APLInteractif.pdf}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
