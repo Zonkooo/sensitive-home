@@ -192,15 +192,11 @@ travail dans le bureau
 \end_layout
 
 \begin_layout Section
-Profils de configuration
+Architecture de la gestion de la maison
 \end_layout
 
 \begin_layout Subsection
-Profils globaux
-\end_layout
-
-\begin_layout Subsection
-Profils locaux
+...
 \end_layout
 
 \begin_layout Subsection
@@ -220,11 +216,44 @@ Interface tactile
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename site-logo.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Société sensitive Object
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Nous pensions au début du projet utiliser un produit de la société Sensitive
- Object, qui réalise des boitiers prets à l'emploi utilisant cette technologie.
- Mais après les avoir contactés, ils ont refusé de nous en vendre, car ils
- ne convenaient pas à l'image qu'ils voulaient donner, et etaient en phase
- de développement d'un nouveau produit.
+ Object, qui vend des boitiers prets à l'emploi utilisant cette technologie,
+ mais la société était en phase de développement d'un nouveau produit, et
+ a refusé de nous vendre l'ancien.
  Nous avons donc provisoirement abandonné cette idée, mais plus tard nous
  avons rencontré un scientifique, Stephan Catheline, qui avait travaillé
  au développement de cette technologie, et nous a assuré qu'il était tout
@@ -251,33 +280,47 @@ Capture des données
 \end_layout
 
 \begin_layout Standard
-Une connaissance exhaustive de l'onde propagée dans une surface infinie
- est possible en entourant la zone à observer de capteurs, ce qui est peu
- commode.
- Heureusement, on peut réduire le nombre de micros : les ondes sonores se
- comportent comme des paquets de particules, et si les bords de la surface
- observée sont suffisamment chaotiques, toutes les particules seront passées
- dans une zone donnée au bout d'un temps suffisamment long (appelé temps
- de Heisenberg), éventuellement après un grand nombre de réflexions sur
- les bords.
- Si cette zone est la zone d'écoute d'un capteur, alors on en déduis qu'un
- seul capteur suffit à récupérer toutes les informations autour du point
- source.
- C'est à dire que la source est virtuellement entourée de capteurs.
+Les ondes sonores se comportent comme des paquets de particules, et si les
+ bords de la surface observée sont suffisamment chaotiques, toutes les 
+\begin_inset Quotes eld
+\end_inset
+
+particules
+\begin_inset Quotes erd
+\end_inset
+
+ de l'onde seront passées dans une zone donnée au bout d'un temps suffisamment
+ long (appelé temps de Heisenberg), éventuellement après un grand nombre
+ de réflexions sur les bords.
+ Si on place un capteur dans cette zone, on va recevoir des informations
+ venant de tous côtés du point source, et on a virtuellement entouré ce
+ point de capteurs.
+ Le décalage entre le premier pic, correspondant à l'onde reçue par le trajet
+ direct, et les pics suivants, correspondant aux ondes réfléchies, ainsi
+ que le nombre de paquets reçus par réflexion sont une signature unique
+ du point qui a été tapé sur la surface, et permettent de le distinguer.
 \end_layout
 
 \begin_layout Standard
 Si le milieu dans lequel on étudie les sons est trop dissipatif, il se peut
  que des paquets d'onde soient complètement absorbés avant d'avoir atteint
- le capteur, et on perd alors des capteurs virtuels sur un coté de la surface.
- Pour corriger cela, on peut ajouter des capteurs à d'autres emplacements,
- pour essayer d'intercepter les paquets dans une autre zone avant qu'ils
+ le capteur, et on perd alors des capteurs virtuels sur un coté de la surface,
+ ce qui peut affecter le contraste de façon plus ou moins gênante.
+ Pour corriger cela, on peut ajouter des capteurs (réels) à d'autres emplacement
+s, pour essayer d'intercepter les paquets dans une autre zone avant qu'ils
  ne disparaissent.
  C'est pourquoi nous utilisons deux micros plutôt qu'un dans le projet.
 \end_layout
 
 \begin_layout Subsubsection
 Calcul de la corrélation
+\end_layout
+
+\begin_layout Standard
+La corrélation d'un point avec un autre est un nombre indiquant combien
+ les deux points sont similaires.
+ Ainsi, la corrélation sera maximale entre deux points identiques, et nous
+ l'esperons, plus faible ailleurs.
 \end_layout
 
 \begin_layout Standard
@@ -301,11 +344,8 @@ Considérons une boite noire dont la réponse impulsionnelle est
 
  de la surface entre le point A et le capteur, qui sera le signal reçu par
  le capteur.
-\end_layout
-
-\begin_layout Standard
-Or un résultat de la théorie du signal nous dit que pour des entrées normalisées
-, le maximum en sortie d'un filtre de réponse impulsionnelle 
+ Or un résultat de la théorie du signal nous dit que pour des entrées normalisée
+s, le maximum en sortie d'un filtre de réponse impulsionnelle 
 \begin_inset Formula $h(t)$
 \end_inset
 
@@ -314,7 +354,12 @@ Or un résultat de la théorie du signal nous dit que pour des entrées normalis
 \end_inset
 
 .
- Donc lorsque l'on reçoit un nouveau son (
+ Ce maximum correspond au moment où les deux signaux sont en phase et se
+ recouvrent parfaitement.
+\end_layout
+
+\begin_layout Standard
+Donc lorsque l'on reçoit un nouveau son (
 \begin_inset Formula $s(t)$
 \end_inset
 
@@ -326,13 +371,19 @@ Or un résultat de la théorie du signal nous dit que pour des entrées normalis
 \begin_inset Formula $s(-t)\otimes h_{i}(t)$
 \end_inset
 
-), le signal obtenu présentera un pic maximum pour le point correspondant
- à ce son.
+), le signal obtenu présentera un pic pour chaque bouton, vu que les signaux
+ sont sensilement les mêmes, mais l'amplitude de ce pic sera maximale pour
+ le point correspondant à ce son.
  L'amplitude du pic principal de la convolution calculée est la corrélation
- du son avec le point.
- Avec cette méthode, on est donc capable de savoir de quel point vient un
- son, et on peut éliminer les bruits parasites (voix, bruits extérieurs...)
- en imposant une corrélation minimum pour prendre en compte le résultat.
+ de l'origine du son avec le point 
+\begin_inset Formula $i$
+\end_inset
+
+.
+ Avec cette méthode, on est donc capable de déterminer quel point enregistré
+ est le plus proche du point tapé.
+ Pour ne pas réagir à des bruits parasites, on peut imposer une corrélation
+ minimum pour prendre en compte le résultat.
 \end_layout
 
 \begin_layout Paragraph
@@ -374,10 +425,59 @@ Capture du son
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename murata.jpg
+	lyxscale 50
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:murata"
+
+\end_inset
+
+Capteur piézoélectrique
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Pour enregistrer le son, on utilise des capteurs piézoélectriques (MuRata
- PKS1), ce qui permet d'écouter uniquement les vibrations de la table sur
- laquelle ils sont plaqués, et pas les bruits extérieurs (un capteur piézoélectr
-ique émet un courant proportionel à la déformation qui lui est appliquée).
+ PKS1, voir figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:murata"
+
+\end_inset
+
+), ce qui permet d'écouter uniquement les vibrations de la table sur laquelle
+ ils sont plaqués, et pas les bruits extérieurs (un capteur piézoélectrique
+ émet un courant proportionel à la déformation qui lui est appliquée).
  En réalité, on reçoit quand même les bruits extérieurs, mais avec une amplitude
  faible par rapport aux bruits propagés dans la table.
  Pour vraiment isoler les micros de l'environement, nous utilisons de la
@@ -607,10 +707,10 @@ Après avoir capturé le son d'un choc sur la surface, on va chercher à calcule
 \begin_inset Formula $O(n^{2})$
 \end_inset
 
-, mais nous pouvons améliorer cette complexité en passant par la tranfsormée
- de Fourier des signaux : en effet, une convolution temporelle correspond
- à une multiplication fréquentielle, et le calcul d'une transformée de Fourier
- rapide (FFT) est opéré en 
+, mais nous pouvons améliorer cette complexité en passant par la représentation
+ fréquentielle des signaux, obtenue par tranfsormée de Fourier : en effet,
+ une convolution temporelle correspond à une multiplication fréquentielle,
+ et le calcul d'une transformée de Fourier rapide (FFT) est opéré en 
 \begin_inset Formula $O(n\lg(n))$
 \end_inset
 
@@ -648,6 +748,7 @@ On vient de voir que la FFT est plus rapide si n est une puissance de 2,
  préoccuper de sa puissance, on normalise donc la transformée de Fourier
  du signal, ce qui nous permet de plus d'avoir une corrélation en pourcentage
  (1 correspondant à 100%).
+ 
 \end_layout
 
 \begin_layout Standard
@@ -666,6 +767,22 @@ l'ordre des opérations est donc le suivant :
 \begin_layout Standard
 et les 3 dernières opérations sont répétées pour chaque son connu.
  La recherche du maximum de corrélation peut être effectuée à la volée.
+\end_layout
+
+\begin_layout Paragraph
+Remarque : 
+\end_layout
+
+\begin_layout Standard
+Avec certains micros et/ou cartes son, le signal subit un offset (le silence
+ ne correspond pas à la valeur zero), et il a donc une composante continue,
+ qui va se traduire par un pic autour de 0 Hz sur sa transformée de Fourier.
+ Or cette composante ne nous interesse pas, ce sont les variations du signal
+ que nous comparons.
+ Pour ne pas prendre en compte cette composante continue, on peut soit commencer
+ par soustraire à chaque échantillon la moyenne temporelle du signal, soit
+ ne prendre en compte les échantillons qu'à partir d'une certaine fréquence
+ (100 Hz par exemple).
 \end_layout
 
 \begin_layout Subsubsection
