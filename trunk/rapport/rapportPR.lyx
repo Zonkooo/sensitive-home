@@ -926,6 +926,384 @@ Nous avons choisi dans notre projet de l'utiliser pour permettre un changement
 Communication
 \end_layout
 
+\begin_layout Subsection
+Communication avec les IHM
+\end_layout
+
+\begin_layout Subsubsection
+HashMap partagée
+\end_layout
+
+\begin_layout Standard
+Les informations concernant la maison sont stockées dans des HashMap partagées
+ entre les différentes parties du projet (interface web, interface tactile
+ et communication).
+ C'est une structure de données permettant d'associer une clé à un objet
+ java.
+ Dans ce projet par exemple, une HashMap de salles associe le nom des salles
+ et les objets Salle correspondant.
+ On peut alors, grace à cette HashMap, avoir accès à toutes les informations
+ dépendant des salles (type et valeur des capteurs, type et valeur des prises,
+ etc...).
+ Lorsqu'une nouvelle information est connue, qu'elle vienne de l'utilisateur
+ par l'intermédiaire de l'interface web ou bien par la réception de données
+ provenant d'un module de capteurs, cette HashMap est mise à jour.
+ On travaille donc en permanence avec des données à jour.
+\end_layout
+
+\begin_layout Standard
+L'interface web utilise la HashMap pour afficher les valeurs de température
+ et luminosité actuelles de chaque pièce.
+ Elle propose aussi un état à jour de la configuration de la maison (le
+ nombre de multiprises, le nombre de modules de capteurs, leur situation,
+ la configuration des multiprises, etc...).
+\end_layout
+
+\begin_layout Subsubsection
+Interface tactile
+\end_layout
+
+\begin_layout Standard
+Quand on crée un profil via l'interface web, l'utilisateur a la possibilité
+ d'y associer une zone de l'inteface tactile.
+ Lorsque l'interface tactile reconnait un bouton prédéfini, celle-ci envoie
+ à une classe Interfacage un évènement, qui déclenche un changement de profil
+ vers le profil associé au bouton tapé.
+ 
+\end_layout
+
+\begin_layout Standard
+L'écoute de l'interface tactile est dans la méthode run() d'un Thread.
+ Les Threads sont des morceaux de programme pouvant etre exécutés en parallèle.
+ Ceci permet que les boutons associés à un changement de profil soient détectés
+ bien que la communication avec la multiprise (envoi et réception de messages)
+ fonctionne.
+\end_layout
+
+\begin_layout Subsection
+Communication avec la multiprise
+\end_layout
+
+\begin_layout Subsubsection
+La connexion
+\end_layout
+
+\begin_layout Standard
+La multiprise communique avec le serveur par l'intermédiaire d'un réseau
+ de type ethernet.
+ Ce réseau utilise le CPL (Courants Porteurs en Ligne) ce qui évite de faire
+ trainer des fils supplémentaires.
+ La multiprise possède un module XPORT de Lantronix.
+ C'est un adaptateur série<->ethernet.
+ Ce module fonctionne comme une interface réseau classique: elle est identifiée
+ par une adresse MAC dont le début est spécifique au constructeur et toujours
+ de la forme 
+\begin_inset Quotes eld
+\end_inset
+
+00:20:4A
+\begin_inset Quotes erd
+\end_inset
+
+ et une adresse IP.
+\end_layout
+
+\begin_layout Standard
+Un logiciel fourni par Lantronix est nécessaire pour se connecter une première
+ fois au module XPORT en indiquant l'adresse MAC, quand il est dans sa configura
+tion 
+\begin_inset Quotes eld
+\end_inset
+
+sortie d'usine
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Sans celui-ci il n'est pas possible d'y accéder, son adresse IP étant fixé
+ par défaut à 0.0.0.0.
+ Ce point a posé un problème car l'adresse MAC, normalement écrite sur le
+ module lui-meme était effacée.
+ Après une perte de temps non négligeable, l'adresse MAC a pu etre récupérée
+ par la liaison série.
+\end_layout
+
+\begin_layout Standard
+Lorsqu'une multiprise est créée, par exemple lorsque l'on charge le fichier
+ de configuration de la maison en mémoire, un Thread Communication est instancié
+ avec en paramètre l'adresse IP correspondant à la multiprise traitée.
+ On crée la connexion à l'aide de l'instruction:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+new Socket(adresse IP, port)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Une fois la connexion créée, une boucle va dérouler les étapes d'écoute
+ et d'envoi des données entre le serveur et le XPORT.
+ Cette boucle est exécutée continuellement et parallèlement au reste du
+ programme puisqu'elle est contenue dans la méthode run() du Thread Communicatio
+n.
+ Une queue de type ConcurrentLinkedQueue est utilisée pour stocker les messages
+ devant etre envoyés à la multiprise.
+\end_layout
+
+\begin_layout Enumerate
+Vérification de la taille de la queue de messages à envoyer
+\begin_inset Newline newline
+\end_inset
+
+Si elle n'est pas nulle, on envoie le message qui est en haut de la queue
+\end_layout
+
+\begin_layout Enumerate
+On attend de recevoir un message ou que le temps d'écoute maximum fixé soit
+ dépassé
+\end_layout
+
+\begin_layout Enumerate
+On regarde si le dernier message reçu est un accusé de réception
+\begin_inset Newline newline
+\end_inset
+
+Si c'est le cas, on supprime le message qui est en haut de la queue
+\begin_inset Newline newline
+\end_inset
+
+Sinon si le temps d'écoute maximum est dépassé, on essaie de renvoyer le
+ message qui est en haut de la queue
+\end_layout
+
+\begin_layout Standard
+Avec ce système, si jamais un message n'est pas reçu par la multiprise,
+ il est renvoyé et aucune information n'est perdue.
+\end_layout
+
+\begin_layout Subsubsection
+Le protocole
+\end_layout
+
+\begin_layout Standard
+Un protocole de communication des données a été défini en commun avec l'équipe
+ de la partie électronique.
+ Les messages envoyés et reçus sont formatés de façon à etre reconnus par
+ les programmes communiquant (dans le serveur et dans le microcontroleur
+ de la multiprise).
+\end_layout
+
+\begin_layout Standard
+Voici les différents types de messages définis.
+ Tout message n'étant pas formaté de cette façon n'est pas traité:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Quotes eld
+\end_inset
+
+reçu
+\begin_inset Quotes erd
+\end_inset
+
+ correspond au sens multiprise->serveur
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Quotes eld
+\end_inset
+
+envoyé
+\begin_inset Quotes erd
+\end_inset
+
+ correspond au sens serveur->multiprise
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Quotes eld
+\end_inset
+
+0011xxxxx
+\begin_inset Quotes erd
+\end_inset
+
+ représente l'adresse d'un module de capteurs où 
+\begin_inset Quotes eld
+\end_inset
+
+x
+\begin_inset Quotes erd
+\end_inset
+
+ est une valeur numérique
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+/0011xxxxx:::::NOUVEAU::::
+\backslash
+ est reçu lorsqu'un nouveau module de capteurs est installé dans une pièce
+\end_layout
+
+\begin_layout Itemize
+/0011xxxxx
+\backslash
+ est envoyé à la multiprise qui veut recevoir les données du module 0011xxxxx
+\end_layout
+
+\begin_layout Itemize
+/ACK:0011xxxxx
+\backslash
+ est reçu pour accuser réception de l'ajout d'un nouveau module de capteurs
+\end_layout
+
+\begin_layout Itemize
+/0011xxxxx:d0:d1:d2:d3
+\backslash
+ est reçu toutes les deux secondes et contient les données des quatre capteurs
+ du module 0011xxxxx
+\end_layout
+
+\begin_layout Itemize
+/REQ:prise:valeur
+\backslash
+ est envoyé pour changer la valeur d'une prise
+\end_layout
+
+\begin_layout Itemize
+/ACK:prise:valeur
+\backslash
+ est reçu pour accuser réception d'une commande
+\end_layout
+
+\begin_layout Subsection
+Reconnaissance de matériel
+\end_layout
+
+\begin_layout Standard
+Une fonctionnalité importante du projet est la possibilité d'ajouter de
+ nouveaux appareils sans nécessiter de modification dans l'installation.
+ Ceci est possible par son architecture modulaire.
+\end_layout
+
+\begin_layout Standard
+Des capteurs peuvent etre ajoutés sur les modules de capteurs tant que de
+ la place est disponible.
+ Si ce n'est pas le cas, il faut ajouter un nouveau module de capteurs.
+ Lorsqu'un module est ajouté et mis sous tension, celui-ci va envoyer un
+ message dans les airs.
+ Les multiprises avoisinantes vont le recevoir et le transmettre au serveur.
+ Le premier message reçu va permettre d'associer le nouveau module à la
+ multiprise et il va etre ajouté dans l'interface web pour que l'utilisateur
+ puisse paramétrer dans quelle salle il se trouve.
+\end_layout
+
+\begin_layout Standard
+Il est aussi possible d'ajouter une multiprise.
+ Lorsque celle-ci est branchée sur le réseau, elle envoie sur tout le réseau
+ un message DHCPDISCOVER contenant l'adresse MAC de la multiprise.
+ Un serveur DHCP tourne sur notre serveur.
+ C'est un logiciel qui permet d'attribuer une adresse IP à une interface
+ détectée sur le réseau.
+ Le serveur DHCP va recevoir ce message DHCPDISCOVER et l'écrire dans le
+ fichier syslog du système.
+ Ce fichier log est lu par notre programme, qui vérifie s'il s'agit bien
+ d'une adresse MAC d'un module XPORT.
+ Si oui il va modifier le fichier de configuration du serveur DHCP afin
+ d'y ajouter la possibilité d'attribuer une adresse IP à la nouvelle multiprise.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Quotes eld
+\end_inset
+
+n
+\begin_inset Quotes erd
+\end_inset
+
+ représente le numéro du XPORT ajouté
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Quotes eld
+\end_inset
+
+x
+\begin_inset Quotes erd
+\end_inset
+
+ représente un chiffre hexadécimal
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+host XPORTn {
+\begin_inset Newline newline
+\end_inset
+
+ hardware ethernet xx:xx:xx:xx:xx:xx ; fixed-address 192.168.0.n; 
+\begin_inset Newline newline
+\end_inset
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De cette manière, si un ordinateur ou toute interface réseau n'étant pas
+ un XPORT est reliée au réseau, le serveur DHCP du serveur domotique n'en
+ tiendra pas compte et ne lui attribuera pas d'adresse IP.
+\end_layout
+
+\begin_layout Standard
+Comme pour les modules de capteurs, on ajoute ensuite la nouvelle multiprise
+ au fichier de configuration de la maison et l'utilisateur pourra paramétrer
+ cette multiprise dans l'interface web.
+\end_layout
+
 \begin_layout Section
 Ce que nous n'avons pas eu le temps de développer
 \end_layout
