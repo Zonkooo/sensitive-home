@@ -221,7 +221,7 @@ Afin de configurer et contrôler le reste du projet nous avons mis en place
  le serveur, mais aussi depuis un autre ordinateur du réseau local, ou même
  par internet depuis le travail où un lieu de vacances.
  De plus avec l'avènement nouveaux téléphones portables intégrant un navigateur
- internet comme notamment l'Iphone, une interface web offre la possibilité
+ internet comme notamment l'iPhone, une interface web offre la possibilité
  de transformer son téléphone en télécommande pour la maison.
  
 \end_layout
@@ -510,7 +510,7 @@ Permet de créer un profil en donnant la température et la luminosité souhait�
 \end_layout
 
 \begin_layout Subsection
-Interface IPhone
+Interface iPhone
 \end_layout
 
 \begin_layout Subsubsection
@@ -545,18 +545,18 @@ Pourquoi ne pas contrôler la maison avec son téléphone?
 \end_layout
 
 \begin_layout Subsubsection
-Pourquoi l'IPhone
+Pourquoi l'iPhone
 \end_layout
 
 \begin_layout Standard
-Pour le projet, nous avons décidé de concentrer le développement sur l'Iphone
- et son petit frère l'Ipod touch, qui utilise le même OS et le même navigateur,
+Pour le projet, nous avons décidé de concentrer le développement sur l'iPhone
+ et son petit frère l'iPod touch, qui utilise le même OS et le même navigateur,
  pour plusieurs raisons : premièrement le navigateur Safari intégré permet
  d'utiliser des fonctionnalités web avancées ; ensuite l'interface tactile
- de l'Iphone est ergonomique pour la navigation web sur ce type d'appareil,
+ de l'iPhone est ergonomique pour la navigation web sur ce type d'appareil,
  et enfin c'est l'un des téléphones de nouvelle génération le plus répandu
  sur le marché.
- De plus, plusieurs membres de l'équipe ont un Iphone ou un Ipod Touch,
+ De plus, plusieurs membres de l'équipe ont un iPhone ou un iPod Touch,
  ce qui facilite grandement les tests et les démonstrations.
  
 \end_layout
@@ -567,20 +567,20 @@ Réalisation de l'interface dédiée
 
 \begin_layout Standard
 L'objectif était de minimiser la duplication de code au niveau du serveur
- pour faciliter la maintenance, c'est pourquoi les deux interfaces, Iphone
+ pour faciliter la maintenance, c'est pourquoi les deux interfaces, iPhone
  et classique, utilisent le même code HTML généré par le serveur, ce qui
  permet de n'avoir aucune fonction spécifique à la plateforme client dans
  le serveur Java.
  Tout se fait lors du chargement de la page : le type d'appareil se connectant
- est détecté, s'il s'agit d'un Iphone ou d'un Ipod touch, on utilise une
+ est détecté, s'il s'agit d'un iPhone ou d'un iPod touch, on utilise une
  feuille de style CSS différente.
  Ceci permet de changer complètement la façon dont s'affiche le HTML généré
- par le serveur, et de l'adapter à l'IPhone.
+ par le serveur, et de l'adapter à l'iPhone.
  
 \end_layout
 
 \begin_layout Subsubsection
-Différences de l'interface Iphone
+Différences de l'interface iPhone
 \end_layout
 
 \begin_layout Standard
@@ -589,8 +589,8 @@ Pour rendre la navigation plus facile sur un appareil avec un petit écran,
  du projet, qui prenait trop de place, et les différents formulaires se
  retrouvent sous le menu.
  La taille des polices est optimisée pour faciliter la lecture sur un écran
- d'IPhone.
- Enfin, l'IPhone ne gérant pas le Flash, nous avons remplacé le clip sur
+ d'iPhone.
+ Enfin, l'iPhone ne gérant pas le Flash, nous avons remplacé le clip sur
  l'écran d'accueil par un simple texte décrivant l'état de la maison.
  
 \end_layout
@@ -625,7 +625,7 @@ Compatibilité des appareils mobiles
 
 \begin_layout Standard
 Pour sʼadresser vraiment à tout le marché, il faudrait élargir lʼinterface
- pour Iphone à lʼensemble des appareils mobiles intégrant un navigateur
+ pour iPhone à lʼensemble des appareils mobiles intégrant un navigateur
  internet.
  Cependant il faudrait pour cela prendre le temps de créer toutes les feuilles
  de style CSS spécifiques à chaque navigateur, et idéalement, disposer dʼun
@@ -1192,6 +1192,24 @@ et les 3 dernières opérations sont répétées pour chaque son connu.
  La recherche du maximum de corrélation peut être effectuée à la volée.
 \end_layout
 
+\begin_layout Standard
+L'algorithme de calcul de la FFT est très courant, et en tant qu'ingénieurs,
+ nous sommes sensés nous appuyer sur l'existant pour l'améliorer et l'uiliser
+ dans un contexte nouveau, et pas réinventer la roue à chaque projet.
+ Nous n'avons donc pas implémenté le calcul de FFT nous mêmes, mais l'avons
+ trouvé sur internet
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+FFT en java : http://www.ling.upenn.edu/~tklee/Projects/dsp/
+\end_layout
+
+\end_inset
+
+, parmis les multiples sources disponnibles.
+\end_layout
+
 \begin_layout Paragraph
 Remarque : 
 \end_layout
@@ -1350,7 +1368,7 @@ Communication
 \end_layout
 
 \begin_layout Subsection
-Communication avec les IHM
+Communication avec les interfaces Homme-Machine
 \end_layout
 
 \begin_layout Subsubsection
@@ -1366,7 +1384,8 @@ Les informations concernant la maison sont stockées dans des HashMap partagées
  Dans ce projet par exemple, une HashMap de salles associe le nom des salles
  et les objets Salle correspondant.
  On peut alors avoir accès à toutes les informations dépendant des salles
- (type et valeur des capteurs, type et valeur des prises).
+ (type et valeur des capteurs, type et valeur des prises) à partir de leur
+ nom.
  Lorsqu'une nouvelle information est connue, qu'elle vienne de l'utilisateur
  par l'intermédiaire de l'interface web ou bien par la réception de données
  provenant d'un module de capteurs, cette HashMap est mise à jour.
@@ -1417,9 +1436,13 @@ La multiprise communique avec le serveur par l'intermédiaire d'un réseau
  Ce réseau utilise le CPL (Courants Porteurs en Ligne) ce qui évite de faire
  trainer des fils supplémentaires.
  La multiprise possède un module XPORT de Lantronix.
- C'est un adaptateur série<->ethernet qui fonctionne comme une interface
- réseau classique: elle est identifiée par une adresse MAC dont le début
- est spécifique au constructeur et toujours de la forme 
+ C'est un adaptateur série
+\begin_inset Formula $\leftrightarrow$
+\end_inset
+
+ethernet qui fonctionne comme une interface réseau classique: elle est identifié
+e par une adresse MAC dont le début est spécifique au constructeur, qui
+ est toujours de la forme 
 \begin_inset Quotes eld
 \end_inset
 
@@ -1427,7 +1450,7 @@ La multiprise communique avec le serveur par l'intermédiaire d'un réseau
 \begin_inset Quotes erd
 \end_inset
 
- et une adresse IP.
+, ainsi que par une adresse IP.
 \end_layout
 
 \begin_layout Standard
@@ -1445,7 +1468,7 @@ sortie d'usine
  Sans celui-ci il n'est pas possible d'y accéder, son adresse IP étant fixé
  par défaut à 0.0.0.0.
  Ce point a posé un problème car l'adresse MAC, normalement écrite sur le
- module lui-même était effacée.
+ module lui-même, était effacée.
  Après une perte de temps non négligeable, l'adresse MAC a pu être récupérée
  par la liaison série.
 \end_layout
@@ -1454,7 +1477,14 @@ sortie d'usine
 Lorsqu'une multiprise est créée, par exemple lorsque l'on charge le fichier
  de configuration de la maison en mémoire, un Thread Communication est instancié
  avec en paramètre l'adresse IP correspondant à la multiprise traitée.
- On crée la connexion à l'aide de l'instruction:
+ On crée la connexion à l'aide du code présenté dans l'extrait de code 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "alg:Ouverture_connexion"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -1467,6 +1497,12 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "alg:Ouverture_connexion"
+
+\end_inset
+
 Ouverture d'une connexion
 \end_layout
 
@@ -1475,7 +1511,7 @@ Ouverture d'une connexion
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout LyX-Code
 new Socket(adresse IP, port)
 \end_layout
 
@@ -1486,12 +1522,7 @@ new Socket(adresse IP, port)
 
 \begin_layout Standard
 Une fois la connexion créée, une boucle va dérouler les étapes d'écoute
- et d'envoi des données entre le serveur et le XPORT.
- Cette boucle est exécutée continuellement et parallèlement au reste du
- programme puisqu'elle est contenue dans la méthode run() du Thread Communicatio
-n.
- Une queue de type ConcurrentLinkedQueue est utilisée pour stocker les messages
- devant être envoyés à la multiprise.
+ et d'envoi des données entre le serveur et le XPORT : 
 \end_layout
 
 \begin_layout Enumerate
@@ -1521,6 +1552,13 @@ Sinon si le temps d'écoute maximum est dépassé, on essaie de renvoyer le
 \end_layout
 
 \begin_layout Standard
+Cette boucle est exécutée continuellement et parallèlement au reste du programme
+ puisqu'elle est contenue dans la méthode run() du Thread Communication.
+ Une queue de type ConcurrentLinkedQueue est utilisée pour stocker les messages
+ devant être envoyés à la multiprise.
+\end_layout
+
+\begin_layout Standard
 Avec ce système, si jamais un message n'est pas reçu par la multiprise,
  il est renvoyé et aucune information n'est perdue.
 \end_layout
@@ -1530,8 +1568,8 @@ Le protocole
 \end_layout
 
 \begin_layout Standard
-Un protocole de communication des données a été défini en commun avec l'équipe
- de la partie électronique.
+Un protocole de communication des données a été défini en concertation avec
+ l'équipe de la partie électronique.
  Les messages envoyés et reçus sont formatés de façon à être reconnus par
  les programmes communiquant (dans le serveur et dans le microcontrôleur
  de la multiprise).
@@ -1550,7 +1588,11 @@ reçu
 \begin_inset Quotes erd
 \end_inset
 
- correspond au sens multiprise->serveur
+ correspond au sens multiprise
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+serveur
 \begin_inset Newline newline
 \end_inset
 
@@ -1562,7 +1604,11 @@ envoyé
 \begin_inset Quotes erd
 \end_inset
 
- correspond au sens serveur->multiprise
+ correspond au sens serveur
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+multiprise
 \begin_inset Newline newline
 \end_inset
 
@@ -1590,39 +1636,63 @@ x
 \end_layout
 
 \begin_layout Itemize
+
+\family typewriter
 /0011xxxxx:::::NOUVEAU::::
 \backslash
+
+\family default
  est reçu lorsqu'un nouveau module de capteurs est installé dans une pièce
 \end_layout
 
 \begin_layout Itemize
+
+\family typewriter
 /0011xxxxx
 \backslash
- est envoyé à la multiprise qui veut recevoir les données du module 0011xxxxx
+
+\family default
+ est envoyé à la multiprise qui doit relayer les données du module 0011xxxxx
 \end_layout
 
 \begin_layout Itemize
+
+\family typewriter
 /ACK:0011xxxxx
 \backslash
+
+\family default
  est reçu pour accuser réception de l'ajout d'un nouveau module de capteurs
 \end_layout
 
 \begin_layout Itemize
+
+\family typewriter
 /0011xxxxx:d0:d1:d2:d3
 \backslash
+
+\family default
  est reçu toutes les deux secondes et contient les données des quatre capteurs
  du module 0011xxxxx
 \end_layout
 
 \begin_layout Itemize
+
+\family typewriter
 /REQ:prise:valeur
 \backslash
+
+\family default
  est envoyé pour changer la valeur d'une prise
 \end_layout
 
 \begin_layout Itemize
+
+\family typewriter
 /ACK:prise:valeur
 \backslash
+
+\family default
  est reçu pour accuser réception d'une commande
 \end_layout
 
@@ -1665,7 +1735,7 @@ Il est aussi possible d'ajouter une multiprise.
  fichier syslog du système.
  Ce fichier log est lu par notre programme, qui vérifie s'il s'agit bien
  d'une adresse MAC d'un module XPORT.
- Si oui il va modifier le fichier de configuration du serveur DHCP afin
+ Si oui, il va modifier le fichier de configuration du serveur DHCP afin
  d'y ajouter la possibilité d'attribuer une adresse IP à la nouvelle multiprise.
  
 \end_layout
@@ -1695,6 +1765,7 @@ x
 
 \begin_layout Standard
 \begin_inset Float algorithm
+placement H
 wide false
 sideways false
 status open
@@ -1711,12 +1782,12 @@ Extrait du fichier de configuration du dhcp
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout LyX-Code
 host XPORTn {
 \begin_inset Newline newline
 \end_inset
 
- hardware ethernet xx:xx:xx:xx:xx:xx ; fixed-address 192.168.0.n; 
+  hardware ethernet xx:xx:xx:xx:xx:xx ; fixed-address 192.168.0.n; 
 \begin_inset Newline newline
 \end_inset
 
