@@ -135,12 +135,12 @@ L'objectif du projet est de développer une solution de domotique qui soit
 \end_layout
 
 \begin_layout Standard
-Le comportement de la maison est ensuite régit par des profils d'utilisation
+Le comportement de la maison est ensuite régi par des profils d'utilisation
  : on distingue des profils globaux, qui s'appliquent sur la maison dans
  son ensemble, et définissent des constantes telles que la température moyenne
  à maintenir, ou la luminosité globale dans la maison ; et des profils locaux,
- qui ne s'appliquent qu'à une seule pièce, sont prioritaires sur le profil
- global, et correspondent à une activité spécifique.
+ qui ne s'appliquent qu'à une seule pièce, prioritaires sur le profil global,
+ et correspondant à une activité spécifique.
  Des profils globaux type seront 
 \begin_inset Quotes eld
 \end_inset
@@ -173,7 +173,7 @@ lecture dans le salon
 \begin_inset Quotes erd
 \end_inset
 
-, ou 
+ ou 
 \begin_inset Quotes eld
 \end_inset
 
@@ -431,13 +431,13 @@ Société sensitive Object
 
 \begin_layout Standard
 Nous pensions au début du projet utiliser un produit de la société Sensitive
- Object, qui vend des boitiers prets à l'emploi utilisant cette technologie,
+ Object, qui vend des boitiers prêts à l'emploi utilisant cette technologie,
  mais la société était en phase de développement d'un nouveau produit, et
  a refusé de nous vendre l'ancien.
  Nous avons donc provisoirement abandonné cette idée, mais plus tard nous
  avons rencontré un scientifique, Stephan Catheline, qui avait travaillé
  au développement de cette technologie, et nous a assuré qu'il était tout
- à fait possible de la mettre en place nous mêmes en se basant sur l'article
+ à fait possible de la mettre en place nous-mêmes en se basant sur l'article
  scientifique joint à ce rapport.
  Nous nous sommes donc mis au travail, et l'idée a été réintégrée au projet.
 \end_layout
@@ -577,14 +577,14 @@ Convoluer le signal retourné temporellement par
 
 , qui est la réponse impulsionnelle de la table, équivaut à renvoyer virtuelleme
 nt à travers la table l'onde vers sa source : on fait défiler le temps à
- l'envers, et on observe le signal que l'on a émit avec le coup au point
+ l'envers, et on observe le signal que l'on a émis avec le coup au point
  
 \begin_inset Formula $i$
 \end_inset
 
 .
  Le pic principal sera d'autant plus grand que l'on est virtuellement près
- de la source, et on aura évidement un maximum sur la source elle même.
+ de la source, et on aura évidemment un maximum sur la source elle-même.
 \end_layout
 
 \begin_layout Standard
@@ -666,7 +666,7 @@ reference "fig:murata"
 
 \begin_layout Standard
 Pour écouter l'entrée son, nous nous sommes basés sur le code d'exemple
- fourni par Sun pour les application audio an Java
+ fourni par Sun pour les application audio en Java
 \begin_inset Foot
 status collapsed
 
@@ -783,8 +783,8 @@ reference "fig:schema_concatene"
 \end_inset
 
 .
- Par ailleurs, sachant que nous récupérons les données de 2 capteurs en
- 
+ Par ailleurs, sachant que nous récupérons les données de deux capteurs
+ en 
 \begin_inset Quotes eld
 \end_inset
 
@@ -803,7 +803,7 @@ mono
 \begin_inset Quotes erd
 \end_inset
 
- (1 seul canal), aucun traitement n'est nécessaire.
+ (un seul canal), aucun traitement n'est nécessaire.
 \end_layout
 
 \begin_layout Standard
@@ -888,7 +888,7 @@ Après avoir capturé le son d'un choc sur la surface, on va chercher à calcule
 \end_inset
 
 , mais nous pouvons améliorer cette complexité en passant par la représentation
- fréquentielle des signaux, obtenue par tranfsormée de Fourier : en effet,
+ fréquentielle des signaux, obtenue par transformée de Fourier : en effet,
  une convolution temporelle correspond à une multiplication fréquentielle,
  et le calcul d'une transformée de Fourier rapide (FFT) est opéré en 
 \begin_inset Formula $O(n\lg(n))$
@@ -978,7 +978,7 @@ J'ai commencé à développer le projet avec une idée fausse sur la convolution
 
 ), alors qu'il faut non pas sommer, mais effectuer une FFT inverse puis
  rechercher le maximum pour avoir la corrélation.
- Car la convolution de 2 signaux n'est pas un scalaire mais bien un signal
+ Car la convolution de deux signaux n'est pas un scalaire mais bien un signal
  temporel.
  Mon calcul de corrélation était donc biaisé par les lobes secondaires qui
  apparaissent normalement sur le signal convolué, et dont la puissance peut
@@ -1035,7 +1035,7 @@ le site suivant décrit quelques pistes pour obtenir un algorithme de calcul
 
 \end_inset
 
- (ou en utilisant les implémentations optimisées disponnibles en C, comme
+ (ou en utilisant les implémentations optimisées disponibles en C, comme
  FFTW
 \begin_inset Foot
 status collapsed
@@ -1064,11 +1064,11 @@ Pour augmenter la précision de détermination des zones tapées, on pourrait
 
 \begin_layout Standard
 On pourrait aussi utiliser un algorithme d'apprentissage, qui permettrait
- de différentier les boutons non pas seulement à partir de leur corrélation,
+ de différencier les boutons non pas seulement à partir de leur corrélation,
  mais aussi à partir des corrélations des autres boutons.
- Ainsi, on pourrait différentier deux boutons très proches si leur corrélation
+ Ainsi, on pourrait différencier deux boutons très proches si leur corrélation
  avec un troisième bouton varie de façon significative.
- Il est aussi possible que cette piste de mène à rien, sachant que nous
+ Il est aussi possible que cette piste ne mène à rien, sachant que nous
  n'avons effectué aucun test sur ce point.
 \end_layout
 
@@ -1081,8 +1081,8 @@ Le dispositif présenté ci dessus permet de rendre n'importe quelle surface
  tactile avec quelques micros et après avoir calibré les boutons sur cette
  surface.
  Son principal avantage est qu'en plus d'être bon marché, le coût de cette
- technologie ne dépends pas de la taille de la surface à rendre tactile.
- De plus, Il s'agit d'une installation rapide à mettre en place, facilement
+ technologie ne dépend pas de la taille de la surface à rendre tactile.
+ De plus, il s'agit d'une installation rapide à mettre en place, facilement
  adaptable à de nombreuses configurations : un bouton peut être rajouté
  ou supprimé à n'importe quel moment, et adaptée à un environnement hostile
  : si on place les micros sous une table par exemple, ou peut renverser
