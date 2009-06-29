@@ -211,6 +211,186 @@ collision des architectures : need UML dès le début du projet
 Interface Web
 \end_layout
 
+\begin_layout Standard
+Afin de configurer et contrôler le reste du projet nous avons mis en place
+ une interface web.
+ Nous avons fait ce choix plutôt quʼune interface logicielle standard par
+ soucis d'accessibilité des contrôles : une interface logicielle aurait
+ permis de contrôler la maison uniquement depuis le serveur, tandis quʼavec
+ une interface web il devient possible de la commander non seulement depuis
+ le serveur, mais aussi depuis un autre ordinateur du réseau local, ou même
+ par internet depuis le travail où un lieu de vacances.
+ De plus avec lʼavènement nouveaux téléphones portables intégrant un navigateur
+ internet comme notamment lʼIphone, une interface web offre la possibilité
+ de transformer son téléphone en télécommande pour la maison.
+ 
+\end_layout
+
+\begin_layout Subsection
+Technologies utilisées
+\end_layout
+
+\begin_layout Subsubsection
+Côté client
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename interface.png
+	lyxscale 60
+	width 90text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Interface"
+
+\end_inset
+
+Interface côté client avec clip Flash
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Pour que lʼinterface web soit la plus accessible possible et consultable
+ sur les différents appareils et navigateurs, côté client nous avons utilisé
+ du simple HTML généré et mis en page par une feuille de style en CSS.
+ Pour avoir un rendu plus dynamique de lʼétat de la maison qui puisse se
+ mettre à jour en temps réel sans que lʼutilisateur nʼai a envoyer de nouvelles
+ requêtes manuellement, nous avons utilisé un clip en Adobe Flash (voir
+ figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Interface"
+
+\end_inset
+
+) qui communique avec le serveur par lʼintermédiaire dʼun fichier XML.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Côté serveur
+\end_layout
+
+\begin_layout Standard
+Pour réaliser une interface logicielle en HTML il nous fallait utiliser
+ un langage capable de le générer dynamiquement.
+ Il existe trois plates-formes permettant de le faire : PHP, le framework
+ .NET via lʼASP où le Java via le JSP ou les Servlets.
+ Le tout le reste du projet étant en Java, que ce soit la communication
+ avec la multiprise ou la gestion des profil, il apparaissait logique de
+ conserver le même langage et de réaliser lʼinterface web en Java aussi.
+ Il fallait donc employer Java Edition Entreprises (anciennement J2EE) car
+ la version standard ne gère pas les technologies web.
+ Enfin en utilisant du Java il nous restait encore deux options : le JSP,
+ qui ressemble à une page HTML dans laquelle est intégré du code Java dans
+ des balises, ou les Servlets, qui sont des classes Java permettant de gérer
+ des requêtes HTTP et dʼécrire du HTML via la sortie standard.
+ De ces deux solutions nous avons choisit dʼutiliser les Servlets car ils
+ sont eux mêmes des classe Java et pouvaient à ce titre sʼintégrer plus
+ facilement dans le reste du projet et communiquer directement avec les
+ autres classes du projet et dʼéchanger des données avec elles.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Serveur web
+\end_layout
+
+\begin_layout Subsection
+Architecture de l'interface
+\end_layout
+
+\begin_layout Subsection
+Fonctions de l'interface
+\end_layout
+
+\begin_layout Subsubsection
+Menu
+\end_layout
+
+\begin_layout Subsubsection
+Accueil
+\end_layout
+
+\begin_layout Subsubsection
+Configuration de la maison
+\end_layout
+
+\begin_layout Subsubsection
+Changement de profil
+\end_layout
+
+\begin_layout Subsubsection
+Sauvegarde de la configuration
+\end_layout
+
+\begin_layout Subsubsection
+Configuration d'un profil
+\end_layout
+
+\begin_layout Subsubsection
+Création d'un profil
+\end_layout
+
+\begin_layout Subsection
+Interface IPhone
+\end_layout
+
+\begin_layout Subsubsection
+Pourquoi une interface mobile ?
+\end_layout
+
+\begin_layout Subsubsection
+Pourquoi l'IPhone
+\end_layout
+
+\begin_layout Subsubsection
+Réalisation de lʼinterface dédiée
+\end_layout
+
+\begin_layout Subsubsection
+Différences de lʼinterface Iphone
+\end_layout
+
+\begin_layout Subsection
+Pistes d'amélioration
+\end_layout
+
+\begin_layout Subsubsection
+AJAX
+\end_layout
+
+\begin_layout Subsubsection
+Compatibilité des appareils mobiles
+\end_layout
+
 \begin_layout Section
 Interface tactile
 \end_layout
