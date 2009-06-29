@@ -214,14 +214,14 @@ Interface Web
 \begin_layout Standard
 Afin de configurer et contrôler le reste du projet nous avons mis en place
  une interface web.
- Nous avons fait ce choix plutôt quʼune interface logicielle standard par
+ Nous avons fait ce choix plutôt qu'une interface logicielle standard par
  soucis d'accessibilité des contrôles : une interface logicielle aurait
- permis de contrôler la maison uniquement depuis le serveur, tandis quʼavec
+ permis de contrôler la maison uniquement depuis le serveur, tandis qu'avec
  une interface web il devient possible de la commander non seulement depuis
  le serveur, mais aussi depuis un autre ordinateur du réseau local, ou même
  par internet depuis le travail où un lieu de vacances.
- De plus avec lʼavènement nouveaux téléphones portables intégrant un navigateur
- internet comme notamment lʼIphone, une interface web offre la possibilité
+ De plus avec l'avènement nouveaux téléphones portables intégrant un navigateur
+ internet comme notamment l'Iphone, une interface web offre la possibilité
  de transformer son téléphone en télécommande pour la maison.
  
 \end_layout
@@ -277,11 +277,11 @@ Interface côté client avec clip Flash
 \end_layout
 
 \begin_layout Standard
-Pour que lʼinterface web soit la plus accessible possible et consultable
+Pour que l'interface web soit la plus accessible possible et consultable
  sur les différents appareils et navigateurs, côté client nous avons utilisé
  du simple HTML généré et mis en page par une feuille de style en CSS.
- Pour avoir un rendu plus dynamique de lʼétat de la maison qui puisse se
- mettre à jour en temps réel sans que lʼutilisateur nʼai a envoyer de nouvelles
+ Pour avoir un rendu plus dynamique de l'état de la maison qui puisse se
+ mettre à jour en temps réel sans que l'utilisateur n'ai a envoyer de nouvelles
  requêtes manuellement, nous avons utilisé un clip en Adobe Flash (voir
  figure 
 \begin_inset CommandInset ref
@@ -290,7 +290,7 @@ reference "fig:Interface"
 
 \end_inset
 
-) qui communique avec le serveur par lʼintermédiaire dʼun fichier XML.
+) qui communique avec le serveur par l'intermédiaire d'un fichier XML.
  
 \end_layout
 
@@ -302,20 +302,20 @@ Côté serveur
 Pour réaliser une interface logicielle en HTML il nous fallait utiliser
  un langage capable de le générer dynamiquement.
  Il existe trois plates-formes permettant de le faire : PHP, le framework
- .NET via lʼASP où le Java via le JSP ou les Servlets.
+ .NET via l'ASP où le Java via le JSP ou les Servlets.
  Le tout le reste du projet étant en Java, que ce soit la communication
  avec la multiprise ou la gestion des profil, il apparaissait logique de
- conserver le même langage et de réaliser lʼinterface web en Java aussi.
+ conserver le même langage et de réaliser l'interface web en Java aussi.
  Il fallait donc employer Java Edition Entreprises (anciennement J2EE) car
  la version standard ne gère pas les technologies web.
  Enfin en utilisant du Java il nous restait encore deux options : le JSP,
  qui ressemble à une page HTML dans laquelle est intégré du code Java dans
  des balises, ou les Servlets, qui sont des classes Java permettant de gérer
- des requêtes HTTP et dʼécrire du HTML via la sortie standard.
- De ces deux solutions nous avons choisit dʼutiliser les Servlets car ils
- sont eux mêmes des classe Java et pouvaient à ce titre sʼintégrer plus
+ des requêtes HTTP et d'écrire du HTML via la sortie standard.
+ De ces deux solutions nous avons choisit d'utiliser les Servlets car ils
+ sont eux mêmes des classe Java et pouvaient à ce titre s'intégrer plus
  facilement dans le reste du projet et communiquer directement avec les
- autres classes du projet et dʼéchanger des données avec elles.
+ autres classes du projet et d'échanger des données avec elles.
  
 \end_layout
 
@@ -324,8 +324,8 @@ Serveur web
 \end_layout
 
 \begin_layout Standard
-Pour pouvoir déployer cette interface web en JAVA nous avons installé un
- serveur Apache Tomcat qui permet de diffuser des projets JAVA web sur un
+Pour pouvoir déployer cette interface web en Java nous avons installé un
+ serveur Apache Tomcat qui permet de diffuser des projets Java web sur un
  serveur Apache.
  
 \end_layout
@@ -335,22 +335,22 @@ Architecture de l'interface
 \end_layout
 
 \begin_layout Standard
-Une classe principale nommée Interface est la base de lʼinterface web cʼest
- elle qui reçoit toutes les requêtes de lʼutilisateur et les redistribue
- aux autres classes de lʼinterface web.
+Une classe principale nommée Interface est la base de l'interface web c'est
+ elle qui reçoit toutes les requêtes de l'utilisateur et les redistribue
+ aux autres classes de l'interface web.
  Il s'agit aussi de la classe de déploiment du projet web, c'est à dire
  qu'elle est chargée de créer et stocker toutes les données communes au
  projet, que ce soit la configuration de la maison, ou les profils de températur
-e et dʼéclairage pour la maison.
+e et d'éclairage pour la maison.
  
 \end_layout
 
 \begin_layout Standard
 La classe CommunHtml contient différentes fonctions permettant de générer
- des bouts de code HTML que l'on retrouve fréquement dans les page de lʼinterfac
-e, comme par exemple lʼen tête de la page web.
+ des bouts de code HTML que l'on retrouve fréquement dans les page de l'interfac
+e, comme par exemple l'en tête de la page web.
  La classe CommunHtml reçoit aussi les requêtes HTTP de la classe Interface
- et, en fonction de dʼune variable 
+ et, en fonction de d'une variable 
 \begin_inset Quotes eld
 \end_inset
 
@@ -362,13 +362,13 @@ page
 \family typewriter
 switch
 \family default
- qui permet de générer la page que lʼutilisateur à demandée.
+ qui permet de générer la page que l'utilisateur à demandée.
 \end_layout
 
 \begin_layout Standard
 Enfin une classe Formulaires génère les différents formulaires HTML qui
- permettront à lʼutilisateur de configurer et commander la maison.
- Lʼappel à ces formulaires, qui dépendent de la page choisie, est fait dans
+ permettront à l'utilisateur de configurer et commander la maison.
+ L'appel à ces formulaires, qui dépendent de la page choisie, est fait dans
  le 
 \family typewriter
 switch
@@ -381,32 +381,132 @@ switch
 Fonctions de l'interface
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Standard
+\begin_inset Wrap figure
+lines 0
+placement R
+overhang 0in
+width "30col%"
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align right
+\begin_inset Graphics
+	filename menu.png
+	lyxscale 75
+	scale 60
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
 Menu
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Un menu commun à toutes les pages permet à l'utilisateur de sélectionner
+ la page de l'interface qu'il souhaite parmi les différentes sections :
 \end_layout
 
 \begin_layout Subsubsection
 Accueil
 \end_layout
 
+\begin_layout Standard
+Cette page (voir figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Interface"
+
+\end_inset
+
+) permet de connaître en temps réel l'état de la maison.
+ Un clip Flash affiche une représentation de la maison et informe l'utilisateur
+ de la température et de la luminosité dans chaque salle.
+ Il va lire ces informations dans un fichier XML nommé etat.xml qui est mis
+ à jour par le moteur principal de l'interface à chaque fois qu'une nouvelle
+ données donnée de capteur est reçue.
+ Si le navigateur ne gère pas le Flash, les informations sont affichées
+ en format texte avec le nom des salles et les informations correspondantes.
+ 
+\end_layout
+
 \begin_layout Subsubsection
 Configuration de la maison
+\end_layout
+
+\begin_layout Standard
+Cette page propose un formulaire qui permet de configurer la maison : il
+ permet d'ajouter des salles et de les nommer, de répartir les différents
+ modules de capteurs et multiprises dans les salles, de définir le type
+ des capteurs sur les modules de capteurs et les appareils branchés à chaque
+ multiprise .
 \end_layout
 
 \begin_layout Subsubsection
 Changement de profil
 \end_layout
 
+\begin_layout Standard
+Permet de changer rapidement de profil à l'aide d'un simple menu déroulant.
+\end_layout
+
 \begin_layout Subsubsection
 Sauvegarde de la configuration
+\end_layout
+
+\begin_layout Standard
+Sérialise toutes les données du projet dans des fichiers XML, qui seront
+ ensuite désérialisés lors du prochain lancement du projet.
+ Cela permet de relancer le serveur exactement dans l'état dans lequel il
+ a été arrêté.
+ 
 \end_layout
 
 \begin_layout Subsubsection
 Configuration d'un profil
 \end_layout
 
+\begin_layout Standard
+Permet de sélectionner un profil et de changer la température et la luminosité
+ voulue dans ce profil.
+ 
+\end_layout
+
 \begin_layout Subsubsection
 Création d'un profil
+\end_layout
+
+\begin_layout Standard
+Permet de créer un profil en donnant la température et la luminosité souhaité
+ dans ce profil.
+ Il est de plus possible de cocher une option «bouton» qui, si elle est
+ sélectionnée, permet de d'assigner un bouton de l'interface tactile à ce
+ profil.
+ L'utilisateur n'a alors qu'a taper un nombre défini de fois à l'endroit
+ où il veut créer ce nouveau bouton pour l'étalonner, et il devient lié
+ au nouveau profil.
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -417,16 +517,82 @@ Interface IPhone
 Pourquoi une interface mobile ?
 \end_layout
 
+\begin_layout Standard
+Nous avons pensé que l'interface web n'était pas suffisante pour le projet,
+ car même si elle rendait le contrôle accessible sur n'importe quel ordinateur
+ du réseau, s'il fallait aller sur un ordinateur à un chaque fois que l'utilisat
+eur veut modifier la luminosité de la salle, le projet n'apporterait pas
+ vraiment de confort face à un simple interrupteur.
+ C'est pourquoi nous avons pensé que l'utilisateur pourrait avoir en permanence
+ sur lui une télécommande pour contrôler sa maison, cependant cela lui imposait
+ de se surcharger d'un appareil de plus en permanence et l'obligeait à investir
+ dans une télécommande spécifique.
+ C'est pourquoi nous nous sommes demandés : 
+\begin_inset Quotes eld
+\end_inset
+
+Pourquoi ne pas contrôler la maison avec son téléphone?
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Les utilisateurs l'ont en général toujours sur eux et les téléphones récents
+ offrent un navigateur web qui serait capable d'exploiter notre interface.
+ Mais pour que cette utilisation reste ergonomique il fallait développer
+ une interface dédiée à un appareil mobile, qui n'a ni le même écran, ni
+ les même contrôles qu'un ordinateur classique.
+ 
+\end_layout
+
 \begin_layout Subsubsection
 Pourquoi l'IPhone
 \end_layout
 
-\begin_layout Subsubsection
-Réalisation de lʼinterface dédiée
+\begin_layout Standard
+Pour le projet, nous avons décidé de concentrer le développement sur l'Iphone
+ et son petit frère l'Ipod touch, qui utilise le même OS et le même navigateur,
+ pour plusieurs raisons : premièrement le navigateur Safari intégré permet
+ d'utiliser des fonctionnalités web avancées ; ensuite l'interface tactile
+ de l'Iphone est ergonomique pour la navigation web sur ce type d'appareil,
+ et enfin c'est l'un des téléphones de nouvelle génération le plus répandu
+ sur le marché.
+ De plus, plusieurs membres de l'équipe ont un Iphone ou un Ipod Touch,
+ ce qui facilite grandement les tests et les démonstrations.
+ 
 \end_layout
 
 \begin_layout Subsubsection
-Différences de lʼinterface Iphone
+Réalisation de l'interface dédiée
+\end_layout
+
+\begin_layout Standard
+L'objectif était de minimiser la duplication de code au niveau du serveur
+ pour faciliter la maintenance, c'est pourquoi les deux interfaces, Iphone
+ et classique, utilisent le même code HTML généré par le serveur, ce qui
+ permet de n'avoir aucune fonction spécifique à la plateforme client dans
+ le serveur Java.
+ Tout se fait lors du chargement de la page : le type d'appareil se connectant
+ est détecté, s'il s'agit d'un Iphone ou d'un Ipod touch, on utilise une
+ feuille de style CSS différente.
+ Ceci permet de changer complètement la façon dont s'affiche le HTML généré
+ par le serveur, et de l'adapter à l'IPhone.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Différences de l'interface Iphone
+\end_layout
+
+\begin_layout Standard
+Pour rendre la navigation plus facile sur un appareil avec un petit écran,
+ le menu occupe toute la largeur de la la page, nous avons retiré le logo
+ du projet, qui prenait trop de place, et les différents formulaires se
+ retrouvent sous le menu.
+ La taille des polices est optimisée pour faciliter la lecture sur un écran
+ d'IPhone.
+ Enfin, l'IPhone ne gérant pas le Flash, nous avons remplacé le clip sur
+ l'écran d'accueil par un simple texte décrivant l'état de la maison.
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -437,8 +603,35 @@ Pistes d'amélioration
 AJAX
 \end_layout
 
+\begin_layout Standard
+Lʼinterface Web étant une interface logicielle reportée sur une interface
+ HTML, il apparaît intéressant dʼexploiter les possibilités de lʼAJAX et
+ du web 2.0, qui permettent justement de créer des applications web asynchrones
+ avec les requêtes de lʼutilisateur.
+ Cela rendrait lʼinterface plus fluide, donnerait encore plus lʼillusion
+ dʼutiliser un logiciel dans son navigateur, et permettrait en prime de
+ limiter les transferts de données entre le client et le serveur au strict
+ nécéssaire.
+ Lʼutilisation dʼAJAX apparaît donc naturelle si lʼon devait poursuivre
+ le développement du projet, mais cela est légèrement plus lourd à mettre
+ en place, et pas indispensable au fonctionnement ; cʼest pourquoi cela
+ nʼa pas été notre priorité dans un premier temps.
+ 
+\end_layout
+
 \begin_layout Subsubsection
 Compatibilité des appareils mobiles
+\end_layout
+
+\begin_layout Standard
+Pour sʼadresser vraiment à tout le marché, il faudrait élargir lʼinterface
+ pour Iphone à lʼensemble des appareils mobiles intégrant un navigateur
+ internet.
+ Cependant il faudrait pour cela prendre le temps de créer toutes les feuilles
+ de style CSS spécifiques à chaque navigateur, et idéalement, disposer dʼun
+ appareil de chaque type pour tester le résultat ; cʼest pourquoi nous ne
+ lʼavons pas fait dans lʼétat actuel du projet.
+ 
 \end_layout
 
 \begin_layout Section
@@ -721,7 +914,7 @@ Pour écouter l'entrée son, nous nous sommes basés sur le code d'exemple
 status collapsed
 
 \begin_layout Plain Layout
-Code source disponible à l'adresse : http://java.sun.com/products/java-media/sound
+Code source disponible à l'adresse : http://Java.sun.com/products/Java-media/sound
 /samples/JavaSoundDemo/
 \end_layout
 
@@ -1169,7 +1362,7 @@ Les informations concernant la maison sont stockées dans des HashMap partagées
  entre les différentes parties du projet (interface web, interface tactile
  et communication).
  Une HashMap est une structure de données permettant d'associer une clé
- à un objet java.
+ à un objet Java.
  Dans ce projet par exemple, une HashMap de salles associe le nom des salles
  et les objets Salle correspondant.
  On peut alors avoir accès à toutes les informations dépendant des salles
@@ -1604,7 +1797,7 @@ gantt project
 \end_layout
 
 \begin_layout Standard
-serveur web java
+serveur web Java
 \end_layout
 
 \begin_layout Standard
