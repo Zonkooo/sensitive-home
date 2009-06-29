@@ -323,8 +323,58 @@ Pour réaliser une interface logicielle en HTML il nous fallait utiliser
 Serveur web
 \end_layout
 
+\begin_layout Standard
+Pour pouvoir déployer cette interface web en JAVA nous avons installé un
+ serveur Apache Tomcat qui permet de diffuser des projets JAVA web sur un
+ serveur Apache.
+ 
+\end_layout
+
 \begin_layout Subsection
 Architecture de l'interface
+\end_layout
+
+\begin_layout Standard
+Une classe principale nommée Interface est la base de lʼinterface web cʼest
+ elle qui reçoit toutes les requêtes de lʼutilisateur et les redistribue
+ aux autres classes de lʼinterface web.
+ Il s'agit aussi de la classe de déploiment du projet web, c'est à dire
+ qu'elle est chargée de créer et stocker toutes les données communes au
+ projet, que ce soit la configuration de la maison, ou les profils de températur
+e et dʼéclairage pour la maison.
+ 
+\end_layout
+
+\begin_layout Standard
+La classe CommunHtml contient différentes fonctions permettant de générer
+ des bouts de code HTML que l'on retrouve fréquement dans les page de lʼinterfac
+e, comme par exemple lʼen tête de la page web.
+ La classe CommunHtml reçoit aussi les requêtes HTTP de la classe Interface
+ et, en fonction de dʼune variable 
+\begin_inset Quotes eld
+\end_inset
+
+page
+\begin_inset Quotes erd
+\end_inset
+
+ passée dans la requête, effectue un 
+\family typewriter
+switch
+\family default
+ qui permet de générer la page que lʼutilisateur à demandée.
+\end_layout
+
+\begin_layout Standard
+Enfin une classe Formulaires génère les différents formulaires HTML qui
+ permettront à lʼutilisateur de configurer et commander la maison.
+ Lʼappel à ces formulaires, qui dépendent de la page choisie, est fait dans
+ le 
+\family typewriter
+switch
+\family default
+ décrit précédemment dans la classe CommunHtml.
+ 
 \end_layout
 
 \begin_layout Subsection
