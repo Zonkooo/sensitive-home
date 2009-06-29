@@ -2188,10 +2188,19 @@ Nous avons commencé par planifier l'avancement du projet avec un diagramme
 
 \begin_layout Standard
 Nous avons découvert et appris à utiliser le contrôle de version sous subversion
- (SVN) en utilisant les serveurs offerts par Google Code, ce qui nous a
- bien servi, surtout dans les derniers jours du projet pendant lesquels
- nous travaillions à peu près tous sur les mêmes classes dans lesquelles
- il restait des problèmes à régler.
+ (SVN) en utilisant les serveurs offerts par Google Code
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+http://code.google.com/p/sensitive-home/
+\end_layout
+
+\end_inset
+
+, ce qui nous a bien servi, surtout dans les derniers jours du projet pendant
+ lesquels nous travaillions à peu près tous sur les mêmes classes dans lesquelle
+s il restait des problèmes à régler.
 \end_layout
 
 \begin_layout Standard
