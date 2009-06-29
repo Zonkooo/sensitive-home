@@ -211,6 +211,186 @@ collision des architectures : need UML dès le début du projet
 Interface Web
 \end_layout
 
+\begin_layout Standard
+Afin de configurer et contrôler le reste du projet nous avons mis en place
+ une interface web.
+ Nous avons fait ce choix plutôt quʼune interface logicielle standard par
+ soucis d'accessibilité des contrôles : une interface logicielle aurait
+ permis de contrôler la maison uniquement depuis le serveur, tandis quʼavec
+ une interface web il devient possible de la commander non seulement depuis
+ le serveur, mais aussi depuis un autre ordinateur du réseau local, ou même
+ par internet depuis le travail où un lieu de vacances.
+ De plus avec lʼavènement nouveaux téléphones portables intégrant un navigateur
+ internet comme notamment lʼIphone, une interface web offre la possibilité
+ de transformer son téléphone en télécommande pour la maison.
+ 
+\end_layout
+
+\begin_layout Subsection
+Technologies utilisées
+\end_layout
+
+\begin_layout Subsubsection
+Côté client
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename interface.png
+	lyxscale 60
+	width 90text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Interface"
+
+\end_inset
+
+Interface côté client avec clip Flash
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Pour que lʼinterface web soit la plus accessible possible et consultable
+ sur les différents appareils et navigateurs, côté client nous avons utilisé
+ du simple HTML généré et mis en page par une feuille de style en CSS.
+ Pour avoir un rendu plus dynamique de lʼétat de la maison qui puisse se
+ mettre à jour en temps réel sans que lʼutilisateur nʼai a envoyer de nouvelles
+ requêtes manuellement, nous avons utilisé un clip en Adobe Flash (voir
+ figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Interface"
+
+\end_inset
+
+) qui communique avec le serveur par lʼintermédiaire dʼun fichier XML.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Côté serveur
+\end_layout
+
+\begin_layout Standard
+Pour réaliser une interface logicielle en HTML il nous fallait utiliser
+ un langage capable de le générer dynamiquement.
+ Il existe trois plates-formes permettant de le faire : PHP, le framework
+ .NET via lʼASP où le Java via le JSP ou les Servlets.
+ Le tout le reste du projet étant en Java, que ce soit la communication
+ avec la multiprise ou la gestion des profil, il apparaissait logique de
+ conserver le même langage et de réaliser lʼinterface web en Java aussi.
+ Il fallait donc employer Java Edition Entreprises (anciennement J2EE) car
+ la version standard ne gère pas les technologies web.
+ Enfin en utilisant du Java il nous restait encore deux options : le JSP,
+ qui ressemble à une page HTML dans laquelle est intégré du code Java dans
+ des balises, ou les Servlets, qui sont des classes Java permettant de gérer
+ des requêtes HTTP et dʼécrire du HTML via la sortie standard.
+ De ces deux solutions nous avons choisit dʼutiliser les Servlets car ils
+ sont eux mêmes des classe Java et pouvaient à ce titre sʼintégrer plus
+ facilement dans le reste du projet et communiquer directement avec les
+ autres classes du projet et dʼéchanger des données avec elles.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Serveur web
+\end_layout
+
+\begin_layout Subsection
+Architecture de l'interface
+\end_layout
+
+\begin_layout Subsection
+Fonctions de l'interface
+\end_layout
+
+\begin_layout Subsubsection
+Menu
+\end_layout
+
+\begin_layout Subsubsection
+Accueil
+\end_layout
+
+\begin_layout Subsubsection
+Configuration de la maison
+\end_layout
+
+\begin_layout Subsubsection
+Changement de profil
+\end_layout
+
+\begin_layout Subsubsection
+Sauvegarde de la configuration
+\end_layout
+
+\begin_layout Subsubsection
+Configuration d'un profil
+\end_layout
+
+\begin_layout Subsubsection
+Création d'un profil
+\end_layout
+
+\begin_layout Subsection
+Interface IPhone
+\end_layout
+
+\begin_layout Subsubsection
+Pourquoi une interface mobile ?
+\end_layout
+
+\begin_layout Subsubsection
+Pourquoi l'IPhone
+\end_layout
+
+\begin_layout Subsubsection
+Réalisation de lʼinterface dédiée
+\end_layout
+
+\begin_layout Subsubsection
+Différences de lʼinterface Iphone
+\end_layout
+
+\begin_layout Subsection
+Pistes d'amélioration
+\end_layout
+
+\begin_layout Subsubsection
+AJAX
+\end_layout
+
+\begin_layout Subsubsection
+Compatibilité des appareils mobiles
+\end_layout
+
 \begin_layout Section
 Interface tactile
 \end_layout
@@ -936,26 +1116,26 @@ HashMap partagée
 
 \begin_layout Standard
 Les informations concernant la maison sont stockées dans des HashMap partagées
- entre les différentes parties du projet (interface web, interface tactile
- et communication).
- Une HashMap est une structure de données permettant d'associer une clé
- à un objet java.
- Dans ce projet par exemple, une HashMap de salles associe le nom des salles
- et les objets Salle correspondant.
- On peut alors avoir accès à toutes les informations dépendant des salles
- (type et valeur des capteurs, type et valeur des prises).
- Lorsqu'une nouvelle information est connue, qu'elle vienne de l'utilisateur
- par l'intermédiaire de l'interface web ou bien par la réception de données
- provenant d'un module de capteurs, cette HashMap est mise à jour.
- On travaille donc en permanence avec des données à jour.
+entre les différentes parties du projet (interface web, interface tactile
+et communication).
+Une HashMap est une structure de données permettant d'associer une clé
+à un objet java.
+Dans ce projet par exemple, une HashMap de salles associe le nom des salles
+et les objets Salle correspondant.
+On peut alors avoir accès à toutes les informations dépendant des salles
+(type et valeur des capteurs, type et valeur des prises).
+Lorsqu'une nouvelle information est connue, qu'elle vienne de l'utilisateur
+par l'intermédiaire de l'interface web ou bien par la réception de données
+provenant d'un module de capteurs, cette HashMap est mise à jour.
+On travaille donc en permanence avec des données à jour.
 \end_layout
 
 \begin_layout Standard
 L'interface web utilise la HashMap pour afficher les valeurs de température
- et luminosité actuelles de chaque pièce.
- Elle propose aussi un état à jour de la configuration de la maison (le
- nombre de multiprises, le nombre de modules de capteurs, leur situation,
- la configuration des multiprises).
+et luminosité actuelles de chaque pièce.
+Elle propose aussi un état à jour de la configuration de la maison (le
+nombre de multiprises, le nombre de modules de capteurs, leur situation,
+la configuration des multiprises).
 \end_layout
 
 \begin_layout Subsubsection
@@ -964,20 +1144,20 @@ Interface tactile
 
 \begin_layout Standard
 Quand on crée un profil via l'interface web, l'utilisateur a la possibilité
- d'y associer une zone de l'inteface tactile.
- Lorsque l'interface tactile reconnait un bouton prédéfini, celle-ci envoie
- à la classe Interfacage un évènement, qui déclenche un changement de profil
- vers le profil associé au bouton tapé.
- 
+d'y associer une zone de l'inteface tactile.
+Lorsque l'interface tactile reconnait un bouton prédéfini, celle-ci envoie
+à la classe Interfacage un évènement, qui déclenche un changement de profil
+vers le profil associé au bouton tapé.
+
 \end_layout
 
 \begin_layout Standard
 L'écoute de l'interface tactile est contenue dans la méthode run() d'un
- Thread.
- Les Threads sont des morceaux de programme pouvant être exécutés en parallèle.
- Ceci permet que les boutons associés à un changement de profil soient détectés
- bien que la communication avec la multiprise (envoi et réception de messages)
- fonctionne en parallèle.
+Thread.
+Les Threads sont des morceaux de programme pouvant être exécutés en parallèle.
+Ceci permet que les boutons associés à un changement de profil soient détectés
+bien que la communication avec la multiprise (envoi et réception de messages)
+fonctionne en parallèle.
 \end_layout
 
 \begin_layout Subsection
@@ -990,13 +1170,13 @@ La connexion
 
 \begin_layout Standard
 La multiprise communique avec le serveur par l'intermédiaire d'un réseau
- de type ethernet.
- Ce réseau utilise le CPL (Courants Porteurs en Ligne) ce qui évite de faire
- trainer des fils supplémentaires.
- La multiprise possède un module XPORT de Lantronix.
- C'est un adaptateur série<->ethernet qui fonctionne comme une interface
- réseau classique: elle est identifiée par une adresse MAC dont le début
- est spécifique au constructeur et toujours de la forme 
+de type ethernet.
+Ce réseau utilise le CPL (Courants Porteurs en Ligne) ce qui évite de faire
+trainer des fils supplémentaires.
+La multiprise possède un module XPORT de Lantronix.
+C'est un adaptateur série<->ethernet qui fonctionne comme une interface
+réseau classique: elle est identifiée par une adresse MAC dont le début
+est spécifique au constructeur et toujours de la forme
 \begin_inset Quotes eld
 \end_inset
 
@@ -1004,34 +1184,35 @@ La multiprise communique avec le serveur par l'intermédiaire d'un réseau
 \begin_inset Quotes erd
 \end_inset
 
- et une adresse IP.
+et une adresse IP.
 \end_layout
 
 \begin_layout Standard
 Un logiciel fourni par Lantronix est nécessaire pour se connecter une première
- fois au module XPORT en indiquant l'adresse MAC, quand il est dans sa configura
-tion 
+fois au module XPORT en indiquant l'adresse MAC, quand il est dans sa configura
+tion
 \begin_inset Quotes eld
 \end_inset
+
 
 sortie d'usine
 \begin_inset Quotes erd
 \end_inset
 
 .
- Sans celui-ci il n'est pas possible d'y accéder, son adresse IP étant fixé
- par défaut à 0.0.0.0.
- Ce point a posé un problème car l'adresse MAC, normalement écrite sur le
- module lui-même était effacée.
- Après une perte de temps non négligeable, l'adresse MAC a pu être récupérée
- par la liaison série.
+Sans celui-ci il n'est pas possible d'y accéder, son adresse IP étant fixé
+par défaut à 0.0.0.0.
+Ce point a posé un problème car l'adresse MAC, normalement écrite sur le
+module lui-même était effacée.
+Après une perte de temps non négligeable, l'adresse MAC a pu être récupérée
+par la liaison série.
 \end_layout
 
 \begin_layout Standard
 Lorsqu'une multiprise est créée, par exemple lorsque l'on charge le fichier
- de configuration de la maison en mémoire, un Thread Communication est instancié
- avec en paramètre l'adresse IP correspondant à la multiprise traitée.
- On crée la connexion à l'aide de l'instruction:
+de configuration de la maison en mémoire, un Thread Communication est instancié
+avec en paramètre l'adresse IP correspondant à la multiprise traitée.
+On crée la connexion à l'aide de l'instruction:
 \end_layout
 
 \begin_layout Standard
@@ -1063,12 +1244,12 @@ new Socket(adresse IP, port)
 
 \begin_layout Standard
 Une fois la connexion créée, une boucle va dérouler les étapes d'écoute
- et d'envoi des données entre le serveur et le XPORT.
- Cette boucle est exécutée continuellement et parallèlement au reste du
- programme puisqu'elle est contenue dans la méthode run() du Thread Communicatio
+et d'envoi des données entre le serveur et le XPORT.
+Cette boucle est exécutée continuellement et parallèlement au reste du
+programme puisqu'elle est contenue dans la méthode run() du Thread Communicatio
 n.
- Une queue de type ConcurrentLinkedQueue est utilisée pour stocker les messages
- devant être envoyés à la multiprise.
+Une queue de type ConcurrentLinkedQueue est utilisée pour stocker les messages
+devant être envoyés à la multiprise.
 \end_layout
 
 \begin_layout Enumerate
@@ -1081,7 +1262,7 @@ Si elle n'est pas nulle, on envoie le message qui est en haut de la queue
 
 \begin_layout Enumerate
 On attend de recevoir un message ou que le temps d'écoute maximum fixé soit
- dépassé
+dépassé
 \end_layout
 
 \begin_layout Enumerate
@@ -1094,12 +1275,12 @@ Si c'est le cas, on supprime le message qui est en haut de la queue
 \end_inset
 
 Sinon si le temps d'écoute maximum est dépassé, on essaie de renvoyer le
- message qui est en haut de la queue
+message qui est en haut de la queue
 \end_layout
 
 \begin_layout Standard
 Avec ce système, si jamais un message n'est pas reçu par la multiprise,
- il est renvoyé et aucune information n'est perdue.
+il est renvoyé et aucune information n'est perdue.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1108,15 +1289,15 @@ Le protocole
 
 \begin_layout Standard
 Un protocole de communication des données a été défini en commun avec l'équipe
- de la partie électronique.
- Les messages envoyés et reçus sont formatés de façon à être reconnus par
- les programmes communiquant (dans le serveur et dans le microcontrôleur
- de la multiprise).
+de la partie électronique.
+Les messages envoyés et reçus sont formatés de façon à être reconnus par
+les programmes communiquant (dans le serveur et dans le microcontrôleur
+de la multiprise).
 \end_layout
 
 \begin_layout Standard
 Voici les différents types de messages définis.
- Tout message n'étant pas formaté de cette façon n'est pas traité:
+Tout message n'étant pas formaté de cette façon n'est pas traité:
 \end_layout
 
 \begin_layout Standard
@@ -1127,7 +1308,7 @@ reçu
 \begin_inset Quotes erd
 \end_inset
 
- correspond au sens multiprise->serveur
+correspond au sens multiprise->serveur
 \begin_inset Newline newline
 \end_inset
 
@@ -1139,7 +1320,7 @@ envoyé
 \begin_inset Quotes erd
 \end_inset
 
- correspond au sens serveur->multiprise
+correspond au sens serveur->multiprise
 \begin_inset Newline newline
 \end_inset
 
@@ -1151,7 +1332,7 @@ envoyé
 \begin_inset Quotes erd
 \end_inset
 
- représente l'adresse d'un module de capteurs où 
+représente l'adresse d'un module de capteurs où
 \begin_inset Quotes eld
 \end_inset
 
@@ -1159,7 +1340,7 @@ x
 \begin_inset Quotes erd
 \end_inset
 
- est une valeur numérique
+est une valeur numérique
 \begin_inset Newline newline
 \end_inset
 
@@ -1169,44 +1350,44 @@ x
 \begin_layout Itemize
 /0011xxxxx:::::NOUVEAU::::
 \backslash
- est reçu lorsqu'un nouveau module de capteurs est installé dans une pièce
+est reçu lorsqu'un nouveau module de capteurs est installé dans une pièce
 \end_layout
 
 \begin_layout Itemize
 /0011xxxxx
 \backslash
- est envoyé à la multiprise qui veut recevoir les données du module 0011xxxxx
+est envoyé à la multiprise qui veut recevoir les données du module 0011xxxxx
 \end_layout
 
 \begin_layout Itemize
 /ACK:0011xxxxx
 \backslash
- est reçu pour accuser réception de l'ajout d'un nouveau module de capteurs
+est reçu pour accuser réception de l'ajout d'un nouveau module de capteurs
 \end_layout
 
 \begin_layout Itemize
 /0011xxxxx:d0:d1:d2:d3
 \backslash
- est reçu toutes les deux secondes et contient les données des quatre capteurs
- du module 0011xxxxx
+est reçu toutes les deux secondes et contient les données des quatre capteurs
+du module 0011xxxxx
 \end_layout
 
 \begin_layout Itemize
 /REQ:prise:valeur
 \backslash
- est envoyé pour changer la valeur d'une prise
+est envoyé pour changer la valeur d'une prise
 \end_layout
 
 \begin_layout Itemize
 /ACK:prise:valeur
 \backslash
- est reçu pour accuser réception d'une commande
+est reçu pour accuser réception d'une commande
 \end_layout
 
 \begin_layout Standard
 Les messages sont découpés pour être envoyés octet par octet.
- Ils sont lus de l'autre coté du XPORT par un microcontrôleur utilisant
- une liaison série.
+Ils sont lus de l'autre coté du XPORT par un microcontrôleur utilisant
+une liaison série.
 \end_layout
 
 \begin_layout Subsection
@@ -1215,36 +1396,37 @@ Reconnaissance de matériel
 
 \begin_layout Standard
 Une fonctionnalité importante du projet est la possibilité d'ajouter de
- nouveaux appareils sans nécessiter de modification dans l'installation.
- Ceci est possible par son architecture modulaire.
+nouveaux appareils sans nécessiter de modification dans l'installation.
+Ceci est possible par son architecture modulaire.
 \end_layout
+
 
 \begin_layout Standard
 Des capteurs peuvent être ajoutés sur les modules de capteurs tant que de
- la place est disponible.
- Si ce n'est pas le cas, il faut ajouter un nouveau module de capteurs.
- Lorsqu'un module est ajouté et mis sous tension, celui-ci va envoyer un
- message dans les airs.
- Les multiprises avoisinantes vont le recevoir et le transmettre au serveur.
- Le premier message reçu va permettre d'associer le nouveau module à la
- multiprise et il va être ajouté dans l'interface web pour que l'utilisateur
- puisse paramétrer dans quelle salle il se trouve.
+la place est disponible.
+Si ce n'est pas le cas, il faut ajouter un nouveau module de capteurs.
+Lorsqu'un module est ajouté et mis sous tension, celui-ci va envoyer un
+message dans les airs.
+Les multiprises avoisinantes vont le recevoir et le transmettre au serveur.
+Le premier message reçu va permettre d'associer le nouveau module à la
+multiprise et il va être ajouté dans l'interface web pour que l'utilisateur
+puisse paramétrer dans quelle salle il se trouve.
 \end_layout
 
 \begin_layout Standard
 Il est aussi possible d'ajouter une multiprise.
- Lorsque celle-ci est branchée sur le réseau, elle envoie sur tout le réseau
- un message DHCPDISCOVER contenant l'adresse MAC de la multiprise.
- Un serveur DHCP tourne sur notre serveur.
- C'est un logiciel qui permet d'attribuer une adresse IP à une interface
- détectée sur le réseau.
- Le serveur DHCP va recevoir ce message DHCPDISCOVER et l'écrire dans le
- fichier syslog du système.
- Ce fichier log est lu par notre programme, qui vérifie s'il s'agit bien
- d'une adresse MAC d'un module XPORT.
- Si oui il va modifier le fichier de configuration du serveur DHCP afin
- d'y ajouter la possibilité d'attribuer une adresse IP à la nouvelle multiprise.
- 
+Lorsque celle-ci est branchée sur le réseau, elle envoie sur tout le réseau
+un message DHCPDISCOVER contenant l'adresse MAC de la multiprise.
+Un serveur DHCP tourne sur notre serveur.
+C'est un logiciel qui permet d'attribuer une adresse IP à une interface
+détectée sur le réseau.
+Le serveur DHCP va recevoir ce message DHCPDISCOVER et l'écrire dans le
+fichier syslog du système.
+Ce fichier log est lu par notre programme, qui vérifie s'il s'agit bien
+d'une adresse MAC d'un module XPORT.
+Si oui il va modifier le fichier de configuration du serveur DHCP afin
+d'y ajouter la possibilité d'attribuer une adresse IP à la nouvelle multiprise.
+
 \end_layout
 
 \begin_layout Standard
@@ -1255,7 +1437,7 @@ n
 \begin_inset Quotes erd
 \end_inset
 
- représente le numéro du XPORT ajouté
+représente le numéro du XPORT ajouté
 \begin_inset Newline newline
 \end_inset
 
@@ -1267,7 +1449,7 @@ x
 \begin_inset Quotes erd
 \end_inset
 
- représente un chiffre hexadécimal
+représente un chiffre hexadécimal
 \end_layout
 
 \begin_layout Standard
@@ -1293,7 +1475,7 @@ host XPORTn {
 \begin_inset Newline newline
 \end_inset
 
- hardware ethernet xx:xx:xx:xx:xx:xx ; fixed-address 192.168.0.n; 
+hardware ethernet xx:xx:xx:xx:xx:xx ; fixed-address 192.168.0.n;
 \begin_inset Newline newline
 \end_inset
 
@@ -1307,14 +1489,14 @@ host XPORTn {
 
 \begin_layout Standard
 De cette manière, si un ordinateur ou toute interface réseau n'étant pas
- un XPORT est reliée au réseau, le serveur DHCP du serveur domotique n'en
- tiendra pas compte et ne lui attribuera pas d'adresse IP.
+un XPORT est reliée au réseau, le serveur DHCP du serveur domotique n'en
+tiendra pas compte et ne lui attribuera pas d'adresse IP.
 \end_layout
 
 \begin_layout Standard
 Comme pour les modules de capteurs, on ajoute ensuite la nouvelle multiprise
- au fichier de configuration de la maison et l'utilisateur pourra paramétrer
- cette multiprise dans l'interface web.
+au fichier de configuration de la maison et l'utilisateur pourra paramétrer
+cette multiprise dans l'interface web.
 \end_layout
 
 \begin_layout Section
@@ -1323,35 +1505,35 @@ Ce que nous n'avons pas eu le temps de développer
 
 \begin_layout Standard
 Si nous avions eu plus de temps, nous aurions pu integrer un système de
- calendrier à la gestion de la maison (par exemple google calendar), qui
- aurait permis des changements automatiques de profils, alors qu'actuellement,
- ils doivent être effectués à la main.
+calendrier à la gestion de la maison (par exemple google calendar), qui
+aurait permis des changements automatiques de profils, alors qu'actuellement,
+ils doivent être effectués à la main.
 \end_layout
 
 \begin_layout Standard
 Nous aurions aussi aimé utiliser des capteurs de présence à l'entrée des
- salle, toujours pour automatiser les changements de profil, ce qui aurait
- accru le confort pour l'utilisateur, ainsi que l'acpect écologique du projet
- : en sachant qu'il n'y a personne dans la pièce, on s'empresse d'éteindre
- de la lumière, voire de baisser la température d'un degré, et si quelqu'un
- arrive, la pièce se configure à ses attentes sans attendre d'ordres.
+salle, toujours pour automatiser les changements de profil, ce qui aurait
+accru le confort pour l'utilisateur, ainsi que l'acpect écologique du projet
+: en sachant qu'il n'y a personne dans la pièce, on s'empresse d'éteindre
+de la lumière, voire de baisser la température d'un degré, et si quelqu'un
+arrive, la pièce se configure à ses attentes sans attendre d'ordres.
 \end_layout
 
 \begin_layout Standard
 Dans notre vision finale du projet, nous aurions utilisé des micros sans
- fil pour placer des interfaces tactiles vraiment partout sans encombrement.
- Ces micros sans fils auraint pu communiquer avec les multiprises, à la
- manière des modules de capteurs, qui auraient relayé l'information vers
- l'ordinateur pour être traitée.
+fil pour placer des interfaces tactiles vraiment partout sans encombrement.
+Ces micros sans fils auraint pu communiquer avec les multiprises, à la
+manière des modules de capteurs, qui auraient relayé l'information vers
+l'ordinateur pour être traitée.
 \end_layout
 
 \begin_layout Standard
 Toujours dans une optique écologiste, nous aurions pu integrer une facette
- de sensibilisation de l'utilisateur, lui proposant de réduire la température
- du chauffage si le programme l'estime trop élevée, de couper la chaudière
- quand l'été arrive, et nous aurions même pu analyser les comportements
- de l'utilisateur et lui proposer de changer ses horaires pour profiter
- plus longtemps de la lumière du soleil par exemple.
+de sensibilisation de l'utilisateur, lui proposant de réduire la température
+du chauffage si le programme l'estime trop élevée, de couper la chaudière
+quand l'été arrive, et nous aurions même pu analyser les comportements
+de l'utilisateur et lui proposer de changer ses horaires pour profiter
+plus longtemps de la lumière du soleil par exemple.
 \end_layout
 
 \begin_layout Standard
